@@ -1,0 +1,12 @@
+Put rom zip files here:
+1942.zip
+digdug.zip
+dkong.zip
+eyes.zip
+frogger.zip
+galaga.zip
+lizwiz.zip
+mrtnt.zip
+pacman.zip
+theglobp.zip
+Z80-081707.zip

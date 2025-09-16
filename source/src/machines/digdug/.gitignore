@@ -1,0 +1,11 @@
+digdug_cmap.h
+digdug_cmap_sprites.h
+digdug_cmap_tiles.h
+digdug_pftiles.h
+digdug_playfield.h
+digdug_rom1.h
+digdug_rom2.h
+digdug_rom3.h
+digdug_spritemap.h
+digdug_tilemap.h
+digdug_wavetable.h

@@ -1,0 +1,25 @@
+#ifndef _pacman_dipswitches_h_
+#define _pacman_dipswitches_h_
+
+#define PACMAN_DIP_FREE       0b00000000
+#define PACMAN_DIP_1C1P       0b00000001
+#define PACMAN_DIP_1C2P       0b00000010
+#define PACMAN_DIP_2C1P       0b00000011
+
+#define PACMAN_DIP_LIVE1      0b00000000
+#define PACMAN_DIP_LIVE2      0b00000100
+#define PACMAN_DIP_LIVE3      0b00001000
+#define PACMAN_DIP_LIVE5      0b00001100
+
+#define PACMAN_DIP_B10K       0b00000000
+#define PACMAN_DIP_B15K       0b00010000
+#define PACMAN_DIP_B20K       0b00100000
+#define PACMAN_DIP_BNONE      0b00110000
+
+#define PACMAN_DIP_NORMAL     0b11000000
+#define PACMAN_DIP_RACKTEST   0b01000000
+#define PACMAN_DIP_FREEZE     0b10000000
+
+#define PACMAN_DIP (PACMAN_DIP_NORMAL | PACMAN_DIP_B10K | PACMAN_DIP_LIVE3 | PACMAN_DIP_1C1P)
+
+#endif

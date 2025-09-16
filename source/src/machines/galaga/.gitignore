@@ -1,0 +1,8 @@
+galaga_cmap_sprites.h
+galaga_cmap_tiles.h
+galaga_rom1.h
+galaga_rom2.h
+galaga_rom3.h
+galaga_spritemap.h
+galaga_tilemap.h
+galaga_wavetable.h

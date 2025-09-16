@@ -1,0 +1,5 @@
+pacman_cmap.h
+pacman_rom.h
+pacman_spritemap.h
+pacman_tilemap.h
+pacman_wavetable.h

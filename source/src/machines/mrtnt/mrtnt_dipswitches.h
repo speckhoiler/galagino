@@ -1,0 +1,24 @@
+#ifndef _mrtnt_dipswitches_h_
+#define _mrtnt_dipswitches_h_
+
+#define MRTNT_DIP_FREE       0b00000000
+#define MRTNT_DIP_2C1P       0b00000001
+#define MRTNT_DIP_1C2P       0b00000010
+#define MRTNT_DIP_1C1P       0b00000011
+
+#define MRTNT_DIP_LIVE5      0b00000000
+#define MRTNT_DIP_LIVE4      0b00000100
+#define MRTNT_DIP_LIVE3      0b00001000
+#define MRTNT_DIP_LIVE2      0b00001100
+
+#define MRTNT_DIP_B150K      0b00000000
+#define MRTNT_DIP_B125K      0b00010000
+#define MRTNT_DIP_B100K      0b00100000
+#define MRTNT_DIP_B75K       0b00110000
+
+#define MRTNT_DIP_UPRIGHT    0b01000000
+#define MRTNT_DIP_COCKTAIL   0b00000000
+
+#define MRTNT_DIP (MRTNT_DIP_UPRIGHT | MRTNT_DIP_B75K | MRTNT_DIP_LIVE3 | MRTNT_DIP_1C1P)
+
+#endif
