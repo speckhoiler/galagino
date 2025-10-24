@@ -5,6 +5,8 @@ This port is NOT by the original author, so please do not bother him with issues
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
+Demonstration: [Galagino running on a "My Arcade Galaga Micro Player Pro" machine](https://www.youtube.com/watch?v=N-ntNdpjVxQ)
+
 ![Cabinet](images/galagino_cabinet.jpg)
 
 ![Pac-Man screenshot](images/pacman.gif)
@@ -68,7 +70,7 @@ repository. Preparing the firmware thus consists of a few additional steps:
 * The ROM ZIP files have to be placed in the [romszip directory](romszip/), together with the ZIP file containing the Z80 emulator.
 * A set of [python scripts](romconv/) is then being used to convert and
  patch the ROM data and emulator code and to include the resulting code into the
-galagino machines directory. For all games, just use conv__all.bat.
+galagino machines directory. For all games, just use conv__all.bat. Please verfiy that the stript run without errors.
 
 The [ROM conversion](./romconv) create a whole bunch of additional files in the
 [source directory](./source). Please check the README in the
