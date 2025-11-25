@@ -9,4 +9,5 @@ lizwiz.zip
 mrtnt.zip
 pacman.zip
 theglobp.zip
+crush.zip
 Z80-081707.zip

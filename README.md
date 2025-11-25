@@ -1,11 +1,11 @@
-# Galagino ported to platformio - with additional games
+# Galagino ported to platformio - with 5 additional games
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
-Demonstration video: [ESP32 Game: Multi Arcade Machine](https://www.youtube.com/watch?v=N-ntNdpjVxQ)
+Demonstration video: [DIY ESP32 Project 2025: ESP32 Game - Multi Arcade Machine](https://www.youtube.com/watch?v=N-ntNdpjVxQ)
 
 ![Cabinet](images/galagino_cabinet.jpg)
 
@@ -19,6 +19,7 @@ Demonstration video: [ESP32 Game: Multi Arcade Machine](https://www.youtube.com/
 ![Eyes screenshot](images/eyes.png)
 ![Mr. TNT screenshot](images/mrtnt.png)
 ![The Glob screenshot](images/theglob.png)
+![Crush Roller screenshot](images/crush.png)
 
 ## Hardware
 
@@ -52,7 +53,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
 
 * The [Galagino specific code](source/) contained in this repository
 * A [Z80 software emulation](https://fms.komkon.org/EMUL8/Z80-081707.zip) by [Marat Fayzullin](https://fms.komkon.org/)
-* The orignal ROM files
+* The original ROM files
     * [Galaga (Namco Rev. B ROM)](https://www.google.com/search?q=galaga.zip+arcade+rom)
     * [Pac-Man (Midway)](https://www.google.com/search?q=pacman.zip+arcade+rom)
     * [Donkey Kong (US set 1)](https://www.google.com/search?q=dkong.zip+arcade+rom)
@@ -63,9 +64,11 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Eyes](https://www.google.com/search?q=eyes.zip+arcade+rom)
     * [Mr. TNT](https://www.google.com/search?q=mrtnt.zip+arcade+rom)
     * [The Glob](https://www.google.com/search?q=theglobp.zip+arcade+rom) (Important: filename with "p")
+    * [Crush Roller](https://www.google.com/search?q=crush.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
+* If you do not have Python installed, download it from here. [Python 3.13.0](https://www.python.org/downloads/release/python-3130)
 * The ROM ZIP files have to be placed in the [romszip directory](romszip/), together with the ZIP file containing the Z80 emulator.
 * A set of [python scripts](romconv/) is then being used to convert and patch the ROM data and emulator code and to include the resulting code into the galagino machines directory. For all games, just use conv__all.bat.
 

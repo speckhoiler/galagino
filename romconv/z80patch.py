@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import zipfile
 
 ZIPLOC="../romszip/"
@@ -18,7 +17,7 @@ unsigned char OpZ80_INL(unsigned short Addr);
 #endif
 #endif /* Z80_H */
 
-#include "..\..\emulation\emulation.h"
+#include "..\\..\\emulation\\emulation.h"
 """
 
 Z80H_EXTRA2=b"""#undef word 

@@ -42,7 +42,8 @@ enum {
   MCH_EYES,
   MCH_MRTNT,
   MCH_LIZWIZ,
-  MCH_THEGLOB
+  MCH_THEGLOB,
+  MCH_CRUSH
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame

@@ -72,6 +72,11 @@
   theglob theglobMachine = theglob();
 #endif
 
+#ifdef ENABLE_CRUSH 
+  #include "machines\crush\crush.h"
+  crush crushMachine = crush();
+#endif
+ 
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
@@ -102,8 +107,11 @@ machineBase *machines[] = {
   &mrtntMachine, 
 #endif  
 #ifdef ENABLE_THEGLOB 
-  &theglobMachine
-#endif  
+  &theglobMachine,
+#endif
+#ifdef ENABLE_CRUSH 
+  &crushMachine
+#endif
 };
 
 signed char machinesCount = (signed char)(sizeof(machines) / sizeof(unsigned short*));

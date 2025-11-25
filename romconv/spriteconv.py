@@ -174,7 +174,7 @@ def parse_spritemap(id, fmt, infiles, outfile):
             sprites.append(parse_sprite_frogger(data))
 
     # pacman, galaga and digdug, eyes
-    elif fmt == "pacman" or fmt == "galaga" or fmt == "digdug" or fmt == "eyes" or fmt == "lizwiz" or fmt == "mrtnt":
+    elif fmt == "pacman" or fmt == "galaga" or fmt == "digdug" or fmt == "eyes" or fmt == "lizwiz" or fmt == "mrtnt" or fmt == "crush":
         for name in infiles:    
             f = open(name, "rb")
             spritemap_data = f.read()
@@ -185,7 +185,7 @@ def parse_spritemap(id, fmt, infiles, outfile):
 
             # read and parse all 64 sprites
             for sprite in range(64):
-                sprites.append(parse_sprite(spritemap_data[64*sprite:64*(sprite+1)], fmt == "pacman" or fmt == "eyes" or fmt == "lizwiz" or fmt == "mrtnt", fmt == "eyes" or fmt == "mrtnt"))
+                sprites.append(parse_sprite(spritemap_data[64*sprite:64*(sprite+1)], fmt == "pacman" or fmt == "eyes" or fmt == "lizwiz" or fmt == "mrtnt" or fmt == "crush", fmt == "eyes" or fmt == "mrtnt"))
             #for s in range(len(sprites)): 
             #   print(s)
             #   show_sprite(sprites[s])

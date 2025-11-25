@@ -12,22 +12,24 @@
 #define ENABLE_MRTNT
 #define ENABLE_LIZWIZ
 #define ENABLE_THEGLOB
+#define ENABLE_CRUSH
 
-#if !defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)
+#if !defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)
   #error "At least one machine has to be enabled!"
 #endif
 
 // check if only one machine is enabled
-#if (( defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) &&  defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) &&  defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) &&  defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) &&  defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) &&  defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) &&  defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) &&  defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) &&  defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) &&  defined(ENABLE_THEGLOB)))
+#if (( defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) &&  defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) &&  defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) &&  defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) &&  defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) &&  defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) &&  defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) &&  defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) &&  defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) &&  defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH)) || \
+     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) &&  defined(ENABLE_CRUSH)))
   #define SINGLE_MACHINE
 #endif
 
