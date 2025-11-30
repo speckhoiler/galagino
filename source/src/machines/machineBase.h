@@ -28,7 +28,7 @@
 
 struct sprite_S {
   unsigned char code, color, flags;
-  short x, y; 
+  short x, y;
 };
 
 enum {
@@ -78,6 +78,7 @@ public:
     }
 
     virtual signed char machineType() { return MCH_MENU; } 
+
     virtual unsigned char rdZ80(unsigned short Addr) { return 0xff; }
     virtual void wrZ80(unsigned short Addr, unsigned char Value) { };
     virtual void outZ80(unsigned short Port, unsigned char Value) { };
@@ -92,6 +93,7 @@ public:
     virtual void run_frame(void) { };
     virtual void prepare_frame(void) { };
     virtual void render_row(short row) { };
+    
     virtual const signed char *waveRom(unsigned char value) { return 0; }
     virtual const unsigned short *logo(void) { return 0; };
     virtual bool hasNamcoAudio() { return false; }

@@ -332,10 +332,8 @@ void galaga::check_galaga_sprite(struct sprite_S *spr) {
 }
 
 void galaga::trigger_sound_explosion(void) {
-  if(game_started) {
-    snd_boom_cnt = 2 * sizeof(galaga_sample_boom);
-    snd_boom_ptr = (const signed char*)galaga_sample_boom;
-  }
+  snd_boom_cnt = 2 * sizeof(galaga_sample_boom);
+  snd_boom_ptr = (const signed char*)galaga_sample_boom;
 }
 
 // draw a single 8x8 tile

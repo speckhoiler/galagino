@@ -146,11 +146,14 @@ void crush::wrZ80(unsigned short Addr, unsigned char Value) {
 
       if (Addr == 0x505f)
         timerSoundChanged = millis();
+
+      //printf("%x;%x;%x\n", soundregs[0x15], soundregs[0x1a], soundregs[0x1f]);
     }
   }
 
   // Remove ugly sound (protection not to use namco audio hardware?) when game over...
-  if (soundregs[0x15] == 0xc && soundregs[0x1a] == 0x3 && soundregs[0x1f] == 0x6 && ((millis() - timerSoundChanged) > 40)) {
+  if (((soundregs[0x15] == 0xc && soundregs[0x1a] == 0x3 && soundregs[0x1f] == 0x6) ||
+    (soundregs[0x15] == 0xf && soundregs[0x1a] == 0x5 && soundregs[0x1f] == 0x9)) && ((millis() - timerSoundChanged) > 40)) {
     printf("%s\n", "Game over - silence");
     soundregs[0x15] = 0;
     soundregs[0x1a] = 0;
@@ -163,8 +166,8 @@ void crush::outZ80(unsigned short Port, unsigned char Value) {
 }
 
 void crush::run_frame(void) {
-  for(int i=0;i<INST_PER_FRAME * 3;i++) {
-    StepZ80(cpu); StepZ80(cpu); StepZ80(cpu); StepZ80(cpu); StepZ80(cpu);
+  for(int i=0;i<INST_PER_FRAME;i++) {
+    StepZ80(cpu); StepZ80(cpu); StepZ80(cpu); StepZ80(cpu);
   }
       
   if(irq_enable[0])

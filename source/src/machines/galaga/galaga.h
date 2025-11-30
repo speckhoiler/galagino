@@ -23,14 +23,17 @@ public:
 	~galaga() { }
 
 	signed char machineType() override { return MCH_GALAGA; } 
-	unsigned char rdZ80(unsigned short Addr) override;
-	void wrZ80(unsigned short Addr, unsigned char Value) override;
-	unsigned char opZ80(unsigned short Addr) override;
+	
+	//Z80 calls as inline for more speed
+	inline unsigned char rdZ80(unsigned short Addr) override;
+	inline void wrZ80(unsigned short Addr, unsigned char Value) override;
+	inline unsigned char opZ80(unsigned short Addr) override;
 
 	void run_frame(void) override;
 	void prepare_frame(void) override;
 	void render_row(short row) override;
-    const signed char * waveRom(unsigned char value) override;
+
+	const signed char *waveRom(unsigned char value) override;
 	const unsigned short *logo(void) override;
 	bool hasNamcoAudio() override { return true; }
 

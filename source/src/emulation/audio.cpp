@@ -224,7 +224,7 @@ void Audio::namco_render_buffer(void) {
       galaga *galagaMachine = dynamic_cast<galaga*>(currentMachine);
 
       if(galagaMachine->snd_boom_cnt) {
-        value += *galagaMachine->snd_boom_ptr;
+        value += *galagaMachine->snd_boom_ptr * 3;
         
         if(galagaMachine->snd_boom_cnt & 1) 
           galagaMachine->snd_boom_ptr++;

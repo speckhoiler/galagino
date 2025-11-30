@@ -27,14 +27,17 @@ public:
 
 	void reset() override;
 	signed char machineType() override { return MCH_DIGDUG; } 
-	unsigned char rdZ80(unsigned short Addr) override;
-	void wrZ80(unsigned short Addr, unsigned char Value) override;
-	unsigned char opZ80(unsigned short Addr) override;
+
+	//Z80 calls as inline for more speed
+	inline unsigned char rdZ80(unsigned short Addr) override;
+	inline void wrZ80(unsigned short Addr, unsigned char Value) override;
+	inline unsigned char opZ80(unsigned short Addr) override;
 
 	void run_frame(void) override;
 	void prepare_frame(void) override;
 	void render_row(short row) override;
-	const signed char * waveRom(unsigned char value) override;
+	
+	const signed char *waveRom(unsigned char value) override;
 	const unsigned short *logo(void) override;
 	bool hasNamcoAudio() override { return true; }
 #ifdef LED_PIN
@@ -46,8 +49,9 @@ protected:
 	void blit_sprite(short row, unsigned char s) override;
 
 private:
-	unsigned char namco_read(unsigned short Addr);
-	void namco_write(unsigned short Addr, unsigned char Value);
+	//namco as inline for more speed
+	inline unsigned char namco_read(unsigned short Addr);
+	inline void namco_write(unsigned short Addr, unsigned char Value);
 #ifdef LED_PIN
 	const CRGB menu_leds[7] = { LED_WHITE, LED_BLUE, LED_RED, LED_RED, LED_RED, LED_BLUE, LED_WHITE };
 #endif

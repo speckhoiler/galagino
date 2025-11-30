@@ -22,10 +22,11 @@ void Nunchuck::disable() {
 
 unsigned char Nunchuck::getInput() {
   // update every 100ms only
-  if(!enabled || millis() - timeout < 100)
+  unsigned long now = millis();
+  if(!enabled || now - timeout < 100)
     return lastValue;
   else
-    timeout = millis();
+    timeout = now;
 
   bool success = nchuk.update();  // Get new data from the controller
 

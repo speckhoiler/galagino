@@ -45,6 +45,19 @@ void emulation_frame() {
   // slow down. This risk is only given with Galaga as the emulation of
   // all three CPUs takes nearly 13ms. The 60hz vblank rate is in turn 
   // 16.6 ms.
+#if 0
+  static int counter;
+  static unsigned long time = millis();
+
+  if (counter % 10 == 0) {
+    // good time: 160ms
+    unsigned long now = millis();
+    printf("%2d: %dms\n", (int)currentMachine->machineType(),  now - time);
+    time = now;
+  }
+  counter++;
+#endif
+
   currentMachine->run_frame();
 
   // Wait for signal from video task to emulate a 60Hz frame rate. Don't do
