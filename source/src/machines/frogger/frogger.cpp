@@ -104,7 +104,7 @@ void frogger::wrZ80(unsigned short Addr, unsigned char Value) {
     if((Addr & 0xc000) == 0xc000) {
       if(Addr == 0xd000) {
 	      // PA goes to AY port A and can be read by SND CPU through the AY
-	      frogger_snd_command = Value;
+	      snd_command = Value;
 	      return;
       }
       
@@ -114,13 +114,13 @@ void frogger::wrZ80(unsigned short Addr, unsigned char Value) {
 	      // other bits go to connector
 	
 	      // bit 0 = state written by CPU1
-	      if(!(frogger_snd_irq_state & 1) && (Value & 8))
-	        frogger_snd_irq_state |= 1;
+	      if(!(snd_irq_state & 1) && (Value & 8))
+	        snd_irq_state |= 1;
 	
 	      // CPU1 writes 0
-	      if(!(Value & 8) && (frogger_snd_irq_state & 1)) {
-	        frogger_snd_irq_state |= 2;
-	        frogger_snd_irq_state &= 0xfe;
+	      if(!(Value & 8) && (snd_irq_state & 1)) {
+	        snd_irq_state |= 2;
+	        snd_irq_state &= 0xfe;
 	      }
 	      return;
       }
@@ -143,13 +143,13 @@ void frogger::outZ80(unsigned short Port, unsigned char Value) {
   if(current_cpu == 1) {
     // 40 is the ay data port
     if((Port & 0xff) == 0x40) {
-      soundregs[frogger_snd_ay_port] = Value;      
+      soundregs[snd_ay_port] = Value;      
       return;
     }
     
     // 80 is the ay control port selecting the register
     if((Port & 0xff) == 0x80) {
-      frogger_snd_ay_port = Value & 15;
+      snd_ay_port = Value & 15;
       return;
     }
   }
@@ -164,21 +164,21 @@ unsigned char frogger::inZ80(unsigned short Port) {
   if(current_cpu == 1) {
     // read AY data port
     if((Port & 0xff) == 0x40) {
-      if(frogger_snd_ay_port < 14)
-        return soundregs[frogger_snd_ay_port];
+      if(snd_ay_port < 14)
+        return soundregs[snd_ay_port];
       
       // port A, command register
-      if(frogger_snd_ay_port == 14)
-        return frogger_snd_command;
+      if(snd_ay_port == 14)
+        return snd_command;
       
       // port B, timer
-      if(frogger_snd_ay_port == 15) {
+      if(snd_ay_port == 15) {
         // AY and Z80 run at 1.75 MHz, the counter runs at the same
         // speed. The cycle time thus is 570ns
 	
         // using the instruction counter for the rate isn't perfect as it assumes all
         // instructions run the same time ... which they don't
-        return frogger_timer[(frogger_snd_icnt/20)%20];
+        return frogger_timer[(snd_icnt/20)%20];
       }
       
       return 0;
@@ -193,12 +193,12 @@ void frogger::run_frame(void) {
     // audio CPU speed is crucial here as it determines the
     // audio playback rate
     current_cpu=0; StepZ80(&cpu[0]); StepZ80(&cpu[0]); StepZ80(&cpu[0]); StepZ80(&cpu[0]);
-    current_cpu=1; StepZ80(&cpu[1]); frogger_snd_icnt++; StepZ80(&cpu[1]); frogger_snd_icnt++;
+    current_cpu=1; StepZ80(&cpu[1]); snd_icnt++; StepZ80(&cpu[1]); snd_icnt++;
 
     // "latch" interrupt until CPU has them enabled
-    if(frogger_snd_irq_state & 2 && cpu[1].IFF & IFF_1) {
+    if(snd_irq_state & 2 && cpu[1].IFF & IFF_1) {
       IntZ80(&cpu[1], INT_RST38);
-      frogger_snd_irq_state &= ~2;  // clear flag
+      snd_irq_state &= ~2;  // clear flag
     } 
   }
       
@@ -238,11 +238,11 @@ void frogger::blit_tile(short row, char col) {
   if((row < 2) || (row >= 34))
     return;
 
-  const unsigned short *tile = frogger_tilemap[memory[0x0800 + addr]];
+  const unsigned short *tile = tileRom(memory[0x0800 + addr]);
 
   // frogger has a very reduced color handling
   int c = memory[0xc00 + 2 * (addr & 31) + 1] & 7;
-  const unsigned short *colors = frogger_colormap[((c >> 1) & 0x03) | ((c << 2) & 0x04)];
+  const unsigned short *colors = colorRom(((c >> 1) & 0x03) | ((c << 2) & 0x04));
 
   unsigned short *ptr = frame_buffer + 8*col;
 
@@ -283,11 +283,11 @@ void frogger::blit_tile_scroll(short row, signed char col, short scroll) {
   }
     
   const unsigned char chr = memory[0x0800 + addr];
-  const unsigned short *tile = frogger_tilemap[chr];
+  const unsigned short *tile = tileRom(chr);
 
   // frogger has a very reduced color handling
   int c = memory[0xc00 + 2 * (addr & 31) + 1] & 7;
-  const unsigned short *colors = frogger_colormap[((c >> 1) & 0x03) | ((c << 2) & 0x04)];
+  const unsigned short *colors = colorRom(((c >> 1) & 0x03) | ((c << 2) & 0x04));
   unsigned short *ptr = frame_buffer + 8*col + sub;
 
   // 8 pixel rows per tile
@@ -302,8 +302,8 @@ void frogger::blit_tile_scroll(short row, signed char col, short scroll) {
 }
 
 void frogger::blit_sprite(short row, unsigned char s) {
-  const unsigned long *spr = frogger_sprites[sprite[s].flags & 3][sprite[s].code];
-  const unsigned short *colors = frogger_colormap[sprite[s].color];
+  const unsigned long *spr = spriteRom(sprite[s].flags & 3, sprite[s].code);
+  const unsigned short *colors = colorRom(sprite[s].color);
   
   // create mask for sprites that clip left or right
   unsigned long mask = 0xffffffff;
@@ -345,7 +345,8 @@ void frogger::blit_sprite(short row, unsigned char s) {
 void frogger::render_row(short row) {
   // the upper screen half of frogger has a blue background
   // using 8 in fact adds a tiny fraction of red as well. But that does not hurt
-  memset(frame_buffer, row <= 17 ? 8 : 0, 2 * 224 * 8);
+   if (row >=2 && row <= 17)
+    memset(frame_buffer, 8, 2 * 224 * 8);
 
   // don't render lines 0, 1, 34 and 35
   if(row <= 1 || row >= 34) return;
@@ -379,6 +380,18 @@ void frogger::render_row(short row) {
     if((sprite[s].y < 8*(row+1)) && ((sprite[s].y+16) > 8*row))
       blit_sprite(row, s);
   }
+}
+
+const unsigned short *frogger::tileRom(unsigned short addr) {
+  return frogger_tilemap[addr];
+}
+
+const unsigned short *frogger::colorRom(unsigned short addr) {
+  return frogger_colormap[addr];
+}
+
+const unsigned long *frogger::spriteRom(unsigned char flags, unsigned char code) {
+  return frogger_sprites[flags][code];
 }
 
 const unsigned short *frogger::logo(void) {

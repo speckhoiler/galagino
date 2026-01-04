@@ -28,10 +28,9 @@ public:
 	void reset() override;
 	signed char machineType() override { return MCH_DIGDUG; } 
 
-	//Z80 calls as inline for more speed
-	inline unsigned char rdZ80(unsigned short Addr) override;
-	inline void wrZ80(unsigned short Addr, unsigned char Value) override;
-	inline unsigned char opZ80(unsigned short Addr) override;
+	unsigned char rdZ80(unsigned short Addr) override;
+	void wrZ80(unsigned short Addr, unsigned char Value) override;
+	unsigned char opZ80(unsigned short Addr) override;
 
 	void run_frame(void) override;
 	void prepare_frame(void) override;

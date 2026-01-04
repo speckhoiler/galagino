@@ -38,12 +38,17 @@ protected:
     void blit_tile(short row, char col) override;
 	void blit_sprite(short row, unsigned char s) override;
 	void blit_tile_scroll(short row, signed char col, short scroll);
+	virtual const unsigned short *tileRom(unsigned short addr);
+	virtual const unsigned short *colorRom(unsigned short addr);
+	virtual const unsigned long *spriteRom(unsigned char flags, unsigned char code);
+	
+	unsigned char snd_irq_state = 0;
+	unsigned char snd_command;
+	unsigned char snd_filter;
+	unsigned long snd_icnt;
+	unsigned char snd_ay_port;
 
 private:
-	unsigned char frogger_snd_irq_state = 0;
-	unsigned char frogger_snd_command;
-	unsigned char frogger_snd_ay_port;
-	unsigned long frogger_snd_icnt;
 #ifdef LED_PIN
 	const CRGB menu_leds[7] = { LED_RED, LED_GREEN, LED_YELLOW, LED_YELLOW, LED_YELLOW, LED_GREEN, LED_RED };
 #endif

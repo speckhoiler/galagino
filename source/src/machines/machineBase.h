@@ -43,7 +43,8 @@ enum {
   MCH_MRTNT,
   MCH_LIZWIZ,
   MCH_THEGLOB,
-  MCH_CRUSH
+  MCH_CRUSH,
+  MCH_ANTEATER
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame
@@ -64,7 +65,8 @@ public:
       this->frame_buffer = framebuffer; 
       this->sprite = spritebuffer;
       this->memory = memorybuffer;
-    }
+      memset(soundregs, 0, sizeof(soundregs)); 
+     }
 
     virtual void reset() {
       for(current_cpu = 0; current_cpu < sizeof(cpu) / sizeof(Z80); current_cpu++)
@@ -103,7 +105,6 @@ public:
 #endif
     char game_started;	
     unsigned char soundregs[32];
-
 protected:
     virtual void blit_tile(short row, char col) { }
     virtual void blit_sprite(short row, unsigned char s) { }

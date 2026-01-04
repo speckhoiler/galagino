@@ -13,6 +13,7 @@ call conv_eyes.bat
 call conv_mrtnt.bat
 call conv_theglob.bat
 call conv_crush.bat
+call conv_anteater.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!

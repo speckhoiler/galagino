@@ -17,100 +17,95 @@
 #include "emulation\input.h"
 #include "emulation\menu.h"
 #include "emulation\emulation.h"
-
 #ifdef LED_PIN
   #include "emulation\led.h"
 #endif
 
-#ifdef ENABLE_PACMAN
+#ifdef ENABLE_PACMAN  
   #include "machines\pacman\pacman.h"
-  pacman pacmanMachine = pacman();
 #endif
 
 #ifdef ENABLE_GALAGA
   #include "machines\galaga\galaga.h"
-  galaga galagaMachine = galaga();
 #endif
 
 #ifdef ENABLE_DKONG
   #include "machines\dkong\dkong.h"
-  dkong dkongMachine = dkong();
 #endif
 
 #ifdef ENABLE_FROGGER
   #include "machines\frogger\frogger.h"
-  frogger froggerMachine = frogger();
 #endif
 
 #ifdef ENABLE_DIGDUG
   #include "machines\digdug\digdug.h"
-  digdug digdugMachine = digdug();
 #endif
 
 #ifdef ENABLE_1942
   #include "machines\1942\1942.h"
-  _1942 _1942Machine = _1942();
 #endif
 
 #ifdef ENABLE_EYES
   #include "machines\eyes\eyes.h"
-  eyes eyesMachine = eyes();
 #endif
 
 #ifdef ENABLE_MRTNT
   #include "machines\mrtnt\mrtnt.h"
-  mrtnt mrtntMachine = mrtnt();
 #endif
 
 #ifdef ENABLE_LIZWIZ
   #include "machines\lizwiz\lizwiz.h"
-  lizwiz lizwizMachine = lizwiz();
 #endif
 
 #ifdef ENABLE_THEGLOB
   #include "machines\theglob\theglob.h"
-  theglob theglobMachine = theglob();
 #endif
 
 #ifdef ENABLE_CRUSH 
   #include "machines\crush\crush.h"
-  crush crushMachine = crush();
 #endif
- 
+
+#ifdef ENABLE_ANTEATER 
+  #include "machines\anteater\anteater.h"
+#endif
+
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
-  &pacmanMachine, 
-#endif  
+  new pacman(),
+#endif
 #ifdef ENABLE_GALAGA  
-  &galagaMachine, 
+  new galaga(), 
 #endif  
 #ifdef ENABLE_DIGDUG  
-  &digdugMachine, 
+  new digdug(), 
 #endif  
 #ifdef ENABLE_FROGGER  
-  &froggerMachine, 
+  new frogger(), 
 #endif  
 #ifdef ENABLE_DKONG  
-  &dkongMachine, 
+  new dkong(), 
 #endif  
 #ifdef ENABLE_1942  
-  &_1942Machine, 
+  new _1942(), 
 #endif  
 #ifdef ENABLE_LIZWIZ  
-  &lizwizMachine,
+  new lizwiz(),
 #endif  
 #ifdef ENABLE_EYES  
-  &eyesMachine, 
+  new eyes(), 
 #endif  
 #ifdef ENABLE_MRTNT  
-  &mrtntMachine, 
+  new mrtnt(), 
 #endif  
 #ifdef ENABLE_THEGLOB 
-  &theglobMachine,
+  new theglob(),
 #endif
 #ifdef ENABLE_CRUSH 
-  &crushMachine
+  new crush(),
+#endif
+#ifdef ENABLE_ANTEATER 
+  new anteater()
 #endif
 };
 
@@ -164,10 +159,10 @@ void setup() {
   sprite_buffer = (sprite_S*)malloc(128 * sizeof(sprite_S));
   memory = (uint8_t *)malloc(RAMSIZE);
   currentMachine = machines[0];
-
+  
   for (int i = 0; i < machinesCount; i++)
     machines[i]->init(&input, frame_buffer, sprite_buffer, memory);
-  
+
   audio.init();
   audio.start(currentMachine);
 
@@ -177,7 +172,6 @@ void setup() {
   input.onDoAttractReset(onDoAttractReset);
 
   menu.init(&input, machines, machinesCount, frame_buffer);
-  
 #ifdef LED_PIN
   led.init();
 #endif

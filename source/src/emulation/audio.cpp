@@ -90,11 +90,11 @@ void Audio::transmit() {
 void Audio::ay_render_buffer(void) {
   signed char machineType = currentMachine->machineType();
 
-  #define AY ((machineType == MCH_FROGGER) ? 1 : 2)       // frogger has one AY / 1942 has two AYs
-  #define AY_INC ((machineType == MCH_FROGGER) ? 9 : 8)   // froggger runs at 1.78 MHz -> 223718/24000 = 9,32 / 1942 runs at 1.5 MHz -> 187500/24000 = 7,81
-  #define AY_VOL ((machineType == MCH_FROGGER) ? 11 : 5) // frogger min/max = -/+ 3*15*11 = -/+ 495 / 1942 min/max = -/+ 6*15*11 = -/+ 990
+  char AY = (machineType == MCH_FROGGER) ? 1 : 2;       // frogger has one AY / 1942 has two AYs
+  char AY_INC = (machineType == MCH_FROGGER || machineType == MCH_ANTEATER) ? 9 : 8;   // froggger runs at 1.78 MHz -> 223718/24000 = 9,32 / 1942 runs at 1.5 MHz -> 187500/24000 = 7,81
+  char AY_VOL = (machineType == MCH_FROGGER) ? 11 : 5;  // frogger min/max = -/+ 3*15*11 = -/+ 495 / 1942 min/max = -/+ 6*15*11 = -/+ 990
 
-  if(machineType == MCH_FROGGER || machineType == MCH_1942) {
+  if(machineType == MCH_FROGGER || machineType == MCH_1942 || machineType == MCH_ANTEATER) {
     // up to two AY's
     for(char ay = 0; ay < AY; ay++) {
       int ay_off = 16 * ay;
@@ -153,7 +153,7 @@ void Audio::ay_render_buffer(void) {
       }
 #endif
     }
-    else if(machineType == MCH_FROGGER || machineType == MCH_1942) {    
+    else if(machineType == MCH_FROGGER || machineType == MCH_1942 || machineType == MCH_ANTEATER) {    
       for(char ay = 0; ay < AY; ay++) {
         // frogger can acually skip the noise generator as
         // it doesn't use it      

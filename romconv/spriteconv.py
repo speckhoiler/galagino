@@ -6,6 +6,9 @@ def bit_permute_step(x, m, shift):
     x = (x ^ t) ^ (t << shift)
     return x
 
+def BIT(value, shift):
+    return (value >> shift) & 1
+
 def decode_Data(data):
     charmap_data = list(data)
     myiter = iter(range(len(charmap_data)))
@@ -75,6 +78,20 @@ def parse_sprite_frogger(data):
             ym = y & 7 | ((x & 8) ^ 8)
             xm = x & 7 | (y & 8)
             
+            c0 = 1 if data[0][(xm^7) + ((ym & 8) << 1)] & (0x80 >> (ym&7)) else 0
+            c1 = 2 if data[1][(xm^7) + ((ym & 8) << 1)] & (0x80 >> (ym&7)) else 0
+            row.append(c0+c1)
+        sprite.append(row)
+    return sprite
+
+def parse_sprite_anteater(data):
+    sprite = []    
+    for y in range(16):
+        row = [ ]
+        for x in range(16):
+            ym = y & 7 | ((x & 8) ^ 8)
+            xm = x & 7 | (y & 8)
+            #print("x={}, y={}".format(len(data[0]),(xm^7) + ((ym & 8) << 1)))
             c0 = 1 if data[0][(xm^7) + ((ym & 8) << 1)] & (0x80 >> (ym&7)) else 0
             c1 = 2 if data[1][(xm^7) + ((ym & 8) << 1)] & (0x80 >> (ym&7)) else 0
             row.append(c0+c1)
@@ -210,7 +227,43 @@ def parse_spritemap(id, fmt, infiles, outfile):
                 ))
                 
             # for s in range(len(sprites)): print(s); show_sprite_4bpp(sprites[s])
-    
+
+    elif fmt == "anteater":
+        # frogger uses the tilemap roms for sprites as well
+        spritemap_data = []
+        complete = []
+        for file in infiles:        
+            f = open(file, "rb")
+            complete += f.read()
+            f.close()
+        
+        complete2 = []
+        for offs in range(4096):
+            srcoffs = offs & 0x9bf
+            srcoffs |= (BIT(offs,4) ^ BIT(offs,9) ^ (BIT(offs,2) & BIT(offs,10))) << 6
+            srcoffs |= (BIT(offs,2) ^ BIT(offs,10)) << 9
+            srcoffs |= (BIT(offs,0) ^ BIT(offs,6) ^ 1) << 10
+            #print("srcoffs={}".format(srcoffs))
+            complete2.append(complete[srcoffs])
+
+        spritemap_data.append(complete2[0:2048])
+        spritemap_data.append(complete2[2048:4096])
+
+        #raise ValueError("Missing spritemap data")
+        # most of these aren't sprites but tiles. Converting them all
+        # won't hurt as flash memory is no the limit
+       
+        for sprite in range(64):
+            data = []
+            for i in range(2):
+                data.append(spritemap_data[i][32*sprite:32*(sprite+1)])
+
+            #print("data={}".format(len(spritemap_data[0])))            
+            sprites.append(parse_sprite_frogger(data))
+
+        #for s in range(len(sprites)):
+        #    print(s)
+        #    show_sprite(sprites[s])    
     else: # dkong
         spritemap_data = []
         for file in infiles:        

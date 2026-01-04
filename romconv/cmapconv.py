@@ -69,6 +69,7 @@ def parse_palette(name, name2=None):
 
         rgb = (r << 11) + (g << 5) + b
         rgbs = ((rgb & 0xff00) >> 8) + ((rgb & 0xff) << 8)
+        #print(rgbs, r, g, b)
         palette.append(rgbs)
 
     return palette

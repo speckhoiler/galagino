@@ -1,4 +1,4 @@
-# Galagino ported to platformio - with 5 additional games
+# Galagino ported to platformio - with 6 additional games
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
@@ -20,6 +20,7 @@ Demonstration video: [DIY ESP32 Project 2025: ESP32 Game - Multi Arcade Machine]
 ![Mr. TNT screenshot](images/mrtnt.png)
 ![The Glob screenshot](images/theglob.png)
 ![Crush Roller screenshot](images/crush.png)
+![Anteater screenshot](images/anteater.png)
 
 ## Hardware
 
@@ -65,6 +66,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Mr. TNT](https://www.google.com/search?q=mrtnt.zip+arcade+rom)
     * [The Glob](https://www.google.com/search?q=theglobp.zip+arcade+rom) (Important: filename with "p")
     * [Crush Roller](https://www.google.com/search?q=crush.zip+arcade+rom)
+    * [Anteater](https://www.google.com/search?q=anteater.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 

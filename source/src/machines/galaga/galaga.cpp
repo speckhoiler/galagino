@@ -95,8 +95,9 @@ unsigned char galaga::rdZ80(unsigned short Addr) {
 void galaga::wrZ80(unsigned short Addr, unsigned char Value) {
   if(Addr < 16384) return;   // ignore rom writes
 
-  if((Addr & 0xe000) == 0x8000)
+  if((Addr & 0xe000) == 0x8000) {
     memory[Addr-0x8000] = Value;
+  }
   
   // namco 06xx
   if((Addr & 0xf800) == 0x7000) {
@@ -182,12 +183,12 @@ void galaga::wrZ80(unsigned short Addr, unsigned char Value) {
 void galaga::run_frame(void) {
   for(int i=0; i < INST_PER_FRAME; i++) {
     current_cpu = 0;
-    StepZ80(cpu); StepZ80(cpu); StepZ80(cpu); StepZ80(cpu);
+    StepZ80(&cpu[0]); StepZ80(&cpu[0]); StepZ80(&cpu[0]); StepZ80(&cpu[0]);
     if(!sub_cpu_reset) {
       current_cpu = 1;
-      StepZ80(cpu+1); StepZ80(cpu+1); StepZ80(cpu+1); StepZ80(cpu+1);       
+      StepZ80(&cpu[1]); StepZ80(&cpu[1]); StepZ80(&cpu[1]); StepZ80(&cpu[1]);       
       current_cpu = 2;
-      StepZ80(cpu+2); StepZ80(cpu+2); StepZ80(cpu+2); StepZ80(cpu+2);       
+      StepZ80(&cpu[2]); StepZ80(&cpu[2]); StepZ80(&cpu[2]); StepZ80(&cpu[2]);       
     }
 
     if(namco_busy) namco_busy--;

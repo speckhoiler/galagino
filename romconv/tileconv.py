@@ -2,6 +2,9 @@
 
 import sys
 
+def BIT(value, shift):
+    return (value >> shift) & 1
+
 def bit_permute_step(x, m, shift):
     t = ((x >> shift) ^ x) & m
     x = (x ^ t) ^ (t << shift)
@@ -211,8 +214,7 @@ def parse_tilemap_1942(id, files, outname):
     
     f.close()
         
-def parse_charmap_2(id, innames, outname):
-
+def parse_charmap_frogger(id, innames, outname):
     # swap bits 0 and 1 in an integer
     def bit01_swap(a):
         return (a & 0xfffc) | ((a & 2)>>1) | ((a & 1)<<1) 
@@ -264,7 +266,53 @@ def parse_charmap_2(id, innames, outname):
     
     f.close()
 
-if len(sys.argv) != 4 and len(sys.argv) != 5 and len(sys.argv) != 9:
+def parse_charmap_anteater(id, innames, outname):
+    complete = []
+    for file in innames:        
+        f = open(file, "rb")
+        complete += f.read()
+        f.close()
+        
+    complete2 = []
+    for offs in range(4096):
+        srcoffs = offs & 0x9bf
+        srcoffs |= (BIT(offs,4) ^ BIT(offs,9) ^ (BIT(offs,2) & BIT(offs,10))) << 6
+        srcoffs |= (BIT(offs,2) ^ BIT(offs,10)) << 9
+        srcoffs |= (BIT(offs,0) ^ BIT(offs,6) ^ 1) << 10
+        #print("srcoffs={}".format(srcoffs))
+        complete2.append(complete[srcoffs])
+
+    charmap_data_0 = complete2[0:2048]
+    charmap_data_1 = complete2[2048:4096]
+    
+    if len(charmap_data_0) != 2048 or len(charmap_data_1) != 2048:
+        raise ValueError("Missing charmap data")
+
+    # read and parse all 256 characters
+    chars = []
+    for chr in range(256):
+        chars.append(parse_chr_2(charmap_data_0[8*chr:8*(chr+1)],
+                     charmap_data_1[8*chr:8*(chr+1)]))
+
+    #for c in range(len(chars)):
+    #    print("---", c)
+    #    show_chr(chars[c])
+    #for c in chars: 
+    #    show_chr(c)
+
+    # write as c source
+    f = open(outname, "w")
+    
+    print("const unsigned short "+id+"[][8] = {", file=f )
+    chars_str = []
+    for c in chars:
+        chars_str.append(" { " + dump_chr(c) + " }")
+    print(",\n".join(chars_str), file=f)
+    print("};", file=f)
+    
+    f.close()
+
+if len(sys.argv) != 4 and len(sys.argv) != 5 and len(sys.argv) != 9  and len(sys.argv) != 6:
     print("Invalid arguments")
     exit(-1)
 
@@ -273,6 +321,7 @@ if len(sys.argv) == 9:
     parse_tilemap_1942(sys.argv[1], (sys.argv[2:4], sys.argv[4:6], sys.argv[6:8] ), sys.argv[8])
 elif len(sys.argv) == 4:
     parse_charmap(sys.argv[1], sys.argv[2], sys.argv[3])
+elif len(sys.argv) == 5:
+    parse_charmap_frogger(sys.argv[1], sys.argv[2:4], sys.argv[4])
 else:
-    # len == 5
-    parse_charmap_2(sys.argv[1], sys.argv[2:4], sys.argv[4])
+    parse_charmap_anteater(sys.argv[2], sys.argv[3:5], sys.argv[5])

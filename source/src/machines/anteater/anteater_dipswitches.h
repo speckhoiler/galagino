@@ -1,0 +1,17 @@
+#ifndef _anteater_dipswitches_h_
+#define _anteater_dipswitches_h_
+
+#define ANTEATER_DIP_LIVES3         0b00000001
+#define ANTEATER_DIP_LIVES5    	    0b00000000
+#define ANTEATER_DIP_DEMOSOUNDS_OFF 0b00000010
+
+#define ANTEATER_DIP1  (ANTEATER_DIP_LIVES5 | ANTEATER_DIP_DEMOSOUNDS_OFF)
+
+#define ANTEATER_DIP_A11B11         0b00000010
+#define ANTEATER_DIP_A12B21         0b00000000
+#define ANTEATER_DIP_A13B31         0b00000100
+#define ANTEATER_DIP_A14B41         0b00000110
+
+#define ANTEATER_DIP2  (ANTEATER_DIP_A11B11)
+
+#endif

@@ -10,7 +10,7 @@ extern Input input;
 
 void emulation_start() {
   currentMachine->reset();
-  xTaskCreatePinnedToCore(emulation_task, "emulation task", 4096, NULL, 2, &emulationTaskHandle, 1);
+  xTaskCreatePinnedToCore(emulation_task, "emulation task", 4096, NULL, 2, &emulationTaskHandle, ARDUINO_RUNNING_CORE == 0 ? 1 : 0);
 }
 
 void emulation_stop() {
@@ -44,11 +44,11 @@ void emulation_frame() {
   // vblank notification and in turn will miss a frame and significantly
   // slow down. This risk is only given with Galaga as the emulation of
   // all three CPUs takes nearly 13ms. The 60hz vblank rate is in turn 
-  // 16.6 ms.
+  // 16.6 ms.  
 #if 0
   static int counter;
   static unsigned long time = millis();
-
+  
   if (counter % 10 == 0) {
     // good time: 160ms
     unsigned long now = millis();
@@ -57,14 +57,14 @@ void emulation_frame() {
   }
   counter++;
 #endif
-
+   
   currentMachine->run_frame();
 
   // Wait for signal from video task to emulate a 60Hz frame rate. Don't do
   // this unless the game has actually started to speed up the boot process
   // a little bit.
   if(currentMachine->game_started)   
-    ulTaskNotifyTake(1, 0xffffffffUL);
+    ulTaskNotifyTake(1, portMAX_DELAY);
   else
     vTaskDelay(1); // give a millisecond delay to make the watchdog happy
 }
