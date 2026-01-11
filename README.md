@@ -5,8 +5,8 @@ This port is NOT by the original author, so please do not bother him with issues
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
-Demonstration video 1: [Galagino with 12 Games!](https://www.youtube.com/watch?v=N-ntNdpjVxQ)
-Demonstration video 2: [DIY ESP32 Project 2025: ESP32 Game - Multi Arcade Machine](https://www.youtube.com/watch?v=N-ntNdpjVxQ)
+* Demonstration video 1: [Galagino with 12 Games!](https://www.youtube.com/watch?v=uZWPA5zXbCE)
+* Demonstration video 2: [DIY ESP32 Project 2025: ESP32 Game - Multi Arcade Machine](https://www.youtube.com/watch?v=N-ntNdpjVxQ)
 
 ![Cabinet](images/galagino_cabinet.jpg)
 
