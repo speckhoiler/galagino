@@ -1,11 +1,11 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include <driver\i2s.h>
-#include "..\machines\machineBase.h"
-#include "..\machines\dkong\dkong.h"
-#include "..\machines\galaga\galaga.h"
-#include "..\config.h"
+#include <driver/i2s.h>
+#include "../machines/machineBase.h"
+#include "../machines/dkong/dkong.h"
+#include "../machines/galaga/galaga.h"
+#include "../config.h"
 
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(4, 4, 4)
 // See https://github.com/espressif/arduino-esp32/issues/8467

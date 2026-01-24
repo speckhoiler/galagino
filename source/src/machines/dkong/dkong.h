@@ -16,8 +16,8 @@
 #include "dkong_sample_walk2.h"
 #include "dkong_sample_jump.h"
 #include "dkong_sample_stomp.h"
-#include "..\tileaddr.h"
-#include "..\machineBase.h"
+#include "../tileaddr.h"
+#include "../machineBase.h"
 
 class dkong : public machineBase
 {

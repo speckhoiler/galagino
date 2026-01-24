@@ -1,9 +1,9 @@
 #include "Arduino.h"
 #include "emulation.h"
 #include "input.h"
-#include "..\machines\machineBase.h"
+#include "../machines/machineBase.h"
 
-// including of "..\machines\machineBase.h" in "emulation.h" not possible
+// including of "../machines/machineBase.h" in "emulation.h" not possible
 TaskHandle_t emulationTaskHandle;
 extern machineBase *currentMachine;
 extern Input input;

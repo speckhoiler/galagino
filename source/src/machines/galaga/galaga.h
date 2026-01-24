@@ -13,8 +13,8 @@
 #include "galaga_wavetable.h"
 #include "galaga_sample_boom.h"
 #include "galaga_starseed.h"
-#include "..\tileaddr.h"
-#include "..\machineBase.h"
+#include "../tileaddr.h"
+#include "../machineBase.h"
 
 class galaga : public machineBase
 {

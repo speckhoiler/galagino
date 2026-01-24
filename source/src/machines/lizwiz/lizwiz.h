@@ -8,8 +8,8 @@
 #include "lizwiz_spritemap.h"
 #include "lizwiz_cmap.h"
 #include "lizwiz_wavetable.h"
-#include "..\tileaddr.h"
-#include "..\pacman\pacman.h"
+#include "../tileaddr.h"
+#include "../pacman/pacman.h"
 
 class lizwiz : public pacman
 {

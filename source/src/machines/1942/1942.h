@@ -14,8 +14,8 @@
 #include "1942_charmap.h"
 #include "1942_sprite_cmap.h"
 #include "1942_tile_cmap.h"
-#include "..\tileaddr.h"
-#include "..\machineBase.h"
+#include "../tileaddr.h"
+#include "../machineBase.h"
 
 class _1942 : public machineBase
 {

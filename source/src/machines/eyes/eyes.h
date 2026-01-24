@@ -8,8 +8,8 @@
 #include "eyes_spritemap.h"
 #include "eyes_cmap.h"
 #include "eyes_wavetable.h"
-#include "..\tileaddr.h"
-#include "..\pacman\pacman.h"
+#include "../tileaddr.h"
+#include "../pacman/pacman.h"
 
 class eyes : public pacman
 {

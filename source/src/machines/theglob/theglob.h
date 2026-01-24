@@ -8,8 +8,8 @@
 #include "theglob_spritemap.h"
 #include "theglob_cmap.h"
 #include "theglob_wavetable.h"
-#include "..\tileaddr.h"
-#include "..\pacman\pacman.h"
+#include "../tileaddr.h"
+#include "../pacman/pacman.h"
 
 class theglob : public pacman
 {

@@ -8,8 +8,8 @@
 #include "frogger_tilemap.h"
 #include "frogger_spritemap.h"
 #include "frogger_cmap.h"
-#include "..\tileaddr.h"
-#include "..\machineBase.h"
+#include "../tileaddr.h"
+#include "../machineBase.h"
 
 class frogger : public machineBase
 {

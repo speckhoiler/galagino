@@ -14,8 +14,8 @@
 #include "digdug_cmap.h"
 #include "digdug_playfield.h"
 #include "digdug_wavetable.h"
-#include "..\tileaddr.h"
-#include "..\machineBase.h"
+#include "../tileaddr.h"
+#include "../machineBase.h"
 
 #define NAMCO_NMI_DELAY  30  // 10 results in errors
 

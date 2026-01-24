@@ -2,8 +2,8 @@
 #define VIDEO_H
 
 #include <Arduino.h>
-#include <driver\spi_master.h>
-#include "..\config.h"
+#include <driver/spi_master.h>
+#include "../config.h"
 
 class Video {
 public:

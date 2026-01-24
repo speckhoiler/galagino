@@ -11,62 +11,62 @@
  */
 #include <Arduino.h>
 #include "config.h"
-#include "machines\machineBase.h"
-#include "emulation\audio.h"
-#include "emulation\video.h"
-#include "emulation\input.h"
-#include "emulation\menu.h"
-#include "emulation\emulation.h"
+#include "machines/machineBase.h"
+#include "emulation/audio.h"
+#include "emulation/video.h"
+#include "emulation/input.h"
+#include "emulation/menu.h"
+#include "emulation/emulation.h"
 #ifdef LED_PIN
-  #include "emulation\led.h"
+  #include "emulation/led.h"
 #endif
 
 #ifdef ENABLE_PACMAN  
-  #include "machines\pacman\pacman.h"
+  #include "machines/pacman/pacman.h"
 #endif
 
 #ifdef ENABLE_GALAGA
-  #include "machines\galaga\galaga.h"
+  #include "machines/galaga/galaga.h"
 #endif
 
 #ifdef ENABLE_DKONG
-  #include "machines\dkong\dkong.h"
+  #include "machines/dkong/dkong.h"
 #endif
 
 #ifdef ENABLE_FROGGER
-  #include "machines\frogger\frogger.h"
+  #include "machines/frogger/frogger.h"
 #endif
 
 #ifdef ENABLE_DIGDUG
-  #include "machines\digdug\digdug.h"
+  #include "machines/digdug/digdug.h"
 #endif
 
 #ifdef ENABLE_1942
-  #include "machines\1942\1942.h"
+  #include "machines/1942/1942.h"
 #endif
 
 #ifdef ENABLE_EYES
-  #include "machines\eyes\eyes.h"
+  #include "machines/eyes/eyes.h"
 #endif
 
 #ifdef ENABLE_MRTNT
-  #include "machines\mrtnt\mrtnt.h"
+  #include "machines/mrtnt/mrtnt.h"
 #endif
 
 #ifdef ENABLE_LIZWIZ
-  #include "machines\lizwiz\lizwiz.h"
+  #include "machines/lizwiz/lizwiz.h"
 #endif
 
 #ifdef ENABLE_THEGLOB
-  #include "machines\theglob\theglob.h"
+  #include "machines/theglob/theglob.h"
 #endif
 
 #ifdef ENABLE_CRUSH 
-  #include "machines\crush\crush.h"
+  #include "machines/crush/crush.h"
 #endif
 
 #ifdef ENABLE_ANTEATER 
-  #include "machines\anteater\anteater.h"
+  #include "machines/anteater/anteater.h"
 #endif
 
 // change machine order is possible here...

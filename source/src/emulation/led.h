@@ -2,7 +2,7 @@
 #define LED_H
 
 #include "config.h"
-#include "..\machines\machineBase.h"
+#include "../machines/machineBase.h"
 
 #ifdef LED_PIN
 #include <FastLED.h>

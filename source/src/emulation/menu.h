@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 #include "input.h"
-#include "..\config.h"
-#include "..\machines\machineBase.h"
+#include "../config.h"
+#include "../machines/machineBase.h"
 
 class Menu {
 public:

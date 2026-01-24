@@ -8,8 +8,8 @@
 #include "anteater_tilemap.h"
 #include "anteater_spritemap.h"
 #include "anteater_cmap.h"
-#include "..\tileaddr.h"
-#include "..\frogger\frogger.h"
+#include "../tileaddr.h"
+#include "../frogger/frogger.h"
 
 class anteater : public frogger
 {

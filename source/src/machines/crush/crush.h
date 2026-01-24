@@ -8,8 +8,8 @@
 #include "crush_spritemap.h"
 #include "crush_cmap.h"
 #include "crush_wavetable.h"
-#include "..\tileaddr.h"
-#include "..\pacman\pacman.h"
+#include "../tileaddr.h"
+#include "../pacman/pacman.h"
 
 class crush : public pacman
 {

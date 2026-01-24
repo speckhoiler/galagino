@@ -8,8 +8,8 @@
 #include "mrtnt_spritemap.h"
 #include "mrtnt_cmap.h"
 #include "mrtnt_wavetable.h"
-#include "..\tileaddr.h"
-#include "..\pacman\pacman.h"
+#include "../tileaddr.h"
+#include "../pacman/pacman.h"
 
 class mrtnt : public pacman
 {

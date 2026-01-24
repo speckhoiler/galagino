@@ -8,8 +8,8 @@
 #include "pacman_spritemap.h"
 #include "pacman_cmap.h"
 #include "pacman_wavetable.h"
-#include "..\tileaddr.h"
-#include "..\machineBase.h"
+#include "../tileaddr.h"
+#include "../machineBase.h"
 
 class pacman : public machineBase
 {

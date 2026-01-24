@@ -2,9 +2,9 @@
 #define MACHINEBASE_H
 
 #include "Arduino.h"
-#include "..\cpus\z80\Z80.h"
-#include "..\cpus\i8048\i8048.h"
-#include "..\emulation\input.h"
+#include "../cpus/z80/Z80.h"
+#include "../cpus/i8048/i8048.h"
+#include "../emulation/input.h"
 
 #ifdef LED_PIN
 #include <FastLED.h>

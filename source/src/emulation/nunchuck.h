@@ -1,7 +1,7 @@
 #ifndef _NUNCHUCK_H_
 #define _NUNCHUCK_H_
 
-#include "..\config.h"
+#include "../config.h"
 
 #ifdef NUNCHUCK_INPUT
 #include <Wire.h>

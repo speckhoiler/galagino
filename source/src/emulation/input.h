@@ -2,7 +2,7 @@
 #define INPUT_H
 
 #include <Arduino.h>
-#include "..\config.h"
+#include "../config.h"
 #ifdef NUNCHUCK_INPUT
   #include "nunchuck.h"
 #endif

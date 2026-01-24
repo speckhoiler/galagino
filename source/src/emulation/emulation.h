@@ -1,8 +1,8 @@
 #ifndef _EMULATION_H_
 #define _EMULATION_H_
 
-#include "cpus\z80\Z80.h"
-#include "cpus\i8048\i8048.h"
+#include "cpus/z80/Z80.h"
+#include "cpus/i8048/i8048.h"
 
 void emulation_start(void);
 void emulation_stop(void);
