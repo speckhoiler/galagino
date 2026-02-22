@@ -6,6 +6,14 @@ void Menu::init(Input *input, machineBase **machines,  signed char machinesCount
   this->machines = machines;
   this->machinesCount = machinesCount;
   this->frame_buffer = framebuffer;
+  if (machinesCount == 1) {
+    machineIndex = 1;
+    menu_sel = 1;
+  }
+  else {
+    machineIndex = MCH_MENU;
+    menu_sel = 2;
+  }
 }
 
 void Menu::show_menu() {

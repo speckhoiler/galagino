@@ -84,7 +84,7 @@ unsigned char theglob::rdZ80(unsigned short Addr) {
     unsigned char keymask = input->buttons_get();
     
     if(Addr == 0x5080)    // dip switch
-      return THEGLOB_DIP;
+      return THEGLOB_DIP | (input->demoSoundsOff() ? THEGLOB_DIP_DEMO_SOUND_OFF : 0);
     
     if(Addr == 0x5000) {
       unsigned char retval = 0xff;

@@ -52,3 +52,4 @@ conv_pacman.bat
 conv_theglob.bat
 conv_crush.bat
 conv_anteater.bat
+conv_bombjack.bat

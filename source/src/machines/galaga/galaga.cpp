@@ -26,7 +26,7 @@ unsigned char galaga::rdZ80(unsigned short Addr) {
   // latch
   if((Addr & 0xfff8) == 0x6800) {
     unsigned char dip_a = (GALAGA_DIPA & (0x80 >> (Addr&7))) ? 0:1;
-    unsigned char dip_b = (GALAGA_DIPB & (0x80 >> (Addr&7))) ? 0:2;    
+    unsigned char dip_b = ((GALAGA_DIPB | (input->demoSoundsOff() ? 0 : GALAGA_DIPB_DEMO_SND)) & (0x80 >> (Addr&7))) ? 0:2;    
     return dip_a + dip_b;
   }
   

@@ -8,7 +8,7 @@ void Nunchuck::setup() {
     delay(1000);
   }
 
-  timeout = millis();
+  timeout = millis() + 200;
   enable();
 }
 

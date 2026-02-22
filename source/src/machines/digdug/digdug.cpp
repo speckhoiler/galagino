@@ -228,7 +228,7 @@ unsigned char digdug::namco_read(unsigned short Addr) {
 	      return ~DIGDUG_DIP_A;
       else if((Addr & 15) == 1)
 	      // DSW1
-        return (unsigned char)~DIGDUG_DIP_B;
+        return ~(DIGDUG_DIP_B | (input->demoSoundsOff() ? 0 : DIGDUG_DIP_DSOUND));
       
     } else if(namco_command == 0xb1) {
       // {8{~(ADR<=2)}};

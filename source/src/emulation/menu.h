@@ -35,14 +35,8 @@ private:
   bool menuWasSelected;
   unsigned long master_attract_timeout; // menu timeout for master attract mode which randomly start games
   signed char machineIndexLast;
-  
-#ifndef SINGLE_MACHINE
-  signed char machineIndex = MCH_MENU;  // start with menu
-  signed char menu_sel = 2;
-#else
-  signed char machineIndex = 1;
-  signed char menu_sel = 1;
-#endif
+  signed char machineIndex;
+  signed char menu_sel;  
 };
 
 #endif

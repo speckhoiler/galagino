@@ -1,10 +1,7 @@
 #include "input.h"
 
-#ifdef NUNCHUCK_INPUT
-  Nunchuck nunchuck;
-#endif
-
-void Input::init() {
+void Input::init(char SingleMachine) {
+  singleMachine = SingleMachine;
 #ifndef NUNCHUCK_INPUT
   pinMode(BTN_START_PIN, INPUT_PULLUP);
   #ifdef BTN_COIN_PIN
@@ -18,6 +15,17 @@ void Input::init() {
 #else
   nunchuck.setup();
 #endif
+
+  char inputs = buttons_get();
+  if (inputs & BUTTON_FIRE) {
+    printf("Demo Sounds switched off\n");
+    switchDemoSoundsOff = 1;
+    firePressedAtStart = 1;
+  }
+}
+
+char Input::demoSoundsOff() {
+  return switchDemoSoundsOff;
 }
 
 void Input::enable() {
@@ -104,33 +112,43 @@ unsigned char Input::buttons_get(void) {
       reset_timer = 0;
   }
 
-#ifndef SINGLE_MACHINE
-  bool buttonExtraRisingEdge = (input_states && BUTTON_EXTRA) && !(input_states_last && BUTTON_EXTRA); 
-  bool buttonUpRisingEdge = (input_states && BUTTON_UP) && !(input_states_last && BUTTON_UP); 
-  bool buttonDownRisingEdge = (input_states && BUTTON_DOWN) && !(input_states_last && BUTTON_DOWN); 
+  if (!singleMachine) {
+    bool buttonExtraRisingEdge = (input_states && BUTTON_EXTRA) && !(input_states_last && BUTTON_EXTRA); 
+    bool buttonUpRisingEdge = (input_states && BUTTON_UP) && !(input_states_last && BUTTON_UP); 
+    bool buttonDownRisingEdge = (input_states && BUTTON_DOWN) && !(input_states_last && BUTTON_DOWN); 
 
-  // joystick up/down (menu) or extra disables attract mode
-  if (buttonUpRisingEdge | buttonDownRisingEdge | buttonExtraRisingEdge ) {
-    if (_doAttractReset_callback)
-      _doAttractReset_callback();  
+    // joystick up/down (menu) or extra disables attract mode
+    if (buttonUpRisingEdge | buttonDownRisingEdge | buttonExtraRisingEdge ) {
+      if (_doAttractReset_callback)
+        _doAttractReset_callback();  
+    }
+
+    // reset control
+    if(input_states & BUTTON_EXTRA) {
+      if(!reset_timer)
+        reset_timer = millis();
+    
+      // reset if coin (or start if no coin is configured) is held for more than 3 seconds
+      if(millis() - reset_timer > 3000) {
+        if (_doReset_callback)
+          _doReset_callback();
+      }
+    } 
+    else
+      reset_timer = 0;
+
+    input_states_last = input_states;
   }
 
-  // reset control
-  if(input_states & BUTTON_EXTRA) {
-    if(!reset_timer)
-      reset_timer = millis();
-    
-    // reset if coin (or start if no coin is configured) is held for more than 3 seconds
-    if(millis() - reset_timer > 3000) {
-      if (_doReset_callback)
-        _doReset_callback();
-    }
-  } 
+  if (firePressedAtStart && input_states & BUTTON_FIRE) {
+    printf("Wait for release fire button...\n");
+    input_states = 0;
+  }
   else
-    reset_timer = 0;
+  {
+    firePressedAtStart = false;
+  }
 
-  input_states_last = input_states;
-#endif
   return input_states | startAndCoinState;
 }
 

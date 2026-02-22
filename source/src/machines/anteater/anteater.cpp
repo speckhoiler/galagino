@@ -50,7 +50,7 @@ unsigned char anteater::rdZ80(unsigned short Addr) {
       }
       
       if(Addr == 0x9801) {
-	      return ANTEATER_DIP1;
+	      return ANTEATER_DIP1 | (input->demoSoundsOff() ? ANTEATER_DIP_DEMOSOUNDS_OFF : ANTEATER_DIP_DEMOSOUNDS_ON);
       }
       
       if(Addr == 0x9802) {

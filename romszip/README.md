@@ -10,4 +10,6 @@ mrtnt.zip
 pacman.zip
 theglobp.zip
 crush.zip
+anteater.zip
+bombjack.zip
 Z80-081707.zip

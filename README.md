@@ -1,7 +1,9 @@
-# Galagino ported to platformio - with 6 additional games
+# Galagino ported to platformio - with 7 additional games
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
+
+The game Bombjack code was taken from [Alby1970](https://github.com/Alby1970).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -22,6 +24,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![The Glob screenshot](images/theglob.png)
 ![Crush Roller screenshot](images/crush.png)
 ![Anteater screenshot](images/anteater.png)
+![Bombjack screenshot](images/bombjack.png)
 
 ## Hardware
 
@@ -68,6 +71,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [The Glob](https://www.google.com/search?q=theglobp.zip+arcade+rom) (Important: filename with "p")
     * [Crush Roller](https://www.google.com/search?q=crush.zip+arcade+rom)
     * [Anteater](https://www.google.com/search?q=anteater.zip+arcade+rom)
+    * [Bombjack](https://www.google.com/search?q=bombjack.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
@@ -96,6 +100,7 @@ With the current configuration, the coin button has the following additional fun
 * Volume up: Hold coin button and push the joystick up. Default setting is 3. 1 is the loudest.
 * Volume down: Hold coin button and push the joystick down.
 * Return back to menu: Hold the coin button for more than 3 seconds. Attract mode is then active again.
+* Demo sounds off: To disable the demo sounds of Galaga, Digdug, The Glob and Bombjack, hold down the fire button while turning it on.
 * The Glob game: Push coin button to call the elevator.
 
 ## Attract mode

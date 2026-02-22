@@ -34,7 +34,7 @@ void emulation_notifyGive() {
 }
 
 void emulation_task(void *p) {  
-  while(1) {
+  for(;;) {
     emulation_frame();
   }
 }

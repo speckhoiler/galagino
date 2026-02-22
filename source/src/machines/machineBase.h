@@ -29,6 +29,12 @@
 struct sprite_S {
   unsigned char code, color, flags;
   short x, y;
+
+  //bombjack
+  unsigned char color_block; // Già shiftato di 3 per essere usato come offset
+  bool is_32x32;
+  bool flip_x;
+  bool flip_y;
 };
 
 enum {
@@ -44,7 +50,8 @@ enum {
   MCH_LIZWIZ,
   MCH_THEGLOB,
   MCH_CRUSH,
-  MCH_ANTEATER
+  MCH_ANTEATER,
+  MCH_BOMBJACK
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame
@@ -104,7 +111,7 @@ public:
     virtual void gameLeds(CRGB *leds) { memcpy(leds, menu_leds, NUM_LEDS*sizeof(CRGB)); };
 #endif
     char game_started;	
-    unsigned char soundregs[32];
+    unsigned char soundregs[48];
 protected:
     virtual void blit_tile(short row, char col) { }
     virtual void blit_sprite(short row, unsigned char s) { }

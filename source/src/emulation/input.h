@@ -17,13 +17,15 @@
 #define BUTTON_COIN  0x40
 #define BUTTON_EXTRA 0x80
 
+
 class Input {
 public:
-  void init();
+  void init(char SingleMachine);
   void enable();
   void disable();
   unsigned char buttons_get(void);
- 
+  char demoSoundsOff();
+
   typedef std::function<void(bool up, bool down)> THandlerVolume;
   Input& onVolumeUpDown(THandlerVolume fn);
 
@@ -41,6 +43,12 @@ private:
   int virtual_coin_state;
   unsigned long virtual_coin_timer;
   unsigned long reset_timer;
+  char singleMachine;
+  char switchDemoSoundsOff;
+  char firePressedAtStart;
+#ifdef NUNCHUCK_INPUT
+  Nunchuck nunchuck;
+#endif
 };
 
 #endif

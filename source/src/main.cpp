@@ -69,6 +69,10 @@
   #include "machines/anteater/anteater.h"
 #endif
 
+#ifdef ENABLE_BOMBJACK 
+  #include "machines/bombjack/bombjack.h"
+#endif
+
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
@@ -105,9 +109,16 @@ machineBase *machines[] = {
   new crush(),
 #endif
 #ifdef ENABLE_ANTEATER 
-  new anteater()
+  new anteater(),
+#endif
+#ifdef ENABLE_BOMBJACK 
+  new bombjack()
 #endif
 };
+
+template <std::size_t N, class T>
+constexpr std::size_t countof(T(&)[N]) { return N; }
+static_assert(countof(machines) >= 1, "At least one machine has to be enabled!");
 
 signed char machinesCount = (signed char)(sizeof(machines) / sizeof(unsigned short*));
 
@@ -166,7 +177,7 @@ void setup() {
   audio.init();
   audio.start(currentMachine);
 
-  input.init();
+  input.init(machinesCount == 1);
   input.onVolumeUpDown(onVolumeUpDown);
   input.onDoReset(onDoReset);
   input.onDoAttractReset(onDoAttractReset);

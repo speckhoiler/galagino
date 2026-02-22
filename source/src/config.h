@@ -14,26 +14,7 @@
 #define ENABLE_THEGLOB
 #define ENABLE_CRUSH
 #define ENABLE_ANTEATER
-
-#if !defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)
-  #error "At least one machine has to be enabled!"
-#endif
-
-// check if only one machine is enabled
-#if (( defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) &&  defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) &&  defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) &&  defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) &&  defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) &&  defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) &&  defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) &&  defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) &&  defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) &&  defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) &&  defined(ENABLE_CRUSH) && !defined(ENABLE_ANTEATER)) || \
-     (!defined(ENABLE_PACMAN) && !defined(ENABLE_GALAGA) && !defined(ENABLE_DKONG) && !defined(ENABLE_FROGGER) && !defined(ENABLE_DIGDUG) && !defined(ENABLE_1942) && !defined(ENABLE_EYES) && !defined(ENABLE_MRTNT) && !defined(ENABLE_LIZWIZ) && !defined(ENABLE_THEGLOB) && !defined(ENABLE_CRUSH) &&  defined(ENABLE_ANTEATER)))
-  #define SINGLE_MACHINE
-#endif
+#define ENABLE_BOMBJACK
 
 // game config
 #define MASTER_ATTRACT_MENU_TIMEOUT  20000      // start games while sitting idle in menu for 20 seconds, undefine to disable

@@ -93,20 +93,39 @@ void Audio::ay_render_buffer(void) {
   char AY = (machineType == MCH_FROGGER) ? 1 : 2;       // frogger has one AY / 1942 has two AYs
   char AY_INC = (machineType == MCH_FROGGER || machineType == MCH_ANTEATER) ? 9 : 8;   // froggger runs at 1.78 MHz -> 223718/24000 = 9,32 / 1942 runs at 1.5 MHz -> 187500/24000 = 7,81
   char AY_VOL = (machineType == MCH_FROGGER) ? 11 : 5;  // frogger min/max = -/+ 3*15*11 = -/+ 495 / 1942 min/max = -/+ 6*15*11 = -/+ 990
+  if (machineType == MCH_BOMBJACK) {
+    AY_VOL = 10;
+    AY = 3;
+    AY_INC = 8;
+  }
 
-  if(machineType == MCH_FROGGER || machineType == MCH_1942 || machineType == MCH_ANTEATER) {
-    // up to two AY's
-    for(char ay = 0; ay < AY; ay++) {
-      int ay_off = 16 * ay;
+  // up to three AY's
+  for(char ay = 0; ay < AY; ay++) {
+    int ay_off = 16 * ay;
 
-      // three tone channels
-      for(char c = 0; c < 3; c++) {
-	      ay_period[ay][c] = currentMachine->soundregs[ay_off + 2 * c] + 256 * (currentMachine->soundregs[ay_off + 2 * c + 1] & 15);
-	      ay_enable[ay][c] = (((currentMachine->soundregs[ay_off + 7] >> c) & 1) | ((currentMachine->soundregs[ay_off + 7] >> (c + 2)) & 2)) ^ 3;
-	      ay_volume[ay][c] = currentMachine->soundregs[ay_off + 8 + c] & 0x0f;
-      }
-      // noise channel
-      ay_period[ay][3] = currentMachine->soundregs[ay_off + 6] & 0x1f;
+    // three tone channels
+    for(char c = 0; c < 3; c++) {
+	    ay_period[ay][c] = currentMachine->soundregs[ay_off + 2 * c] + 256 * (currentMachine->soundregs[ay_off + 2 * c + 1] & 15);
+	    ay_enable[ay][c] = (((currentMachine->soundregs[ay_off + 7] >> c) & 1) | ((currentMachine->soundregs[ay_off + 7] >> (c + 2)) & 2)) ^ 3;
+	    ay_volume[ay][c] = currentMachine->soundregs[ay_off + 8 + c] & 0x0f;
+    }
+    // noise channel
+    ay_period[ay][3] = currentMachine->soundregs[ay_off + 6] & 0x1f;
+
+    if (machineType != MCH_BOMBJACK)
+      continue;
+
+    // --- LOGICA INVILUPPO: Leggi registri R11, R12, R13 ---
+    ay_envelope_period[ay] = currentMachine->soundregs[ay_off + 11] + 256 * currentMachine->soundregs[ay_off + 12];
+    
+    // Rileva un cambio di forma d'onda (R13) per triggerare l'inviluppo
+    uint8_t new_shape = currentMachine->soundregs[ay_off + 13];
+    if (new_shape != ay_envelope_shape[ay]) {
+      ay_envelope_shape[ay] = new_shape & 0x0F;
+      ay_envelope_counter[ay] = 0; // Reset contatore
+      // Imposta lo step iniziale in base alla forma d'onda (attacco: 0, decadimento: 15)
+      ay_envelope_step[ay] = (ay_envelope_shape[ay] < 4 || (ay_envelope_shape[ay] >= 8 && ay_envelope_shape[ay] < 12)) ? 0 : 15;
+      ay_envelope_holding[ay] = 0; // Non in stato di "hold"
     }
   }
 
@@ -177,7 +196,6 @@ void Audio::ay_render_buffer(void) {
 	  
 	          if(bit == 0) bit = -1;
 	          value += AY_VOL * bit * ay_volume[ay][c];
-	  
 	          audio_cnt[ay][c] += AY_INC; // for 24 khz
 	          if(audio_cnt[ay][c] > ay_period[ay][c]) {
 	            audio_cnt[ay][c] -= ay_period[ay][c];
@@ -186,7 +204,83 @@ void Audio::ay_render_buffer(void) {
 	        }
         }
       }
-    }  
+    }
+    else if (machineType == MCH_BOMBJACK) {
+      for(char ay = 0; ay < AY; ay++) {
+        // --- LOGICA INVILUPPO: Esegui un passo di emulazione ---
+        if (!ay_envelope_holding[ay] && ay_envelope_period[ay] > 0) {
+          ay_envelope_counter[ay] += AY_INC;
+          if (ay_envelope_counter[ay] >= ay_envelope_period[ay]) {
+            ay_envelope_counter[ay] -= ay_envelope_period[ay];
+            // Avanza lo step del volume dell'inviluppo in base alla forma
+            if (ay_envelope_shape[ay] < 8) { // Forme d'attacco (volume cresce da 0 a 15)
+              ay_envelope_step[ay]++;
+              if (ay_envelope_step[ay] > 15) {
+                // Se la forma è "alternata" (bit 0 settato), riparte da 0, altrimenti rimane a 15
+                ay_envelope_step[ay] = (ay_envelope_shape[ay] & 1) ? 0 : 15; 
+                // Se la forma è "hold" (bit 1 settato), si ferma qui
+                if (ay_envelope_shape[ay] & 2) ay_envelope_holding[ay] = 1; 
+              }
+            } 
+            else { // Forme di decadimento (volume decresce da 15 a 0)
+              ay_envelope_step[ay]--;
+              if (ay_envelope_step[ay] < 0) {
+                // Se la forma è "alternata" (bit 0 settato), riparte da 15, altrimenti rimane a 0
+                ay_envelope_step[ay] = (ay_envelope_shape[ay] & 1) ? 15 : 0; 
+                // Se la forma è "hold" (bit 1 settato), si ferma qui
+                if (ay_envelope_shape[ay] & 2) ay_envelope_holding[ay] = 1; 
+              }
+            }
+          }
+        }
+      
+        // Elabora il generatore di rumore (R6)
+        if(ay_period[ay][3]) {
+          audio_cnt[ay][3] += AY_INC;
+          if(audio_cnt[ay][3] > ay_period[ay][3]) {
+            audio_cnt[ay][3] -= ay_period[ay][3];
+            // --- CORREZIONE LFSR RUMORE (Standard AY-3-8910 17-bit LFSR) ---
+            uint32_t b = (((ay_noise_rng[ay] >> 0) ^ (ay_noise_rng[ay] >> 3)) & 1);
+            ay_noise_rng[ay] = (ay_noise_rng[ay] >> 1) | (b << 16);
+          }
+        }
+  
+        // Elabora i 3 canali di tono e li mixa con il rumore
+        for(char c = 0; c < 3; c++) {
+          // Controlla se il canale è abilitato nel mixer (R7) e ha un periodo valido
+          if(ay_period[ay][c] && ay_enable[ay][c]) {
+            // --- LOGICA INVILUPPO: Scegli il volume corretto ---
+            int current_channel_volume = 0;
+            if (ay_volume[ay][c] & 0x10) { // Se il bit 4 del registro volume è 1, usa l'inviluppo
+              current_channel_volume = ay_envelope_step[ay];
+            } 
+            else { // Altrimenti, usa il volume fisso (bit 0-3)
+              current_channel_volume = ay_volume[ay][c] & 0x0F;
+            }
+
+            if (current_channel_volume > 0) { // Solo se il volume non è zero
+              short bit = 1;
+              // Applica il mixing Tono/Rumore in base ai bit di ay_enable (ottenuti da R7)
+              if(ay_enable[ay][c] & 1) bit &= (audio_toggle[ay][c] > 0) ? 1:0; // Bit 0 di ay_enable -> Tono
+              if(ay_enable[ay][c] & 2) bit &= (ay_noise_rng[ay] & 1) ? 1:0;     // Bit 1 di ay_enable -> Rumore
+    
+              // Se il bit risultante è 0, il segnale è invertito per l'onda quadra
+              if(bit == 0) bit = -1;
+              value += AY_VOL * bit * current_channel_volume;
+            }
+    
+            // Avanza il contatore del tono (R0-R5)
+            audio_cnt[ay][c] += AY_INC;
+            if(audio_cnt[ay][c] > ay_period[ay][c]) {
+              audio_cnt[ay][c] -= ay_period[ay][c];
+              audio_toggle[ay][c] = -audio_toggle[ay][c];
+            }
+          }
+        }
+      }
+      value = value / 3;
+    }
+
     valueToBuffer(i, value);
   }
 }
