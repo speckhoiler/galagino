@@ -29,9 +29,85 @@ unsigned char digdug::rdZ80(unsigned short Addr) {
     return memory[Addr - 0x8000];
   
   // 0x7100 namco_06xx_device, ctrl_r, ctrl_w
-  if((Addr & 0xfe00) == 0x7000)
-    return namco_read(Addr & 0x1ff);
-  
+  if((Addr & 0xfe00) == 0x7000) {
+    if(Addr & 0x100) {
+      return namco_command;
+    }
+    else {
+      unsigned char keymask = input->buttons_get();
+      keymask_d[2] = keymask_d[1];
+      keymask_d[1] = keymask_d[0];
+      keymask_d[0] = keymask;
+
+      // rising edge, prolonged for two calls
+      unsigned char keymask_p = (keymask ^ keymask_d[2]) & keymask;
+    
+      if((keymask_d[0] & BUTTON_COIN) && !(keymask_d[1] & BUTTON_COIN) && (namco_credit < 99))
+        namco_credit++;
+
+      // this decrease of credit actually triggers the game start
+      if((keymask_d[0] & BUTTON_START) && !(keymask_d[1] & BUTTON_START) && (namco_credit > 0))
+        namco_credit--;
+    
+      if(namco_command == 0x71) {
+        if(namco_mode) {
+      	  if((Addr & 15) == 0) {
+	          unsigned char retval = 0x00;
+	          if(keymask & BUTTON_COIN)   retval |= 0x01;
+	          if(keymask & BUTTON_START)  retval |= 0x10;
+	          return ~retval;
+	        } 
+          else if((Addr & 15) == 1) {
+	          unsigned char retval = 0x00;
+	          if(keymask & BUTTON_UP)        retval |= 0x01;
+	          if(keymask & BUTTON_DOWN)      retval |= 0x04;
+	          if(keymask & BUTTON_LEFT)      retval |= 0x08;
+	          if(keymask & BUTTON_RIGHT)     retval |= 0x02;
+	          if(keymask_d[1] & BUTTON_FIRE) retval |= 0x20;
+	          if(keymask_p & BUTTON_FIRE)    retval |= 0x10;
+	          return ~retval;
+	        } 
+          else if((Addr & 15) == 2) 
+	          return ~0b00000000;
+        } 
+        else {
+	        if((Addr & 15) == 0) {
+	          return 16*(namco_credit/10) + namco_credit % 10;
+	        } 
+          else if((Addr & 15) == 1) {
+	          unsigned char retval = 0x00;
+	          // first player controls
+	          if(keymask & BUTTON_FIRE)       retval |= 0x20;	      
+            if(keymask & BUTTON_FIRE)       retval |= 0x10;
+	          if(keymask & BUTTON_UP)	        retval |= 0x0f;
+	          else if(keymask & BUTTON_RIGHT) retval |= 0x0d;
+	          else if(keymask & BUTTON_DOWN)  retval |= 0x0b;
+	          else if(keymask & BUTTON_LEFT)  retval |= 0x09;
+	          else	                          retval |= 0x07;   // nothing
+      	    return ~retval;
+	        } 
+          else if((Addr & 15) == 2) 
+	          return 0xf8;  // f8 -> no second player control
+        }      
+      } 
+      else if(namco_command == 0xd2) {  
+        if((Addr & 15) == 0)
+	        return ~DIGDUG_DIP_A;
+        else if((Addr & 15) == 1)
+          return ~(DIGDUG_DIP_B | (input->demoSoundsOff() ? 0 : DIGDUG_DIP_DSOUND));      
+      } 
+      else if(namco_command == 0xb1) {
+        if((Addr & 15) <= 2) return 0x00;      
+        return 0xff;
+      } 
+      else if(namco_command == 0x08) {
+        return 0xff;      
+      } 
+      else if(namco_command == 0xc1)
+        return 0xff;      
+    }
+  }
+
   if((Addr & 0xffc0) == 0xb800)
     return 0x00;
 
@@ -89,7 +165,15 @@ void digdug::wrZ80(unsigned short Addr, unsigned char Value) {
   // if(Addr == 0x6830) return; // watchdog etc
   
   if((Addr & 0xfe00) == 0x7000) {
-    namco_write(Addr & 0x1ff, Value);
+    if(Addr & 0x100) {
+      namco_command = Value;    
+      if(Value == 0xa1) namco_mode = 1;
+      if((Value == 0xc1) || (Value == 0xe1)) namco_mode = 0;
+
+      // any command other than 0x10 triggers an NMI to the main CPU after ~50us
+      if(Value != 0x10) namco_nmi_counter = NAMCO_NMI_DELAY;
+      else              namco_nmi_counter = 0;
+    }
     return;
   }
   
@@ -148,98 +232,6 @@ void digdug::run_frame(void) {
     current_cpu = 1;
     IntZ80(&cpu[1], INT_RST38);
   }
-}
-
-void digdug::namco_write(unsigned short Addr, unsigned char Value) {      
-  if(Addr & 0x100) {
-    namco_command = Value;    
-    if(Value == 0xa1) namco_mode = 1;
-    if((Value == 0xc1) || (Value == 0xe1)) namco_mode = 0;
-
-    // any command other than 0x10 triggers an NMI to the main CPU after ~50us
-    if(Value != 0x10) namco_nmi_counter = NAMCO_NMI_DELAY;
-    else              namco_nmi_counter = 0;
-  }
-}
-
-unsigned char digdug::namco_read(unsigned short Addr) {
-  if(Addr & 0x100)
-    return namco_command;
-  else {
-    unsigned char keymask = input->buttons_get();
-
-    static unsigned char keymask_d[] = { 0x00, 0x00, 0x00};	
-    keymask_d[2] = keymask_d[1];
-    keymask_d[1] = keymask_d[0];
-    keymask_d[0] = keymask;
-
-    // rising edge, prolonged for two calls
-    unsigned char keymask_p = (keymask ^ keymask_d[2]) & keymask;
-    
-    if((keymask_d[0] & BUTTON_COIN) && !(keymask_d[1] & BUTTON_COIN) && (namco_credit < 99))
-      namco_credit++;
-
-    // this decrease of credit actually triggers the game start
-    if((keymask_d[0] & BUTTON_START) && !(keymask_d[1] & BUTTON_START) && (namco_credit > 0))
-      namco_credit--;
-    
-    if(namco_command == 0x71) {
-      if(namco_mode) {
-      	if((Addr & 15) == 0) {
-	  unsigned char retval = 0x00;
-	  if(keymask & BUTTON_COIN)   retval |= 0x01;
-	  if(keymask & BUTTON_START)  retval |= 0x10;
-	  return ~retval;
-	} else if((Addr & 15) == 1) {
-	  unsigned char retval = 0x00;
-	  if(keymask & BUTTON_UP)        retval |= 0x01;
-	  if(keymask & BUTTON_DOWN)      retval |= 0x04;
-	  if(keymask & BUTTON_LEFT)      retval |= 0x08;
-	  if(keymask & BUTTON_RIGHT)     retval |= 0x02;
-	  if(keymask_d[1] & BUTTON_FIRE) retval |= 0x20;
-	  if(keymask_p & BUTTON_FIRE)    retval |= 0x10;
-	  return ~retval;
-	} else if((Addr & 15) == 2) 
-	  return ~0b00000000;
-      } else {
-	  if((Addr & 15) == 0) {
-	    return 16*(namco_credit/10) + namco_credit % 10;
-	  } else if((Addr & 15) == 1) {
-	    unsigned char retval = 0x00;
-	    // first player controls
-	    if(keymask & BUTTON_FIRE)       retval |= 0x20;	      
-            //if(keymask_p & BUTTON_FIRE)     retval |= 0x10;
-            if(keymask & BUTTON_FIRE)     retval |= 0x10;
-        
-	    if(keymask & BUTTON_UP)	    retval |= 0x0f;
-	    else if(keymask & BUTTON_RIGHT) retval |= 0x0d;
-	    else if(keymask & BUTTON_DOWN)  retval |= 0x0b;
-	    else if(keymask & BUTTON_LEFT)  retval |= 0x09;
-	    else	                    retval |= 0x07;   // nothing
-      	  	return ~retval;
-	  } else if((Addr & 15) == 2) 
-	      return 0xf8;  // f8 -> no second player control
-      }
-      
-    } else if(namco_command == 0xd2) {
-      
-      if((Addr & 15) == 0)
-      	// DSW0
-	      return ~DIGDUG_DIP_A;
-      else if((Addr & 15) == 1)
-	      // DSW1
-        return ~(DIGDUG_DIP_B | (input->demoSoundsOff() ? 0 : DIGDUG_DIP_DSOUND));
-      
-    } else if(namco_command == 0xb1) {
-      // {8{~(ADR<=2)}};
-      if((Addr & 15) <= 2) return 0x00;      
-      return 0xff;
-    } else if(namco_command == 0x08) {
-      return 0xff;      
-    } else if(namco_command == 0xc1)
-      return 0xff;      
-  }
-  return 0xff;
 }
 
 void digdug::prepare_frame(void) {

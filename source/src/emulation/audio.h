@@ -23,11 +23,13 @@ public:
   void volumeUpDown(bool up, bool down);
 
 private:
-  void namco_waveregs_parse(void);
   void namco_render_buffer(void);
   void ay_render_buffer(void);
+  void sn76489_render_buffer(void);
   void valueToBuffer(int index, short value);
+ 
   machineBase *currentMachine;
+  signed char machineType;
 
 #ifdef SND_DIFF
   unsigned short snd_buffer[128]; // buffer space for two channels
@@ -56,6 +58,10 @@ private:
   int ay_envelope_counter[3] = {0,0,0};
   int ay_envelope_step[3] = {0,0,0};
   int ay_envelope_holding[3] = {0,0,0};
+
+  //MrDo!
+  int sn_counter[2][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}};
+  int sn_toggle[2][4] = {{1, 1, 1, 1}, {1, 1, 1, 1}};
 };
 
 #endif

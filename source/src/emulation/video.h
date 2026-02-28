@@ -11,6 +11,7 @@ public:
 
   void begin(void);
   void write(uint16_t *colors, uint32_t len);
+  void flipVertical(char flip);
 
 private:
   void setAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
@@ -18,9 +19,9 @@ private:
   void writeCommand(uint8_t cmd);
   void write8(uint8_t u8);
   void write16(uint16_t u16);
-
-protected:
+  char dma_active;
   spi_device_handle_t handle;
+  spi_transaction_t* r_trans;
   spi_transaction_t transaction;
   unsigned char *dma_buffer;  // use a second buffer for dma transfers
 };

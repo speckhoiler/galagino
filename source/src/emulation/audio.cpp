@@ -38,7 +38,8 @@ void Audio::init() {
 
 void Audio::start(machineBase *machineBase) {
   currentMachine = machineBase;
-  
+  machineType = currentMachine->machineType();
+    
 #ifndef WORKAROUND_I2S_APLL_PROBLEM
   // The audio CPU of donkey kong runs at 6Mhz. A full bus
   // cycle needs 15 clocks which results in 400k cycles
@@ -77,10 +78,10 @@ void Audio::transmit() {
 
     // render the next audio chunk if data has actually been sent
     if(bytesOut) {      
-      if (currentMachine->hasNamcoAudio()) {
-        namco_waveregs_parse();
+      if (currentMachine->hasNamcoAudio())
         namco_render_buffer();
-      }
+      else if(machineType == MCH_MRDO)
+        sn76489_render_buffer();
       else
         ay_render_buffer();
     }
@@ -88,8 +89,6 @@ void Audio::transmit() {
 }
 
 void Audio::ay_render_buffer(void) {
-  signed char machineType = currentMachine->machineType();
-
   char AY = (machineType == MCH_FROGGER) ? 1 : 2;       // frogger has one AY / 1942 has two AYs
   char AY_INC = (machineType == MCH_FROGGER || machineType == MCH_ANTEATER) ? 9 : 8;   // froggger runs at 1.78 MHz -> 223718/24000 = 9,32 / 1942 runs at 1.5 MHz -> 187500/24000 = 7,81
   char AY_VOL = (machineType == MCH_FROGGER) ? 11 : 5;  // frogger min/max = -/+ 3*15*11 = -/+ 495 / 1942 min/max = -/+ 6*15*11 = -/+ 990
@@ -280,12 +279,32 @@ void Audio::ay_render_buffer(void) {
       }
       value = value / 3;
     }
-
     valueToBuffer(i, value);
   }
 }
 
-void Audio::namco_waveregs_parse(void) {  
+void Audio::sn76489_render_buffer(void) {
+  for (int i = 0; i < 64; i++) {
+    short sample = 0;
+
+    for (int chip = 0; chip < 2; chip++) {
+      for (int c = 0; c < 4; c++) {
+        if (currentMachine->sn_volume[chip][c] < 15) {
+          // ... (logica di generazione onda identica a prima) ...
+          sn_counter[chip][c] -= 11; //SN_CLOCK (8200000.0f / 2.0f / 16.0f); SAMPLE_RATE 24000.0f; SN_INC (SN_CLOCK / SAMPLE_RATE) = 10.677
+          if (sn_counter[chip][c] <= 0) {
+            sn_counter[chip][c] += currentMachine->sn_period[chip][c];
+            sn_toggle[chip][c] = -sn_toggle[chip][c];
+          }
+          sample += sn_toggle[chip][c] * (15 - currentMachine->sn_volume[chip][c]) * 6;
+        }
+      }
+    }
+    valueToBuffer(i, sample);
+  }
+}
+
+void Audio::namco_render_buffer(void) {
   // parse all three wsg channels
   for(char ch = 0; ch < 3; ch++) {  
     snd_wave[ch] = currentMachine->waveRom(currentMachine->soundregs[ch * 5 + 0x05] & 0x07);
@@ -296,10 +315,6 @@ void Audio::namco_waveregs_parse(void) {
     snd_freq[ch] += currentMachine->soundregs[ch * 5 + 0x14] << 16;        
     snd_volume[ch] = currentMachine->soundregs[ch * 5 + 0x15]; //5055, 505a, 505f
   }
-}
-
-void Audio::namco_render_buffer(void) {
-  signed char machineType = currentMachine->machineType();
 
   // render first buffer contents
   for(int i = 0; i < 64; i++) {

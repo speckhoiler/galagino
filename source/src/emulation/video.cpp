@@ -174,26 +174,34 @@ void Video::begin(void) {
 #endif
 }
 
+void Video::flipVertical(char flip) {    
+  if (dma_active)
+    spi_device_get_trans_result(handle, &r_trans, portMAX_DELAY);
+ 
+  writeCommand(0x36); // Row address set, same command for ili9341 and st7789
+#ifdef TFT_ILI9341
+  write8(flip == 1 ? TFT_MAC ^ 0xc0 : TFT_MAC);
+#else
+  write8(flip == 1 ? 0 : 0xc0);
+#endif
+  writeCommand(0x2C); // Write to RAM, same command for ili9341 and st7789 
+
+  dma_active = 0; 
+}
+
 void Video::write(uint16_t *colors, uint32_t len) {
-  static char dma_active = 0;
-
-  transaction.flags = 0;
-  transaction.length = 16*len; // Length in bits
-  transaction.tx_buffer = dma_buffer;
-
   if(dma_active) {
-    spi_transaction_t* r_trans;
-    esp_err_t e = spi_device_get_trans_result(handle, &r_trans, portMAX_DELAY);
-    if (e != ESP_OK) 
-      printf("[ERROR] SPI device get trans result failed: %d\n", e);
+    spi_device_get_trans_result(handle, &r_trans, portMAX_DELAY);
   }
+ 
+  memcpy(dma_buffer, colors, 2 * len);
+  transaction.flags = 0;
+  transaction.length = 16 * len; // Length in bits
+  transaction.tx_buffer = dma_buffer;
+  spi_device_queue_trans(handle, &transaction, portMAX_DELAY);
 
-  memcpy(dma_buffer, colors, 2*len);
-  esp_err_t e = spi_device_queue_trans(handle, &transaction, portMAX_DELAY);
-  if (e != ESP_OK) 
-    printf("[ERROR] SPI device queue trans failed: %d\n", e);
-
-  dma_active = 1;
+  if(!dma_active)
+    dma_active = 1;
 }
 
 void Video::sendCommand(uint8_t commandByte, uint8_t *dataBytes, uint8_t numDataBytes) {
@@ -201,7 +209,6 @@ void Video::sendCommand(uint8_t commandByte, uint8_t *dataBytes, uint8_t numData
   writeCommand(commandByte);
   for(int i=0;i<numDataBytes;i++)
     write8(dataBytes[i]);
-
   digitalWrite(TFT_CS, HIGH);
 }
 
@@ -229,7 +236,6 @@ void Video::write16(uint16_t data) {
   transaction.rxlength = 0;
   transaction.tx_data[0] = ((data >> 8) & 0xFF);
   transaction.tx_data[1] = data & 0xFF;
-
   spi_device_transmit(handle, &transaction);
 }
 
@@ -238,6 +244,5 @@ void Video::write8(uint8_t data) {
   transaction.length = 8; // Length in bits
   transaction.rxlength = 0;
   transaction.tx_data[0] = data;
-
   spi_device_transmit(handle, &transaction);
 }

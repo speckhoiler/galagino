@@ -27,6 +27,8 @@ public:
 
 	void reset() override;
 	signed char machineType() override { return MCH_BOMBJACK; } 
+	signed char useVideoHalfRate() override { return 1; } 
+
 	unsigned char rdZ80(unsigned short Addr) override;
 	void wrZ80(unsigned short Addr, unsigned char Value) override;
 	void outZ80(unsigned short Port, unsigned char Value) override;
@@ -49,10 +51,6 @@ protected:
 	void blit_sprite(short row, unsigned char s_idx);
 
 private:
-	bool background_bufferAllocated = false;
-	unsigned short *background_buffer[36];
-	unsigned char currentBackground[36];
-
 	uint16_t bombjack_palette[128];
 	uint8_t palette[256];
 

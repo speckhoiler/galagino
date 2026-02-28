@@ -1,9 +1,9 @@
-# Galagino ported to platformio - with 7 additional games
+# Galagino ported to platformio - with 8 additional games
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
-The game Bombjack code was taken from [Alby1970](https://github.com/Alby1970).
+The games Bombjack and Mr. Do! were programmed by [Alby1970](https://github.com/Alby1970).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -25,6 +25,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Crush Roller screenshot](images/crush.png)
 ![Anteater screenshot](images/anteater.png)
 ![Bombjack screenshot](images/bombjack.png)
+![Mr. Do screenshot](images/mrdo.png)
 
 ## Hardware
 
@@ -72,6 +73,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Crush Roller](https://www.google.com/search?q=crush.zip+arcade+rom)
     * [Anteater](https://www.google.com/search?q=anteater.zip+arcade+rom)
     * [Bombjack](https://www.google.com/search?q=bombjack.zip+arcade+rom)
+    * [Mr. Do!](https://www.google.com/search?q=mrdo.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
@@ -96,7 +98,7 @@ The Galagino code can be configured through the [config.h](./source/src/config.h
 
 ## Controls
 
-With the current configuration, the coin button has the following additional functions:
+With the current configuration, the buttons have the following additional functions:
 * Volume up: Hold coin button and push the joystick up. Default setting is 3. 1 is the loudest.
 * Volume down: Hold coin button and push the joystick down.
 * Return back to menu: Hold the coin button for more than 3 seconds. Attract mode is then active again.

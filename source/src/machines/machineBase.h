@@ -20,7 +20,7 @@
 #define LED_WHITE    CRGB::White
 #endif
 
-#ifdef ENABLE_1942
+#if (defined(ENABLE_1942) || defined(ENABLE_MRDO))
   #define RAMSIZE   (8192 + 1024 + 128)
 #else
   #define RAMSIZE   (8192)
@@ -32,9 +32,9 @@ struct sprite_S {
 
   //bombjack
   unsigned char color_block; // Già shiftato di 3 per essere usato come offset
-  bool is_32x32;
-  bool flip_x;
-  bool flip_y;
+  char is_32x32;
+  char flip_x;
+  char flip_y;
 };
 
 enum {
@@ -51,7 +51,8 @@ enum {
   MCH_THEGLOB,
   MCH_CRUSH,
   MCH_ANTEATER,
-  MCH_BOMBJACK
+  MCH_BOMBJACK,
+  MCH_MRDO
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame
@@ -79,15 +80,23 @@ public:
       for(current_cpu = 0; current_cpu < sizeof(cpu) / sizeof(Z80); current_cpu++)
         ResetZ80(&cpu[current_cpu]);
 
+      memset(memory, 0, RAMSIZE);
+      memset(soundregs, 0, sizeof(soundregs)); 
+
+      for (int chip = 0; chip < 2; chip++) {
+        for (int c = 0; c < 4; c++) {
+          sn_period[chip][c] = 0;
+          sn_volume[chip][c] = 15; // Muto
+        }
+      }
       current_cpu = 0;
       game_started = 0;
-     
-      memset(soundregs, 0, sizeof(soundregs)); 
-      memset(memory, 0, RAMSIZE);
     }
 
     virtual signed char machineType() { return MCH_MENU; } 
-
+    virtual signed char videoFlipY() { return 0; } 
+    virtual signed char useVideoHalfRate() { return 0; } 
+    
     virtual unsigned char rdZ80(unsigned short Addr) { return 0xff; }
     virtual void wrZ80(unsigned short Addr, unsigned char Value) { };
     virtual void outZ80(unsigned short Port, unsigned char Value) { };
@@ -112,6 +121,10 @@ public:
 #endif
     char game_started;	
     unsigned char soundregs[48];
+    
+    //Mr.Do!
+    int sn_period[2][4];    // 4 canali per chip (3 tono + 1 rumore)
+    int sn_volume[2][4];
 protected:
     virtual void blit_tile(short row, char col) { }
     virtual void blit_sprite(short row, unsigned char s) { }

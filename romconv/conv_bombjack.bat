@@ -33,3 +33,4 @@ echo --- Error #%errorlevel%.
 pause
 
 :end
+cd..

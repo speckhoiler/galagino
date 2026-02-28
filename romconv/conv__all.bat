@@ -15,6 +15,7 @@ call conv_theglob.bat
 call conv_crush.bat
 call conv_anteater.bat
 call conv_bombjack.bat
+call conv_mrdo.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!

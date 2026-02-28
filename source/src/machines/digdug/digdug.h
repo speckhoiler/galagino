@@ -48,12 +48,10 @@ protected:
 	void blit_sprite(short row, unsigned char s) override;
 
 private:
-	//namco as inline for more speed
-	inline unsigned char namco_read(unsigned short Addr);
-	inline void namco_write(unsigned short Addr, unsigned char Value);
 #ifdef LED_PIN
 	const CRGB menu_leds[7] = { LED_WHITE, LED_BLUE, LED_RED, LED_RED, LED_RED, LED_BLUE, LED_WHITE };
 #endif
+	unsigned char keymask_d[3] = { 0x00, 0x00, 0x00};	
 	unsigned char namco_command = 0;
 	unsigned char namco_mode = 0;
 	unsigned char namco_nmi_counter = 0;

@@ -73,6 +73,10 @@
   #include "machines/bombjack/bombjack.h"
 #endif
 
+#ifdef ENABLE_MRDO 
+  #include "machines/mrdo/mrdo.h"
+#endif
+
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
@@ -112,7 +116,10 @@ machineBase *machines[] = {
   new anteater(),
 #endif
 #ifdef ENABLE_BOMBJACK 
-  new bombjack()
+  new bombjack(),
+#endif
+#ifdef ENABLE_MRDO 
+  new mrdo()
 #endif
 };
 
@@ -220,7 +227,9 @@ void updateAudioVideo(void) {
     if (menu.startMachine()) {
       currentMachine = machines[menu.machineIndexSelected()];
       audio.start(currentMachine);
-
+      if (currentMachine->videoFlipY())
+        video.flipVertical(1);
+        
       // start new machine
       emulation_start();
     }
@@ -228,59 +237,69 @@ void updateAudioVideo(void) {
   }
 
   if (doReset || menu.attract_gameTimeout()) {
+    if (currentMachine->videoFlipY())
+      video.flipVertical(0);
+  
     // stop current machine
     emulation_stop();
+  
     menu.show_menu();
     doReset = false;
   }
 #endif
 
+  bool videoHalfRate = true;
 #ifndef VIDEO_HALF_RATE
-  // render and transmit screen at once as the display running at 80Mhz can update at full 60 hz game frame
-  for(int c = 0; c < 36; c += 6) {
-    for (int i = 0; i < 6; i++) {
-      renderRow(c + i, isMenu); video.write(frame_buffer, 224 * 8);
-    }     
+  videoHalfRate = currentMachine->useVideoHalfRate();
+#endif
 
-    // audio is updated 6 times per 60 Hz frame
-    audio.transmit();
-  } 
- 
-  // one screen at 60 Hz is 16.6ms
-  unsigned long t1 = (micros() - t0) / 1000;  // calculate time in milliseconds
-  if(t1 < 16) 
-    vTaskDelay(16 - t1);
-  else
-    vTaskDelay(1);    // at least 1 ms delay to prevent watchdog timeout
+  if (!videoHalfRate) {
+    // render and transmit screen at once as the display running at 80Mhz can update at full 60 hz game frame
+    for(int c = 0; c < 36; c += 6) {
+      for (int i = 0; i < 6; i++) {
+        renderRow(c + i, isMenu); video.write(frame_buffer, 224 * 8);
+      }     
 
-  // physical refresh is 60Hz. So send vblank trigger once a frame
-  emulation_notifyGive();
-#else
-  // render and transmit screen in two halfs as the display running at 40Mhz can only update every second 60 hz game frame
-  for(int half = 0; half < 2; half++) {
-    for(int c = 18 * half; c < 18 * (half + 1); c += 3) {
-      renderRow(c + 0, isMenu); video.write(frame_buffer, 224 * 8);
-      renderRow(c + 1, isMenu); video.write(frame_buffer, 224 * 8);
-      renderRow(c + 2, isMenu); video.write(frame_buffer, 224 * 8);
-
-      // audio is refilled 6 times per screen update. The screen is updated
-      // every second frame. So audio is refilled 12 times per 30 Hz frame.
-      // Audio registers are udated by CPU3 two times per 30hz frame.
+      // audio is updated 6 times per 60 Hz frame
       audio.transmit();
     } 
  
     // one screen at 60 Hz is 16.6ms
     unsigned long t1 = (micros() - t0) / 1000;  // calculate time in milliseconds
-    // printf("uspf %d\n", t1);
-    if(t1 < (half ? 33 : 16))
-      vTaskDelay((half ? 33 : 16) - t1);
-    else if(half)
+    if(t1 < 16) 
+      vTaskDelay(16 - t1);
+    else
       vTaskDelay(1);    // at least 1 ms delay to prevent watchdog timeout
 
-    // physical refresh is 30Hz. So send vblank trigger twice a frame to the emulation. This will make the game run with 60hz speed
+    // physical refresh is 60Hz. So send vblank trigger once a frame
     emulation_notifyGive();
   }
-#endif
+  else {
+    // render and transmit screen in two halfs as the display running at 40Mhz can only update every second 60 hz game frame
+    for(int half = 0; half < 2; half++) {
+      for(int c = 18 * half; c < 18 * (half + 1); c += 3) {
+        renderRow(c + 0, isMenu); video.write(frame_buffer, 224 * 8);
+        renderRow(c + 1, isMenu); video.write(frame_buffer, 224 * 8);
+        renderRow(c + 2, isMenu); video.write(frame_buffer, 224 * 8);
+
+        // audio is refilled 6 times per screen update. The screen is updated
+        // every second frame. So audio is refilled 12 times per 30 Hz frame.
+        // Audio registers are udated by CPU3 two times per 30hz frame.
+        audio.transmit();
+      } 
+ 
+      // one screen at 60 Hz is 16.6ms
+      unsigned long t1 = (micros() - t0) / 1000;  // calculate time in milliseconds
+      // printf("uspf %d\n", t1);
+      if(t1 < (half ? 33 : 16))
+        vTaskDelay((half ? 33 : 16) - t1);
+      else if(half)
+        vTaskDelay(1);    // at least 1 ms delay to prevent watchdog timeout
+
+      // physical refresh is 30Hz. So send vblank trigger twice a frame to the emulation. This will make the game run with 60hz speed
+      emulation_notifyGive();
+    }
+  }
 }
 
 // render one of 36 tile rows (8 x 224 pixel lines)

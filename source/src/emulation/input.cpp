@@ -130,6 +130,7 @@ unsigned char Input::buttons_get(void) {
     
       // reset if coin (or start if no coin is configured) is held for more than 3 seconds
       if(millis() - reset_timer > 3000) {
+        reset_timer = millis();
         if (_doReset_callback)
           _doReset_callback();
       }

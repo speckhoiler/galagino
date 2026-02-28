@@ -2,14 +2,6 @@
 
 void bombjack::reset() {
   machineBase::reset();
-  if (background_bufferAllocated) {
-    background_bufferAllocated = false;
-
-    for (int i = 0; i < 36; i++) {
-      currentBackground[i] = 0;
-      free(background_buffer[i]);
-    }
-  }
 }
 
 unsigned char bombjack::opZ80(unsigned short Addr) {
@@ -299,7 +291,7 @@ void bombjack::prepare_frame(void) {
 void bombjack::blit_tile_bg(short logical_row) {
   // 1. Controlla se il background è visibile.
   if ((m_bg_image & 0x10) == 0) {
-    memset(background_buffer[logical_row], 0, 224 * 8 * 2);
+    memset(frame_buffer, 0, 224 * 8 * 2);
     return;
   }
 
@@ -324,7 +316,7 @@ void bombjack::blit_tile_bg(short logical_row) {
       int source_y = 223 - shifted_dest_x;
 
       if (source_x < 0 || source_x >= 224 || source_y < 0 || source_y >= 288) {
-        background_buffer[logical_row][(y_in_strip * 224) + x_in_strip] = 0;
+        frame_buffer[(y_in_strip * 224) + x_in_strip] = 0;
         continue;
       }
 
@@ -365,10 +357,10 @@ void bombjack::blit_tile_bg(short logical_row) {
 
       // Scrittura nel framebuffer.
       if (pen == 0) {
-        background_buffer[logical_row][(y_in_strip * 224) + x_in_strip] = 0;
+        frame_buffer[(y_in_strip * 224) + x_in_strip] = 0;
       }
       else {
-        background_buffer[logical_row][(y_in_strip * 224) + x_in_strip] = bombjack_palette[color_block | pen];
+        frame_buffer[(y_in_strip * 224) + x_in_strip] = bombjack_palette[color_block | pen];
       }
     }
   }
@@ -472,24 +464,8 @@ void bombjack::blit_sprite(short row, unsigned char s_idx) {
 }
 
 void bombjack::render_row(short row) {
-  //use a buffer for the background for better performance...
-  if (!background_bufferAllocated) {
-    background_bufferAllocated = true;
-    for (int i = 0; i < 36; i++) {
-      background_buffer[i] = (unsigned short *)malloc(224 * 8 * 2);
-      memset(background_buffer[i], 0, 224 * 8 * 2);
-    }
-  }
-
-  //calculate new background when image changed only...
-  if (currentBackground[row] != m_bg_image) {
-    currentBackground[row] = m_bg_image;
-    blit_tile_bg(row);
-  }
-
-  //copy the buffered background...
-  memcpy(frame_buffer, background_buffer[row], 224 * 8 * 2);
-
+  blit_tile_bg(row);
+  
   for (char col = 0; col < 28; col++) {
     blit_tile_fg(row, col);
   }
