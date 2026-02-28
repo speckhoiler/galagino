@@ -3,7 +3,7 @@
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
-The games Bombjack and Mr. Do! were programmed by [Alby1970](https://github.com/Alby1970).
+I got the games Bombjack and Mr. Do! from [Alby1970](https://github.com/Alby1970).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
