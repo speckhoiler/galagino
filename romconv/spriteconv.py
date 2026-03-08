@@ -264,6 +264,30 @@ def parse_spritemap(id, fmt, infiles, outfile):
         #for s in range(len(sprites)):
         #    print(s)
         #    show_sprite(sprites[s])    
+    elif fmt == "bagman":
+        # frogger uses the tilemap roms for sprites as well
+        spritemap_data = []
+        for file in infiles:        
+            f = open(file, "rb")
+            spritemap_data.append(f.read())
+            f.close()
+            
+            #if len(spritemap_data[-1]) != 2048:
+            #    raise ValueError("Missing spritemap data")
+
+        # most of these aren't sprites but tiles. Converting them all
+        # won't hurt as flash memory is no the limit
+        for sprite in range(128):
+            data = []
+            for i in range(2):
+                data.append(spritemap_data[i][32*sprite:32*(sprite+1)])
+            
+            sprites.append(parse_sprite_frogger(data))
+
+        #for s in range(len(sprites)): 
+        #    print(s)
+        #    show_sprite(sprites[s])
+
     else: # dkong
         spritemap_data = []
         for file in infiles:        
@@ -287,6 +311,14 @@ def parse_spritemap(id, fmt, infiles, outfile):
         # write 4 bpp
         print("const unsigned long "+id+"[][32] = {", file=f)    
         dump_c_source_4bpp(sprites, f)
+    elif fmt == "bagman":
+        # write 2 bpp    
+        print("const unsigned long "+id+"[]["+str(len(sprites))+"][16] = {", file=f)    
+        dump_c_source(sprites, False, False, f)
+    
+        # we have plenty of flash space, so we simply pre-compute x flipped
+        # versions of all sprites      
+        dump_c_source(sprites,  True,  False, f)
     else:
         # write 2 bpp    
         print("const unsigned long "+id+"[]["+str(len(sprites))+"][16] = {", file=f)    

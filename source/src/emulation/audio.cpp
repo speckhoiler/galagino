@@ -34,6 +34,8 @@ void Audio::init() {
 #else
   i2s_set_dac_mode(I2S_DAC_CHANNEL_RIGHT_EN);
 #endif  
+
+  generateSinusWave(256, sinusWaveBuffer, sizeof(sinusWaveBuffer)  / 2 );
 }
 
 void Audio::start(machineBase *machineBase) {
@@ -82,6 +84,8 @@ void Audio::transmit() {
         namco_render_buffer();
       else if(machineType == MCH_MRDO)
         sn76489_render_buffer();
+      else if(machineType == MCH_BAGMAN)
+        discrete_render_buffer();
       else
         ay_render_buffer();
     }
@@ -341,6 +345,53 @@ void Audio::namco_render_buffer(void) {
         galagaMachine->snd_boom_cnt--;
       }
     }
+    valueToBuffer(i, value);
+  }
+}
+
+void Audio::generateSinusWave(int32_t amplitude, short* buffer, uint16_t length) { 
+  for (int i=0; i<length; ++i) {
+    buffer[i] = int32_t(float(amplitude) * sin(2.0 * PI * (1.0 / length) * i));
+  }
+}
+
+void Audio::discrete_render_buffer() {
+  unsigned short duration = currentMachine->soundregs[0] + (currentMachine->soundregs[1] << 8);
+
+  if (duration > 0)
+    duration--;
+
+  currentMachine->soundregs[0] = duration & 0x00ff;
+  currentMachine->soundregs[1] = (duration & 0xff00) > 8;
+
+  float frequency;
+  switch (currentMachine->soundregs[2]) {
+    case 0x3: frequency = A5_3; break;
+    case 0x4: frequency = C6_4; break;
+    case 0x5: frequency = F5_5; break;
+    case 0x6: frequency = G5_6; break;
+    case 0x7: frequency = E6_7; break;
+    case 0x8: frequency = B6_8; break;
+    case 0xE: frequency = D6_E; break;
+    case 0xF: frequency = B5_F; break;
+    case 0xB: frequency = XX_B; break;
+  }
+
+  unsigned short pause = currentMachine->soundregs[3];
+  if (pause > 0)
+    currentMachine->soundregs[3]--;
+
+  float delta = 0;
+  if (duration != 0 && pause == 0)
+    delta = (frequency * (sizeof(sinusWaveBuffer) / 2)) / float(24000);
+  
+  for(int i = 0; i < 64; i++) {
+    uint16_t pos = uint32_t(((i + 1) * delta) + positionLast) % (sizeof(sinusWaveBuffer) / 2);
+    short value = sinusWaveBuffer[pos];
+
+    if (i == 63)
+      positionLast = pos;
+
     valueToBuffer(i, value);
   }
 }

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import datetime
 
 # --- CONFIGURAZIONE ---
 SOURCE_C_FILE = "palette_sprite.c"
@@ -55,7 +54,6 @@ def generate_palette_header(palette_rgb888):
     try:
         with open(OUTPUT_H_FILE, 'w') as f:
             f.write(f"// Master Palette di Mr. Do! convertita in formato RGB565 LITTLE ENDIAN.\n")
-            f.write(f"// Generato da script il {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
             f.write("#pragma once\n#include <stdint.h>\n\n")
             f.write(f"// Palette completa da 256 colori (formato Little Endian)\n")
             f.write(f"const uint16_t mrdo_master_palette[256] = {{\n")

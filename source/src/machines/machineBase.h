@@ -52,7 +52,9 @@ enum {
   MCH_CRUSH,
   MCH_ANTEATER,
   MCH_BOMBJACK,
-  MCH_MRDO
+  MCH_MRDO,
+  MCH_BAGMAN,
+  MCH_PENGO
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame

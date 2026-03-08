@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import datetime
 
 # --- CONFIGURAZIONE ---
 SOURCE_H_FILE = "../../source/src/machines/mrdo/mrdo_palette.h" 

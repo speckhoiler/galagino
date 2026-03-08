@@ -312,6 +312,58 @@ def parse_charmap_anteater(id, innames, outname):
     
     f.close()
 
+def parse_charmap_bagman(id, innames, outname):
+    # swap bits 0 and 1 in an integer
+    def bit01_swap(a):
+        return (a & 0xfffc) | ((a & 2)>>1) | ((a & 1)<<1) 
+    
+    f = open(innames[0], "rb")
+    charmap_data_0 = f.read()
+    f.close()
+    
+    f = open(innames[1], "rb")
+    charmap_data_1 = f.read()
+    f.close()
+
+    #if len(charmap_data_0) != 2048 or len(charmap_data_1) != 2048:
+    #    raise ValueError("Missing charmap data")
+
+    # in frogger the second gfx rom has D0 and D1 swapped ... wtf ...
+    # check first 16 bytes / two characters as they should be bitswapped identical in frogger
+    d01_swap = True
+    for i in range(16):
+        if bit01_swap(charmap_data_0[i]) != charmap_data_1[i]:
+            d01_swap = False
+
+    if d01_swap:
+        charmap_data_0 = list(charmap_data_0)
+        for i in range(len(charmap_data_0)):
+            charmap_data_0[i] = bit01_swap(charmap_data_0[i])
+        charmap_data_0 = bytes(charmap_data_0)
+    
+    # read and parse all 1024 characters
+    chars = []
+    for chr in range(1024):
+        chars.append(parse_chr_2(charmap_data_0[8*chr:8*(chr+1)],
+                     charmap_data_1[8*chr:8*(chr+1)]))
+
+    #for c in range(len(chars)):
+    #    print("---", c)
+    #    show_chr(chars[c])
+    #for c in chars: show_chr(c)
+
+    # write as c source
+    f = open(outname, "w")
+    
+    print("const unsigned short "+id+"[][8] = {", file=f )
+    chars_str = []
+    for c in chars:
+        chars_str.append(" { " + dump_chr(c) + " }")
+    print(",\n".join(chars_str), file=f)
+    print("};", file=f)
+    
+    f.close()
+
 if len(sys.argv) != 4 and len(sys.argv) != 5 and len(sys.argv) != 9  and len(sys.argv) != 6:
     print("Invalid arguments")
     exit(-1)
@@ -323,5 +375,8 @@ elif len(sys.argv) == 4:
     parse_charmap(sys.argv[1], sys.argv[2], sys.argv[3])
 elif len(sys.argv) == 5:
     parse_charmap_frogger(sys.argv[1], sys.argv[2:4], sys.argv[4])
-else:
-    parse_charmap_anteater(sys.argv[2], sys.argv[3:5], sys.argv[5])
+elif len(sys.argv) == 6:
+    if sys.argv[1] == "anteater":
+      parse_charmap_anteater(sys.argv[2], sys.argv[3:5], sys.argv[5])
+    else:
+      parse_charmap_bagman(sys.argv[2], sys.argv[3:5], sys.argv[5])

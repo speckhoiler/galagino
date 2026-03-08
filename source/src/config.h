@@ -16,6 +16,8 @@
 #define ENABLE_ANTEATER
 #define ENABLE_BOMBJACK
 #define ENABLE_MRDO
+#define ENABLE_BAGMAN
+#define ENABLE_PENGO
 
 // game config
 #define MASTER_ATTRACT_MENU_TIMEOUT  20000      // start games while sitting idle in menu for 20 seconds, undefine to disable

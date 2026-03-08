@@ -1,9 +1,9 @@
-# Galagino ported to platformio - with 8 additional games
+# Galagino ported to platformio - now with 16 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
-I got the games Bombjack and Mr. Do! from [Alby1970](https://github.com/Alby1970).
+The games Bombjack, Mr. Do! and Pengo I got from [Alby1970](https://github.com/Alby1970).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -26,6 +26,8 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Anteater screenshot](images/anteater.png)
 ![Bombjack screenshot](images/bombjack.png)
 ![Mr. Do screenshot](images/mrdo.png)
+![Bagman screenshot](images/bagman.png)
+![Pengo screenshot](images/pengo.png)
 
 ## Hardware
 
@@ -59,7 +61,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
 
 * The [Galagino specific code](source/) contained in this repository
 * A [Z80 software emulation](https://fms.komkon.org/EMUL8/Z80-081707.zip) by [Marat Fayzullin](https://fms.komkon.org/)
-* The original ROM files
+* The original ROM files. Please download the zip files with the exact names.
     * [Galaga (Namco Rev. B ROM)](https://www.google.com/search?q=galaga.zip+arcade+rom)
     * [Pac-Man (Midway)](https://www.google.com/search?q=pacman.zip+arcade+rom)
     * [Donkey Kong (US set 1)](https://www.google.com/search?q=dkong.zip+arcade+rom)
@@ -74,6 +76,8 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Anteater](https://www.google.com/search?q=anteater.zip+arcade+rom)
     * [Bombjack](https://www.google.com/search?q=bombjack.zip+arcade+rom)
     * [Mr. Do!](https://www.google.com/search?q=mrdo.zip+arcade+rom)
+    * [Bagman](https://www.google.com/search?q="bagmanm2.zip"+download) (Important: filename with "m2")
+    * [Pengo](https://www.google.com/search?q=pengo2u.zip+arcade+rom) (Important: filename with "2u")
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
@@ -102,7 +106,7 @@ With the current configuration, the buttons have the following additional functi
 * Volume up: Hold coin button and push the joystick up. Default setting is 3. 1 is the loudest.
 * Volume down: Hold coin button and push the joystick down.
 * Return back to menu: Hold the coin button for more than 3 seconds. Attract mode is then active again.
-* Demo sounds off: To disable the demo sounds of Galaga, Digdug, The Glob and Bombjack, hold down the fire button while turning it on.
+* Demo sounds off: To disable the demo sounds of Galaga, Digdug, The Glob, Anteater, Bombjack and Pengo hold down the fire button while turning it on.
 * The Glob game: Push coin button to call the elevator.
 
 ## Attract mode

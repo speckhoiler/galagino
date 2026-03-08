@@ -1,0 +1,30 @@
+#ifndef _pengo_dipswitches_h_
+#define _pengo_dipswitches_h_
+
+#define PENGO_DIP_BONUS_LIFE_30000       0b00000000
+#define PENGO_DIP_BONUS_LIFE_50000       0b00000001
+
+#define PENGO_DIP_DEMOSOUNDS_OFF         0b00000010
+#define PENGO_DIP_DEMOSOUNDS_ON          0b00000000
+
+#define PENGO_DIP_COCKTAIL               0b00000100
+#define PENGO_DIP_UPRIGHT                0b00000000
+
+#define PENGO_DIP_LIVE5                  0b00000000
+#define PENGO_DIP_LIVE4                  0b00001000
+#define PENGO_DIP_LIVE3                  0b00010000
+#define PENGO_DIP_LIVE2                  0b00011000
+
+#define PENGO_DIP_RACK_TEST_OFF          0b00100000
+#define PENGO_DIP_RACK_TEST_ON           0b00000000
+
+#define PENGO_DIP_DIFFICULTY_EASY        0b11000000
+#define PENGO_DIP_DIFFICULTY_MEDIUM      0b10000000
+#define PENGO_DIP_DIFFICULTY_HARD        0b01000000
+#define PENGO_DIP_DIFFICULTY_HARDEST     0b00000000
+
+#define PENGO_DSW0 (PENGO_DIP_BONUS_LIFE_30000 | PENGO_DIP_UPRIGHT | PENGO_DIP_LIVE3 | PENGO_DIP_RACK_TEST_OFF | PENGO_DIP_DIFFICULTY_EASY)
+
+#define PENGO_DSW1 (0xCC) //COINS
+
+#endif

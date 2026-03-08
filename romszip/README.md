@@ -1,4 +1,5 @@
 Put rom zip files here:
+Z80-081707.zip
 1942.zip
 digdug.zip
 dkong.zip
@@ -13,4 +14,5 @@ crush.zip
 anteater.zip
 bombjack.zip
 mrdo.zip
-Z80-081707.zip
+pengo2u.zip
+bagmanm2.zip

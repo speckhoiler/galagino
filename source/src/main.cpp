@@ -77,6 +77,14 @@
   #include "machines/mrdo/mrdo.h"
 #endif
 
+#ifdef ENABLE_BAGMAN 
+  #include "machines/bagman/bagman.h"
+#endif
+
+#ifdef ENABLE_PENGO 
+  #include "machines/pengo/pengo.h"
+#endif
+
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
@@ -119,7 +127,13 @@ machineBase *machines[] = {
   new bombjack(),
 #endif
 #ifdef ENABLE_MRDO 
-  new mrdo()
+  new mrdo(),
+#endif
+#ifdef ENABLE_BAGMAN 
+  new bagman(),
+#endif
+#ifdef ENABLE_PENGO 
+  new pengo()
 #endif
 };
 
