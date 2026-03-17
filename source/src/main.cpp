@@ -208,11 +208,6 @@ void setup() {
   led.init();
 #endif
 
-#ifdef SINGLE_MACHINE
-  // start machine [0]
-  emulation_start();
-#endif
-
   video.begin();
   Serial.print("Free heap: "); Serial.println(ESP.getFreeHeap());
 }
@@ -227,13 +222,9 @@ void loop(void) {
 }
 
 void updateAudioVideo(void) {
-  bool isMenu = false;
   uint32_t t0 = micros();
 
-#ifdef SINGLE_MACHINE
-  currentMachine->prepare_frame();
-#else
-  isMenu = menu.machineIndexIsMenu();
+  bool isMenu = menu.machineIndexIsMenu();
   if(isMenu) {
     menu.handle();
   }
@@ -260,7 +251,6 @@ void updateAudioVideo(void) {
     menu.show_menu();
     doReset = false;
   }
-#endif
 
   bool videoHalfRate = true;
 #ifndef VIDEO_HALF_RATE
@@ -318,13 +308,10 @@ void updateAudioVideo(void) {
 
 // render one of 36 tile rows (8 x 224 pixel lines)
 void renderRow(short row, bool isMenu) {
-#ifndef SINGLE_MACHINE 
   if(isMenu) {
     menu.render_row(row);
   } 
-  else
-#endif  
-  {
+  else {
     memset(frame_buffer, 0, 2 * 224 * 8);
     currentMachine->render_row(row);
   }

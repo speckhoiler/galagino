@@ -118,7 +118,7 @@ void bagman::run_frame(void) {
   
   if(irq_enable[0]) {
     // wait till last interrupt acknowledged
-    while (cpu[0].IFF == IFF_IM1) {
+    while (cpu[0].IFF != 0x0b) {
       StepZ80(&cpu[0]);
     }
 

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import datetime
 
 # --- CONFIGURAZIONE PER PENGO (fissa all'interno dello script) ---
 # Nome del file ROM di input
@@ -40,7 +39,6 @@ def parse_pengo_wavetable():
     with open(OUTPUT_H_FILE, "w") as of:
         # Scrive l'intestazione del file C
         of.write(f"// Wavetable audio per Pengo\n")
-        of.write(f"// Generato da script il {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         of.write(f"// ROM di origine: {os.path.basename(INPUT_ROM_FILE)}\n\n")
         of.write("#pragma once\n\n")
         
