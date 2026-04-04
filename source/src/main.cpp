@@ -196,6 +196,7 @@ void setup() {
     machines[i]->init(&input, frame_buffer, sprite_buffer, memory);
 
   audio.init();
+  audio.mute(true);
   audio.start(currentMachine);
 
   input.init(machinesCount == 1);
@@ -231,6 +232,7 @@ void updateAudioVideo(void) {
   else {
     if (menu.startMachine()) {
       currentMachine = machines[menu.machineIndexSelected()];
+      audio.mute(false);
       audio.start(currentMachine);
       if (currentMachine->videoFlipY())
         video.flipVertical(1);
@@ -248,9 +250,10 @@ void updateAudioVideo(void) {
     // stop current machine
     emulation_stop();
   
+    audio.mute(true);
     menu.show_menu();
     doReset = false;
-  }
+}
 
   bool videoHalfRate = true;
 #ifndef VIDEO_HALF_RATE

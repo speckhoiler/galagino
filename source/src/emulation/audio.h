@@ -32,6 +32,7 @@ public:
   void start(machineBase *machineBase);
   void transmit();
   void volumeUpDown(bool up, bool down);
+  void mute(bool enable);
 
 private:
   void namco_render_buffer(void);
