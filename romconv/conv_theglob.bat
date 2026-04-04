@@ -5,7 +5,7 @@ python ./unpack.py theglobp.zip
 if errorlevel 1 goto :error
 
 rem echo TheGlob Logos
-rem python ./logoconv.py ../logos/theglob.png ../source/src/machines/theglob/theglob_logo.h
+python ./logoconv.py ../logos/theglob.png ../source/src/machines/theglob/theglob_logo.h
 if errorlevel 1 goto :error
 
 echo TheGlob CPU code

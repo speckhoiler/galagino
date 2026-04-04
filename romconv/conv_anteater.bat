@@ -5,7 +5,7 @@ python ./unpack.py anteater.zip
 if errorlevel 1 goto :error
 
 rem echo Anteater Logos
-rem python ./logoconv.py ../logos/anteater.png ../source/src/machines/anteater/anteater_logo.h
+python ./logoconv.py ../logos/anteater.png ../source/src/machines/anteater/anteater_logo.h
 if errorlevel 1 goto :error
 
 echo Anteater CPU code

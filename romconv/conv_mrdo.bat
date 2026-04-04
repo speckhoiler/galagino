@@ -5,7 +5,7 @@ python ./unpack.py mrdo.zip
 if errorlevel 1 goto :error
 
 rem echo MrDo Logos
-rem python ./logoconv.py ../logos/mrdo.png ../source/src/machines/mrdo/mrdo_logo.h
+python ./logoconv.py ../logos/mrdo.png ../source/src/machines/mrdo/mrdo_logo.h
 if errorlevel 1 goto :error
 
 cd mrdo

@@ -5,7 +5,7 @@ python ./unpack.py bombjack.zip
 if errorlevel 1 goto :error
 
 rem echo Bombjack Logos
-rem python ./logoconv.py ../logos/bombjack.png ../source/src/machines/bombjack/bombjack_logo.h
+python ./logoconv.py ../logos/bombjack.png ../source/src/machines/bombjack/bombjack_logo.h
 if errorlevel 1 goto :error
 
 cd bombjack

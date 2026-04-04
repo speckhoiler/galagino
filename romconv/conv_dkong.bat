@@ -5,7 +5,7 @@ python ./unpack.py dkong.zip
 if errorlevel 1 goto :error
 
 rem echo Dkong Logos
-rem python ./logoconv.py ../logos/dkong.png ../source/src/machines/dkong/dkong_logo.h
+python ./logoconv.py ../logos/dkong.png ../source/src/machines/dkong/dkong_logo.h
 if errorlevel 1 goto :error
 
 echo Dkong CPU code

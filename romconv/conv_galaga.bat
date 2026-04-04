@@ -5,7 +5,7 @@ python ./unpack.py galaga.zip
 if errorlevel 1 goto :error
 
 rem echo Galaga Logos
-rem python ./logoconv.py ../logos/galaga.png ../source/src/machines/galaga/galaga_logo.h
+python ./logoconv.py ../logos/galaga.png ../source/src/machines/galaga/galaga_logo.h
 if errorlevel 1 goto :error
 
 echo Galaga CPU code

@@ -5,7 +5,7 @@ python ./unpack.py pengo2u.zip
 if errorlevel 1 goto :error
 
 rem echo Pengo Logos
-rem python ./logoconv.py ../logos/pengo.png ../source/src/machines/pengo/pengo_logo.h
+python ./logoconv.py ../logos/pengo.png ../source/src/machines/pengo/pengo_logo.h
 if errorlevel 1 goto :error
 
 cd pengo

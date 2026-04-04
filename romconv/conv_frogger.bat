@@ -5,7 +5,7 @@ python ./unpack.py frogger.zip
 if errorlevel 1 goto :error
 
 rem echo Frogger Logos
-rem python ./logoconv.py ../logos/frogger.png ../source/src/machines/frogger/frogger_logo.h
+python ./logoconv.py ../logos/frogger.png ../source/src/machines/frogger/frogger_logo.h
 if errorlevel 1 goto :error
 
 echo Frogger CPU code

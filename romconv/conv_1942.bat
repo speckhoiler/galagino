@@ -5,7 +5,7 @@ python ./unpack.py 1942.zip
 if errorlevel 1 goto :error
 
 rem echo 1942 Logos
-rem python ./logoconv.py ../logos/1942.png ../source/src/machines/1942/1942_logo.h
+python ./logoconv.py ../logos/1942.png ../source/src/machines/1942/1942_logo.h
 if errorlevel 1 goto :error
 
 echo 1942 CPU code

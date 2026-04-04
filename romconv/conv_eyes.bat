@@ -5,7 +5,7 @@ python ./unpack.py eyes.zip
 if errorlevel 1 goto :error
 
 rem echo Eyes Logos
-rem python ./logoconv.py ../logos/eyes.png ../source/src/machines/eyes/eyes_logo.h
+python ./logoconv.py ../logos/eyes.png ../source/src/machines/eyes/eyes_logo.h
 if errorlevel 1 goto :error
 
 echo Eyes CPU code

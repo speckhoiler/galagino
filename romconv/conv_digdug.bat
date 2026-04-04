@@ -5,7 +5,7 @@ python ./unpack.py digdug.zip
 if errorlevel 1 goto :error
 
 REM echo Digdug Logos
-REM python ./logoconv.py ../logos/digdug.png ../source/src/machines/digdug/digdug_logo.h
+python ./logoconv.py ../logos/digdug.png ../source/src/machines/digdug/digdug_logo.h
 if errorlevel 1 goto :error
 
 echo Digdug CPU code
