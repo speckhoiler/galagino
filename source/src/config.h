@@ -53,7 +53,7 @@
   #define TFT_CS          15
   #define TFT_DC          2
   #define TFT_RST         -1
-  #define TFT_BL          27   // don't set if backlight is hard wired
+  #define TFT_BL          27   // don't set if backlight is hard wired, some CYD's maybe pin 21
   #define TFT_BL_LEVEL    HIGH  // backlight on with low or high signal
   //#define TFT_ILI9341 // define for ili9341, otherwise st7789
   //#define TFT_VFLIP   // define for upside down
@@ -63,15 +63,28 @@
   #define TFT_SCLK 	      14
   //#define TFT_MAC  	    0x20  // some CYD need this to rotate properly and have correct colors
 
-  // Pins used for buttons
-  #define BTN_START_PIN	  35
-  //#define BTN_COIN_PIN    21   // if this is not defined, then start will act as coin & start
+  #ifndef MCP23017_INPUT
+    // Pins used for buttons
+    #define BTN_START_PIN	  35
+    //#define BTN_COIN_PIN    21   // if this is not defined, then start will act as coin & start
 
-  #define BTN_LEFT_PIN    21
-  #define BTN_RIGHT_PIN   22
-  #define BTN_DOWN_PIN    16
-  #define BTN_UP_PIN      17
-  #define BTN_FIRE_PIN    4
+    #define BTN_LEFT_PIN    21
+    #define BTN_RIGHT_PIN   22
+    #define BTN_DOWN_PIN    16
+    #define BTN_UP_PIN      17
+    #define BTN_FIRE_PIN    4
+  #else
+    #define MCP23017_SDA    22
+    #define MCP23017_SCL    27
+    #define MCP23017_LEFT_PIN   0
+    #define MCP23017_RIGHT_PIN  1
+    #define MCP23017_UP_PIN     2
+    #define MCP23017_DOWN_PIN   3
+    #define MCP23017_FIRE_PIN   4
+    #define MCP23017_EXTRA_PIN  5
+    #define MCP23017_COIN_PIN   6
+    #define MCP23017_START_PIN  7
+  #endif
 #endif
 
 #ifndef CHEAP_YELLOW_DISPLAY_CONF

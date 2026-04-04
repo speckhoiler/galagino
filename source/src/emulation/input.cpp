@@ -2,7 +2,7 @@
 
 void Input::init(char SingleMachine) {
   singleMachine = SingleMachine;
-#ifndef NUNCHUCK_INPUT
+#if !defined(NUNCHUCK_INPUT) && !defined(MCP23017_INPUT)
   pinMode(BTN_START_PIN, INPUT_PULLUP);
   #ifdef BTN_COIN_PIN
     pinMode(BTN_COIN_PIN, INPUT_PULLUP);
@@ -12,8 +12,10 @@ void Input::init(char SingleMachine) {
   pinMode(BTN_DOWN_PIN, INPUT_PULLUP);
   pinMode(BTN_UP_PIN, INPUT_PULLUP);
   pinMode(BTN_FIRE_PIN, INPUT_PULLUP);
-#else
+#elif defined(NUNCHUCK_INPUT)
   nunchuck.setup();
+#elif defined(MCP23017_INPUT)
+  mcp.setup();
 #endif
 
   char inputs = buttons_get();
@@ -32,11 +34,18 @@ void Input::enable() {
 #ifdef NUNCHUCK_INPUT
   nunchuck.enable();
 #endif
+#ifdef MCP23017_INPUT
+  mcp.enable();
+#endif
 }
 
 void Input::disable() {
 #ifdef NUNCHUCK_INPUT
   nunchuck.disable();
+  vTaskDelay(100);
+#endif
+#ifdef MCP23017_INPUT
+  mcp.disable();
   vTaskDelay(100);
 #endif
 }
@@ -47,6 +56,8 @@ unsigned char Input::buttons_get(void) {
   unsigned char input_states = 0;
 #ifdef NUNCHUCK_INPUT
   input_states = nunchuck.getInput();  
+#elif defined(MCP23017_INPUT)
+  input_states = mcp.getInput();
 #else
   #ifdef BTN_COIN_PIN
     input_states = (!digitalRead(BTN_COIN_PIN)) ? BUTTON_EXTRA : 0;
