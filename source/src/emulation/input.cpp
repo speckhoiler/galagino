@@ -28,18 +28,6 @@ char Input::demoSoundsOff() {
   return switchDemoSoundsOff;
 }
 
-void Input::enable() {
-#ifdef NUNCHUCK_INPUT
-  nunchuck.enable();
-#endif
-}
-
-void Input::disable() {
-#ifdef NUNCHUCK_INPUT
-  nunchuck.disable();
-  vTaskDelay(100);
-#endif
-}
 unsigned char Input::buttons_get(void) {
   // galagino can be compiled without coin button. This will then
   // be implemented by the start button. Whenever the start button 

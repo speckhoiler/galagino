@@ -56,3 +56,4 @@ conv_bombjack.bat
 conv_mrdo.bat
 conv_bagman.bat
 conv_pengo.bat
+conv_gyruss.bat

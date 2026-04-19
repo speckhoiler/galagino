@@ -50,7 +50,6 @@ void Audio::start(machineBase *machineBase) {
   // DAC connected to port 0.
 
   // The effective sample rate thus is 6M/15/34 = 11764.7 Hz
-  signed char machineType = currentMachine->machineType();
   i2s_set_sample_rates(I2S_NUM_0, machineType == MCH_DKONG ? 11765 : 24000);
 #endif
 }
@@ -86,6 +85,8 @@ void Audio::transmit() {
         sn76489_render_buffer();
       else if(machineType == MCH_BAGMAN)
         discrete_render_buffer();
+      else if(machineType == MCH_DKONG)
+	      i8048_render_buffer();
       else
         ay_render_buffer();
     }
@@ -96,11 +97,8 @@ void Audio::ay_render_buffer(void) {
   char AY = (machineType == MCH_FROGGER) ? 1 : 2;       // frogger has one AY / 1942 has two AYs
   char AY_INC = (machineType == MCH_FROGGER || machineType == MCH_ANTEATER) ? 9 : 8;   // froggger runs at 1.78 MHz -> 223718/24000 = 9,32 / 1942 runs at 1.5 MHz -> 187500/24000 = 7,81
   char AY_VOL = (machineType == MCH_FROGGER) ? 11 : 5;  // frogger min/max = -/+ 3*15*11 = -/+ 495 / 1942 min/max = -/+ 6*15*11 = -/+ 990
-  if (machineType == MCH_BOMBJACK) {
-    AY_VOL = 10;
-    AY = 3;
-    AY_INC = 8;
-  }
+  if (machineType == MCH_BOMBJACK) { AY = 3; AY_INC = 8; AY_VOL = 10; }
+  if (machineType == MCH_GYRUSS) { AY = 5; AY_INC = 9; AY_VOL = 3; }
 
   // up to three AY's
   for(char ay = 0; ay < AY; ay++) {
@@ -136,46 +134,7 @@ void Audio::ay_render_buffer(void) {
   for(int i = 0; i < 64; i++) {
     short value = 0; // silence
 
-    if(machineType == MCH_DKONG) {
-      dkong *dkongMachine = dynamic_cast<dkong*>(currentMachine);
-      
-      // no buffer available
-      if(dkongMachine->dkong_audio_rptr != dkongMachine->dkong_audio_wptr)
-        // copy data from dkong buffer into tx buffer
-        // 8048 sounds gets 50% of the available volume range
-#ifdef WORKAROUND_I2S_APLL_PROBLEM
-        value = dkongMachine->dkong_audio_transfer_buffer[dkongMachine->dkong_audio_rptr][(dkongMachine->dkong_obuf_toggle ? 32 : 0) + (i / 2)];
-#else
-        value = dkongMachine->dkong_audio_transfer_buffer[dkongMachine->dkong_audio_rptr][i];
-#endif
-
-      // include sample sounds
-      // walk is 6.25% volume, jump is at 12.5% volume and, stomp is at 25%
-      for(char j = 0; j < 3; j++) {
-        if(dkongMachine->dkong_sample_cnt[j]) {
-#ifdef WORKAROUND_I2S_APLL_PROBLEM
-          value += *dkongMachine->dkong_sample_ptr[j] >> (2 - j); 
-          if(i & 1) { // advance read pointer every second sample
-            dkongMachine->dkong_sample_ptr[j]++;
-            dkongMachine->dkong_sample_cnt[j]--;
-          }
-#else
-          volume += *dkongMachine->dkong_sample_ptr[j]++ >> (2 - j); 
-          dkongMachine->dkong_sample_cnt[j]--;
-#endif
-        }
-      }
-#ifdef WORKAROUND_I2S_APLL_PROBLEM
-      if (i == 63) {
-        // advance write pointer. The buffer is a ring
-        if(dkongMachine->dkong_obuf_toggle)
-          dkongMachine->dkong_audio_rptr = (dkongMachine->dkong_audio_rptr + 1) & DKONG_AUDIO_QUEUE_MASK;
-        
-        dkongMachine->dkong_obuf_toggle = !dkongMachine->dkong_obuf_toggle;
-      }
-#endif
-    }
-    else if(machineType == MCH_FROGGER || machineType == MCH_1942 || machineType == MCH_ANTEATER) {    
+    if(machineType == MCH_FROGGER || machineType == MCH_1942 || machineType == MCH_ANTEATER || machineType == MCH_GYRUSS) {    
       for(char ay = 0; ay < AY; ay++) {
         // frogger can acually skip the noise generator as
         // it doesn't use it      
@@ -283,6 +242,53 @@ void Audio::ay_render_buffer(void) {
       }
       value = value / 3;
     }
+    valueToBuffer(i, value);
+  }
+}
+
+void Audio::i8048_render_buffer(void) {
+  dkong *dkongMachine = dynamic_cast<dkong*>(currentMachine);
+
+  // render first buffer contents
+  for(int i = 0; i < 64; i++) {
+    short value = 0; // silence
+
+    // no buffer available
+    if(dkongMachine->dkong_audio_rptr != dkongMachine->dkong_audio_wptr)
+      // copy data from dkong buffer into tx buffer
+      // 8048 sounds gets 50% of the available volume range
+#ifdef WORKAROUND_I2S_APLL_PROBLEM
+      value = dkongMachine->dkong_audio_transfer_buffer[dkongMachine->dkong_audio_rptr][(dkongMachine->dkong_obuf_toggle ? 32 : 0) + (i / 2)];
+#else
+      value = dkongMachine->dkong_audio_transfer_buffer[dkongMachine->dkong_audio_rptr][i];
+#endif
+
+    // include sample sounds
+    // walk is 6.25% volume, jump is at 12.5% volume and, stomp is at 25%
+    for(char j = 0; j < 3; j++) {
+      if(dkongMachine->dkong_sample_cnt[j]) {
+#ifdef WORKAROUND_I2S_APLL_PROBLEM
+        value += *dkongMachine->dkong_sample_ptr[j] >> (2 - j); 
+        if(i & 1) { // advance read pointer every second sample
+          dkongMachine->dkong_sample_ptr[j]++;
+          dkongMachine->dkong_sample_cnt[j]--;
+        }
+#else
+        value += *dkongMachine->dkong_sample_ptr[j]++ >> (2 - j); 
+        dkongMachine->dkong_sample_cnt[j]--;
+#endif
+      }
+    }
+#ifdef WORKAROUND_I2S_APLL_PROBLEM
+    if (i == 63) {
+      // advance write pointer. The buffer is a ring
+      if(dkongMachine->dkong_obuf_toggle)
+        dkongMachine->dkong_audio_rptr = (dkongMachine->dkong_audio_rptr + 1) & DKONG_AUDIO_QUEUE_MASK;
+        
+      dkongMachine->dkong_obuf_toggle = !dkongMachine->dkong_obuf_toggle;
+    }
+#endif
+
     valueToBuffer(i, value);
   }
 }

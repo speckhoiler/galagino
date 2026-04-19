@@ -174,15 +174,42 @@ void Video::begin(void) {
 #endif
 }
 
-void Video::flipVertical(char flip) {    
+void Video::flip(char flipY, char flipX) {    
+  if (!flipY && !flipX)
+    return;
+
   if (dma_active)
     spi_device_get_trans_result(handle, &r_trans, portMAX_DELAY);
  
   writeCommand(0x36); // Row address set, same command for ili9341 and st7789
 #ifdef TFT_ILI9341
-  write8(flip == 1 ? TFT_MAC ^ 0xc0 : TFT_MAC);
+  if (flipY)
+    write8(TFT_MAC ^ 0xc0);
+  else
+    write8(0x08);
 #else
-  write8(flip == 1 ? 0 : 0xc0);
+  if (flipY)
+    write8(0);
+  else
+    write8(0x80);
+#endif
+  writeCommand(0x2C); // Write to RAM, same command for ili9341 and st7789 
+
+  dma_active = 0; 
+}
+
+void Video::flipReset(char flipY, char flipX) {
+  if (!flipY && !flipX)
+    return;
+
+  if (dma_active)
+    spi_device_get_trans_result(handle, &r_trans, portMAX_DELAY);
+ 
+  writeCommand(0x36); // Row address set, same command for ili9341 and st7789
+#ifdef TFT_ILI9341
+  write8(TFT_MAC);
+#else
+  write8(0xc0);
 #endif
   writeCommand(0x2C); // Write to RAM, same command for ili9341 and st7789 
 

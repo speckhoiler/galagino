@@ -18,6 +18,7 @@ call conv_bombjack.bat
 call conv_mrdo.bat
 call conv_bagman.bat
 call conv_pengo.bat
+call conv_gyruss.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!

@@ -3,10 +3,9 @@
 #include "input.h"
 #include "../machines/machineBase.h"
 
-// including of "../machines/machineBase.h" in "emulation.h" not possible
-TaskHandle_t emulationTaskHandle;
 extern machineBase *currentMachine;
-extern Input input;
+TaskHandle_t emulationTaskHandle;
+volatile static char doDeleteEmulationTask;
 
 void emulation_start() {
   currentMachine->reset();
@@ -14,59 +13,63 @@ void emulation_start() {
 }
 
 void emulation_stop() {
-  if (emulationTaskHandle == NULL)
+  if (!emulationTaskHandle)
     return;
   
-  input.disable(); // disable input read from nunchuck
-  
-  vTaskDelete(emulationTaskHandle);
+  doDeleteEmulationTask = 1;  
+  while (doDeleteEmulationTask) {
+    xTaskNotifyGive(emulationTaskHandle);
+    vTaskDelay(1);
+  }
+
   emulationTaskHandle = NULL;
   currentMachine->reset();  // clear sound output
-
-  input.enable(); // enable input read from nunchuck
 }
 
 void emulation_notifyGive() {
-  if (emulationTaskHandle == NULL)
+  if (!emulationTaskHandle)
     return;
 
   xTaskNotifyGive(emulationTaskHandle);
 }
 
-void emulation_task(void *p) {  
+IRAM_ATTR void emulation_task(void *p) {
+  currentMachine->start();
+    
   for(;;) {
-    emulation_frame();
-  }
-}
+    currentMachine->run_frame();
 
-void emulation_frame() {
-  // It may happen that the emulation runs too slow. It will then miss the
-  // vblank notification and in turn will miss a frame and significantly
-  // slow down. This risk is only given with Galaga as the emulation of
-  // all three CPUs takes nearly 13ms. The 60hz vblank rate is in turn 
-  // 16.6 ms.  
+    if (doDeleteEmulationTask) {
+      doDeleteEmulationTask = 0;
+      vTaskDelete(emulationTaskHandle);
+    }
+
+    // It may happen that the emulation runs too slow. It will then miss the
+    // vblank notification and in turn will miss a frame and significantly
+    // slow down. This risk is only given with Galaga as the emulation of
+    // all three CPUs takes nearly 13ms. The 60hz vblank rate is in turn 
+    // 16.6 ms.  
 #if 0
-  static int counter;
-  static unsigned long time = millis();
+    static int counter;
+    static unsigned long time = millis();
   
-  if (counter % 10 == 0) {
-    // good time: 160ms
-    unsigned long now = millis();
-    printf("%2d: %dms\n", (int)currentMachine->machineType(),  now - time);
-    time = now;
-  }
-  counter++;
+    if (counter % 10 == 0) {
+      // good time: 160...170ms
+      unsigned long now = millis();
+      printf("10 frames: %dms\n",  now - time);
+      time = now;
+    }
+    counter++;
 #endif
-   
-  currentMachine->run_frame();
 
-  // Wait for signal from video task to emulate a 60Hz frame rate. Don't do
-  // this unless the game has actually started to speed up the boot process
-  // a little bit.
-  if(currentMachine->game_started)   
-    ulTaskNotifyTake(1, portMAX_DELAY);
-  else
-    vTaskDelay(1); // give a millisecond delay to make the watchdog happy
+    // Wait for signal from video task to emulate a 60Hz frame rate. Don't do
+    // this unless the game has actually started to speed up the boot process
+    // a little bit.
+    if(currentMachine->game_started)   
+      ulTaskNotifyTake(1, portMAX_DELAY);
+    else
+      vTaskDelay(1); // give a millisecond delay to make the watchdog happy
+  }
 }
 
 unsigned char OpZ80_INL(unsigned short Addr) {

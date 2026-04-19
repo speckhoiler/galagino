@@ -54,7 +54,8 @@ enum {
   MCH_BOMBJACK,
   MCH_MRDO,
   MCH_BAGMAN,
-  MCH_PENGO
+  MCH_PENGO,
+  MCH_GYRUSS
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame
@@ -78,6 +79,7 @@ public:
       memset(soundregs, 0, sizeof(soundregs)); 
      }
 
+    virtual void start() { }
     virtual void reset() {
       for(current_cpu = 0; current_cpu < sizeof(cpu) / sizeof(Z80); current_cpu++)
         ResetZ80(&cpu[current_cpu]);
@@ -97,6 +99,7 @@ public:
 
     virtual signed char machineType() { return MCH_MENU; } 
     virtual signed char videoFlipY() { return 0; } 
+    virtual signed char videoFlipX() { return 0; } 
     virtual signed char useVideoHalfRate() { return 0; } 
     
     virtual unsigned char rdZ80(unsigned short Addr) { return 0xff; }
@@ -122,7 +125,7 @@ public:
     virtual void gameLeds(CRGB *leds) { memcpy(leds, menu_leds, NUM_LEDS*sizeof(CRGB)); };
 #endif
     char game_started;	
-    unsigned char soundregs[48];
+    unsigned char soundregs[80];
     
     //Mr.Do!
     int sn_period[2][4];    // 4 canali per chip (3 tono + 1 rumore)

@@ -51,7 +51,7 @@ bool Menu::machineIndexIsMenu() {
 
 bool Menu::attract_gameTimeout() {
 #ifdef MASTER_ATTRACT_GAME_TIMEOUT
-  if(master_attract_timeout && (millis() - master_attract_timeout > MASTER_ATTRACT_GAME_TIMEOUT)) {
+  if(machinesCount > 1 && master_attract_timeout && (millis() - master_attract_timeout > MASTER_ATTRACT_GAME_TIMEOUT)) {
     master_attract_timeout = millis();
 
     // select next attract machine

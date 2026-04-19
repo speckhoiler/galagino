@@ -1,24 +1,6 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-// disable e.g. if roms are missing
-#define ENABLE_PACMAN
-#define ENABLE_GALAGA
-#define ENABLE_DKONG
-#define ENABLE_FROGGER
-#define ENABLE_DIGDUG
-#define ENABLE_1942
-#define ENABLE_EYES
-#define ENABLE_MRTNT
-#define ENABLE_LIZWIZ
-#define ENABLE_THEGLOB
-#define ENABLE_CRUSH
-#define ENABLE_ANTEATER
-#define ENABLE_BOMBJACK
-#define ENABLE_MRDO
-#define ENABLE_BAGMAN
-#define ENABLE_PENGO
-
 // game config
 #define MASTER_ATTRACT_MENU_TIMEOUT  20000      // start games while sitting idle in menu for 20 seconds, undefine to disable
 #define MASTER_ATTRACT_GAME_TIMEOUT  60000 * 5  // restart after 5 minutes 

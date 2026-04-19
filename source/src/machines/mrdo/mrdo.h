@@ -43,7 +43,7 @@ public:
 protected:
 	void blit_tile_bg(short logical_row);
 	void blit_tile_fg(short row, char col);
-	void blit_sprite(short row, unsigned char s_idx);
+	void blit_sprite(short row, unsigned char s_idx) override;
 
 private:
 	unsigned char protection_r();

@@ -9,7 +9,9 @@ FILES2COPY=[ "CodesCB.h", "Codes.h", "CodesXX.h", "CodesED.h", "CodesXCB.h", "Ta
 Z80H_EXTRA=b"""void JumpZ80(word PC);
 #endif
 
-void StepZ80(register Z80 *R);
+#include "esp_attr.h"
+
+IRAM_ATTR void StepZ80(register Z80 *R);
 unsigned char OpZ80_INL(unsigned short Addr);
 
 #ifdef __cplusplus

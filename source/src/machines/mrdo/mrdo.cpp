@@ -55,7 +55,7 @@ unsigned char mrdo::rdZ80(unsigned short Addr) {
       if (keymask & BUTTON_UP)
         retval &= ~0x08;
       // if game started with fire button, do not jump to service mode...
-      if (ignoreFireButton & !(keymask & BUTTON_FIRE))
+      if (ignoreFireButton && !(keymask & BUTTON_FIRE))
         ignoreFireButton = 0;
 
       if(!ignoreFireButton && (keymask & BUTTON_FIRE)) {

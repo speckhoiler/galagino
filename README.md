@@ -1,9 +1,10 @@
-# Galagino ported to platformio - now with 16 games!
+# Galagino ported to platformio - now with 17 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
 The games Bombjack, Mr. Do! and Pengo I got from [Alby1970](https://github.com/Alby1970).
+The game Gyruss, I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -28,6 +29,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Mr. Do screenshot](images/mrdo.png)
 ![Bagman screenshot](images/bagman.png)
 ![Pengo screenshot](images/pengo.png)
+![Gyruss screenshot](images/gyruss.png)
 
 ## Hardware
 
@@ -78,6 +80,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Mr. Do!](https://www.google.com/search?q=mrdo.zip+arcade+rom)
     * [Bagman](https://www.google.com/search?q="bagmanm2.zip"+download) (Important: filename with "m2")
     * [Pengo](https://www.google.com/search?q=pengo2u.zip+arcade+rom) (Important: filename with "2u")
+    * [Gyruss](https://www.google.com/search?q=gyruss.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
@@ -90,7 +93,7 @@ Please ensure that the stripts run without errors!
 
 With all these files in place, the source folder can be loaded into visual studio code with the [PlatformIO](https://platformio.org/) plugin. The needed
 platform packages and the arduino framework will be installed during compilation automatically.
-For best performance, compile and upload the release version.
+For best performance, compile and upload the release version. All games are running at nearly 100% speed.
 
 Like in the original:
 If you want to use a LED stripe, you have to download FastLED library.
@@ -98,7 +101,7 @@ If you want to use a nunchuck, you need the NintendoExtensionCtrl library - emul
  
 ## Configuration
 
-The Galagino code can be configured through the [config.h](./source/src/config.h) and [platformio.ini](./source/platformio.ini) file. 
+The Galagino code can be configured through the [config.h](./source/src/config.h), [machines.h](./source/src/machines.h) and [platformio.ini](./source/platformio.ini) file. 
 
 ## Controls
 
@@ -114,6 +117,8 @@ With the current configuration, the buttons have the following additional functi
 In Attract mode, the machine cycles through all games if you do not touch the joystick. The games end after 5 minutes.
 
 ## Limitations
+
+Gyruss: The sound cpu I8039 is missing - so there is no drum sound. Sometimes sprites appear that are no longer in use.
 
 Because of no free GPIO´s, the following buttons are not connected and do not work:
 * Power board: Light button / headphone jack

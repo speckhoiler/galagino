@@ -97,6 +97,7 @@ void galaga::wrZ80(unsigned short Addr, unsigned char Value) {
 
   if((Addr & 0xe000) == 0x8000) {
     memory[Addr-0x8000] = Value;
+    return;
   }
   
   // namco 06xx

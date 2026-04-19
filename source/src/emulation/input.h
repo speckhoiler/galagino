@@ -21,8 +21,6 @@
 class Input {
 public:
   void init(char SingleMachine);
-  void enable();
-  void disable();
   unsigned char buttons_get(void);
   char demoSoundsOff();
 

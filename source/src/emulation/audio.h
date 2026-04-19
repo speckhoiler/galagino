@@ -37,6 +37,7 @@ private:
   void namco_render_buffer(void);
   void ay_render_buffer(void);
   void sn76489_render_buffer(void);
+  void i8048_render_buffer(void);
   void valueToBuffer(int index, short value);
   void discrete_render_buffer(void);
   void generateSinusWave(int32_t amplitude, short* buffer, uint16_t length);
@@ -50,11 +51,11 @@ private:
   unsigned short snd_buffer[64];  // buffer space for a single channel
 #endif
 
-  int ay_period[3][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
-  int ay_volume[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-  int ay_enable[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-  int audio_cnt[3][4], audio_toggle[3][4] = {{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
-  unsigned long ay_noise_rng[3] = {1, 1, 1};
+  int ay_period[5][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+  int ay_volume[5][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+  int ay_enable[5][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+  int audio_cnt[5][4], audio_toggle[5][4] = {{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
+  unsigned long ay_noise_rng[5] = {1, 1, 1, 1, 1};
 
   unsigned long snd_cnt[3] = {0, 0, 0};
   unsigned long snd_freq[3];

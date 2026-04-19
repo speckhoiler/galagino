@@ -8,7 +8,6 @@ void emulation_start(void);
 void emulation_stop(void);
 void emulation_notifyGive(void);
 void emulation_task(void *p);
-void emulation_frame(void);
 
 #ifdef __cplusplus
 extern "C" void OutZ80(unsigned short Port, unsigned char Value);
