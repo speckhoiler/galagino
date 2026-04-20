@@ -23,4 +23,3 @@ echo --- Error #%errorlevel%.
 pause
 
 :end
-pause
