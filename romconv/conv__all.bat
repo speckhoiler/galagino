@@ -19,6 +19,7 @@ call conv_mrdo.bat
 call conv_bagman.bat
 call conv_pengo.bat
 call conv_gyruss.bat
+call conv_ladybug.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!

@@ -77,6 +77,9 @@ private:
   int sn_counter[2][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}};
   int sn_toggle[2][4] = {{1, 1, 1, 1}, {1, 1, 1, 1}};
 
+  // Labdybug
+  uint32_t noise_lfsr[2] = {0x4000, 0x4000};
+
   // Bagman 
   unsigned short positionLast;
   short sinusWaveBuffer[256];

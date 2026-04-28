@@ -183,14 +183,18 @@ void Video::flip(char flipY, char flipX) {
  
   writeCommand(0x36); // Row address set, same command for ili9341 and st7789
 #ifdef TFT_ILI9341
-  if (flipY)
-    write8(TFT_MAC ^ 0xc0);
-  else
+  if (flipY && flipX)
+    write8(0xC8);
+  else if (flipY)
+    write8(0x88);
+  else if (flipX)
     write8(0x08);
 #else
-  if (flipY)
-    write8(0);
-  else
+  if (flipY && flipX)
+    write8(0x40);
+  else if (flipY)
+    write8(0x00);
+  else if (flipX)
     write8(0x80);
 #endif
   writeCommand(0x2C); // Write to RAM, same command for ili9341 and st7789 

@@ -1,10 +1,10 @@
-# Galagino ported to platformio - now with 17 games!
+# Galagino ported to platformio - now with 18 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
 The games Bombjack, Mr. Do! and Pengo I got from [Alby1970](https://github.com/Alby1970).
-The game Gyruss, I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
+The games Gyruss and Ladybug I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -30,6 +30,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Bagman screenshot](images/bagman.png)
 ![Pengo screenshot](images/pengo.png)
 ![Gyruss screenshot](images/gyruss.png)
+![Ladybug screenshot](images/ladybug.png)
 
 ## Hardware
 
@@ -81,6 +82,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Bagman](https://www.google.com/search?q="bagmanm2.zip"+download) (Important: filename with "m2")
     * [Pengo](https://www.google.com/search?q=pengo2u.zip+arcade+rom) (Important: filename with "2u")
     * [Gyruss](https://www.google.com/search?q=gyruss.zip+arcade+rom)
+    * [Ladybug](https://www.google.com/search?q=ladybug.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 

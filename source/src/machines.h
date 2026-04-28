@@ -19,6 +19,7 @@
 #define ENABLE_BAGMAN
 #define ENABLE_PENGO
 #define ENABLE_GYRUSS
+#define ENABLE_LADYBUG
 
 #ifdef ENABLE_PACMAN  
   #include "machines/pacman/pacman.h"
@@ -88,6 +89,10 @@
   #include "machines/gyruss/gyruss.h"
 #endif
 
+#ifdef ENABLE_LADYBUG  
+  #include "machines/ladybug/ladybug.h"
+#endif
+
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
@@ -139,7 +144,10 @@ machineBase *machines[] = {
   new pengo(),
 #endif
 #ifdef ENABLE_GYRUSS 
-  new gyruss()
+  new gyruss(),
+#endif
+#ifdef ENABLE_LADYBUG  
+  new ladybug()
 #endif
 };
 

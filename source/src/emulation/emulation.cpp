@@ -1,6 +1,5 @@
 #include "Arduino.h"
 #include "emulation.h"
-#include "input.h"
 #include "../machines/machineBase.h"
 
 extern machineBase *currentMachine;
@@ -33,7 +32,7 @@ void emulation_notifyGive() {
   xTaskNotifyGive(emulationTaskHandle);
 }
 
-IRAM_ATTR void emulation_task(void *p) {
+void emulation_task(void *p) {
   currentMachine->start();
     
   for(;;) {

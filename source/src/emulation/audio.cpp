@@ -81,7 +81,7 @@ void Audio::transmit() {
     if(bytesOut) {      
       if (currentMachine->hasNamcoAudio())
         namco_render_buffer();
-      else if(machineType == MCH_MRDO)
+      else if(machineType == MCH_MRDO || machineType == MCH_LADYBUG)
         sn76489_render_buffer();
       else if(machineType == MCH_BAGMAN)
         discrete_render_buffer();
@@ -294,19 +294,48 @@ void Audio::i8048_render_buffer(void) {
 }
 
 void Audio::sn76489_render_buffer(void) {
-  for (int i = 0; i < 64; i++) {
-    short sample = 0;
+  const int sn_inc = 11;  // SN_CLOCK / SAMPLE_RATE
+  
+  // Volumi con hold
+  int vol[2][4];
+  for (int chip = 0; chip < 2; chip++) {
+    for (int c = 0; c < 4; c++) {
+      if (currentMachine->sn_hold[chip][c] > 0) {
+        vol[chip][c] = currentMachine->sn_min_volume[chip][c];
+        currentMachine->sn_hold[chip][c]--;
+        if (currentMachine->sn_hold[chip][c] == 0)
+          currentMachine->sn_min_volume[chip][c] = currentMachine->sn_volume[chip][c];
+        } 
+        else {
+          vol[chip][c] = currentMachine->sn_volume[chip][c];
+          currentMachine->sn_min_volume[chip][c] = currentMachine->sn_volume[chip][c];
+        }
+      }
+    }
 
-    for (int chip = 0; chip < 2; chip++) {
-      for (int c = 0; c < 4; c++) {
-        if (currentMachine->sn_volume[chip][c] < 15) {
-          // ... (logica di generazione onda identica a prima) ...
-          sn_counter[chip][c] -= 11; //SN_CLOCK (8200000.0f / 2.0f / 16.0f); SAMPLE_RATE 24000.0f; SN_INC (SN_CLOCK / SAMPLE_RATE) = 10.677
-          if (sn_counter[chip][c] <= 0) {
-            sn_counter[chip][c] += currentMachine->sn_period[chip][c];
-            sn_toggle[chip][c] = -sn_toggle[chip][c];
+    for (int i = 0; i < 64; i++) {
+      short sample = 0;
+
+      for (int chip = 0; chip < 2; chip++) {
+        for (int c = 0; c < 4; c++) {
+          int period = currentMachine->sn_period[chip][c];
+
+          if (vol[chip][c] < 15 && period > 0) {
+            sn_counter[chip][c] -= sn_inc;
+
+          while (sn_counter[chip][c] <= 0) {
+            if (c == 3) {  // Noise channel
+              uint32_t feedback = (noise_lfsr[chip] & 0x01) ^ ((noise_lfsr[chip] & 0x02) >> 1);
+              noise_lfsr[chip] = (noise_lfsr[chip] >> 1) | (feedback << 14);
+              sn_toggle[chip][c] = (noise_lfsr[chip] & 0x01) ? 1 : -1;
+              sn_counter[chip][c] += (period << 3);  // Rallenta noise
+            } 
+            else {  // Tone
+              sn_counter[chip][c] += period;
+              sn_toggle[chip][c] = -sn_toggle[chip][c];
+            }
           }
-          sample += sn_toggle[chip][c] * (15 - currentMachine->sn_volume[chip][c]) * 6;
+          sample += sn_toggle[chip][c] * (15 - vol[chip][c]) * 6;
         }
       }
     }
