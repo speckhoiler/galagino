@@ -190,12 +190,21 @@ void Video::flip(char flipY, char flipX) {
   else if (flipX)
     write8(0x08);
 #else
+#ifdef TFT_VFLIP
+  if (flipY && flipX)
+    write8(0x80);
+  else if (flipY)
+    write8(0xc0);
+  else if (flipX)
+    write8(0x40);
+#else
   if (flipY && flipX)
     write8(0x40);
   else if (flipY)
     write8(0x00);
   else if (flipX)
     write8(0x80);
+#endif
 #endif
   writeCommand(0x2C); // Write to RAM, same command for ili9341 and st7789 
 
@@ -213,7 +222,11 @@ void Video::flipReset(char flipY, char flipX) {
 #ifdef TFT_ILI9341
   write8(TFT_MAC);
 #else
+#ifdef TFT_VFLIP
+  write8(0x00);
+#else
   write8(0xc0);
+#endif
 #endif
   writeCommand(0x2C); // Write to RAM, same command for ili9341 and st7789 
 
