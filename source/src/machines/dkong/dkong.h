@@ -16,6 +16,9 @@
 #include "dkong_sample_walk2.h"
 #include "dkong_sample_jump.h"
 #include "dkong_sample_stomp.h"
+#include "dkong_sample_fall.h"
+#include "dkong_sample_roar.h"
+#include "dkong_sample_snapjaw.h"
 #include "../tileaddr.h"
 #include "../machineBase.h"
 
@@ -48,29 +51,29 @@ public:
 	unsigned char dkong_obuf_toggle = 0;
 	unsigned char dkong_audio_transfer_buffer[DKONG_AUDIO_QUEUE_LEN][64];
 	unsigned char dkong_audio_rptr = 0, dkong_audio_wptr = 0;
-	unsigned short dkong_sample_cnt[3] = { 0,0,0 };
-	const signed char *dkong_sample_ptr[3];
+	unsigned short dkong_sample_cnt[6] = { 0,0,0,0,0,0};
+	const signed char *dkong_sample_ptr[6];
 
 protected:
  	void blit_tile(short row, char col) override;
 	void blit_sprite(short row, unsigned char s) override;
+	void trigger_sound(char snd);
+	
+	i8048_state_S cpu_8048;
+	
+	// sound effects register between 8048 and z80
+	unsigned char dkong_sfx_index = 0x00;
+
+	// the audio cpu is a mb8884 which in turn is 8048/49 compatible
+	unsigned char dkong_audio_assembly_buffer[64];
 
 private:
-	void trigger_sound(char snd);
+	// special variables for dkong
+	unsigned char colortable_select = 0;
 
 #ifdef LED_PIN
 	const CRGB menu_leds[7] = { LED_BLACK, LED_YELLOW, LED_RED, LED_RED, LED_RED, LED_YELLOW, LED_BLACK };
 #endif
-	// the audio cpu is a mb8884 which in turn is 8048/49 compatible
-	i8048_state_S cpu_8048;
-	
-	// special variables for dkong
-	unsigned char colortable_select = 0;
-
-	// sound effects register between 8048 and z80
-	unsigned char dkong_sfx_index = 0x00;
-
-	unsigned char dkong_audio_assembly_buffer[64];
 };
 
 #endif

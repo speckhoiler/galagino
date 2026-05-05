@@ -20,6 +20,8 @@ call conv_bagman.bat
 call conv_pengo.bat
 call conv_gyruss.bat
 call conv_ladybug.bat
+call conv_dkongjr.bat
+call conv_mspacman.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!

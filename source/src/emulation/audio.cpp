@@ -85,7 +85,7 @@ void Audio::transmit() {
         sn76489_render_buffer();
       else if(machineType == MCH_BAGMAN)
         discrete_render_buffer();
-      else if(machineType == MCH_DKONG)
+     else if(machineType == MCH_DKONG || machineType == MCH_DKONGJR)
 	      i8048_render_buffer();
       else
         ay_render_buffer();
@@ -264,17 +264,16 @@ void Audio::i8048_render_buffer(void) {
 #endif
 
     // include sample sounds
-    // walk is 6.25% volume, jump is at 12.5% volume and, stomp is at 25%
-    for(char j = 0; j < 3; j++) {
+    for(char j = 0; j < sizeof(dkongMachine->dkong_sample_cnt) / 2; j++) {
       if(dkongMachine->dkong_sample_cnt[j]) {
 #ifdef WORKAROUND_I2S_APLL_PROBLEM
-        value += *dkongMachine->dkong_sample_ptr[j] >> (2 - j); 
+        value += *dkongMachine->dkong_sample_ptr[j]; 
         if(i & 1) { // advance read pointer every second sample
           dkongMachine->dkong_sample_ptr[j]++;
           dkongMachine->dkong_sample_cnt[j]--;
         }
 #else
-        value += *dkongMachine->dkong_sample_ptr[j]++ >> (2 - j); 
+        value += *dkongMachine->dkong_sample_ptr[j]++; 
         dkongMachine->dkong_sample_cnt[j]--;
 #endif
       }
@@ -288,7 +287,12 @@ void Audio::i8048_render_buffer(void) {
       dkongMachine->dkong_obuf_toggle = !dkongMachine->dkong_obuf_toggle;
     }
 #endif
-
+    value = value << 1;
+    if (value > 384)
+      value = 384;
+    else if (value < -384)
+      value = -384;
+      
     valueToBuffer(i, value);
   }
 }

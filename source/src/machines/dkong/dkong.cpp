@@ -117,7 +117,7 @@ void dkong::wrZ80(unsigned short Addr, unsigned char Value) {
     if((Addr & 0xfff0) == 0x7d00) {
       
       // trigger samples 0 (walk), 1 (jump) and 2 (stomp)
-      if((Addr & 0x0f) <= 2  && Value)
+      if((Addr & 0x0f) <= 2 && Value)
 	      trigger_sound(Addr & 0x0f);
       
       if((Addr & 0x0f) == 3) {
@@ -182,24 +182,56 @@ void dkong::trigger_sound(char snd) {
   static const struct {
     const signed char *data;
     const unsigned short length; 
-  } samples[] = {
+  } 
+  samples[] = {
     { (const signed char *)dkong_sample_walk0, sizeof(dkong_sample_walk0) },
     { (const signed char *)dkong_sample_walk1, sizeof(dkong_sample_walk1) },
     { (const signed char *)dkong_sample_walk2, sizeof(dkong_sample_walk2) },
     { (const signed char *)dkong_sample_jump,  sizeof(dkong_sample_jump)  },
-    { (const signed char *)dkong_sample_stomp, sizeof(dkong_sample_stomp) }
+    { (const signed char *)dkong_sample_stomp, sizeof(dkong_sample_stomp) },
+    { (const signed char *)dkong_sample_roar, sizeof(dkong_sample_roar) },
+    { (const signed char *)dkong_sample_fall, sizeof(dkong_sample_fall) },
+    { (const signed char *)dkong_sample_snapjaw, sizeof(dkong_sample_snapjaw) } 
   };
 
-  // samples 0 = walk, 1 = jump, 2 = stomp
-
-  if(!snd) {
-    // walk0, walk1 and walk2 are variants
-    char rnd = random() % 3;
-    dkong_sample_cnt[0] = samples[rnd].length;
-    dkong_sample_ptr[0] = samples[rnd].data;
-  } else {
-    dkong_sample_cnt[snd] = samples[snd+2].length;
-    dkong_sample_ptr[snd] = samples[snd+2].data;
+  switch (snd) {
+    case 0: {
+      // walk0, walk1 and walk2 are variants
+      char rnd = random() % 3;
+      dkong_sample_cnt[snd] = samples[rnd].length;
+      dkong_sample_ptr[snd] = samples[rnd].data;
+      break;
+    }
+    case 1: {
+      // jump
+      dkong_sample_cnt[snd] = samples[3].length;
+      dkong_sample_ptr[snd] = samples[3].data;
+      break;
+    }
+    case 2: {
+      // stomp
+      dkong_sample_cnt[snd] = samples[4].length;
+      dkong_sample_ptr[snd] = samples[4].data;
+      break;
+    }
+    case 3: {
+      // roar
+      dkong_sample_cnt[snd] = samples[5].length;
+      dkong_sample_ptr[snd] = samples[5].data;
+      break;
+    }
+    case 4: {
+      // fall
+      dkong_sample_cnt[snd] = samples[6].length;
+      dkong_sample_ptr[snd] = samples[6].data;
+      break;
+    }
+    case 6: {
+      // snapjaw
+      dkong_sample_cnt[5] = samples[7].length;
+      dkong_sample_ptr[5] = samples[7].data;
+      break;
+    }
   }
 }
 
