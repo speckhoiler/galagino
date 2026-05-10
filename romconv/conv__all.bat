@@ -22,6 +22,7 @@ call conv_gyruss.bat
 call conv_ladybug.bat
 call conv_dkongjr.bat
 call conv_mspacman.bat
+call conv_timeplt.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!

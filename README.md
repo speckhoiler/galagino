@@ -1,10 +1,10 @@
-# Galagino ported to platformio - now with 20 games!
+# Galagino ported to platformio - now with 21 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
 The games Bombjack, Mr. Do!, Pengo and Donkey Kong Jr. I got from [Alby1970](https://github.com/Alby1970).
-The games Gyruss, Lady Bug and Ms. Pacman I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
+The games Gyruss, Lady Bug, Ms. Pacman and Time Pilot I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -33,6 +33,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Lady Bug screenshot](images/ladybug.png)
 ![Donkey Kong Jr. screenshot](images/dkongjr.png)
 ![Ms. Pacman screenshot](images/mspacman.png)
+![Time Pilot screenshot](images/timeplt.png)
 
 ## Hardware
 
@@ -50,7 +51,7 @@ These are the steps to build the new hardware for the machine:
 
 * Stickers can’t stop us: To open the cabinet, remove some of the artwork stickers from the outside. Screws are hidden under the side artwork, and the top sticker crosses 
   a seam that will need to be separated. Using a heat gun or hair dryer. Soften the glue and peel back these stickers. They are fairly thick and easy to remove once you get a corner up.
-  Keep them somewhere safe for reassembly. TIP: I left out the side screws when screwing it together again.
+  Keep them somewhere safe for reassembly. TIP: I left out the side screws.
 
 * Use a soldering iron to disconnect the main board from the external boards. The main board with display, we do not need that anymore.
 	
@@ -87,6 +88,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Lady Bug](https://www.google.com/search?q=ladybug.zip+arcade+rom)
     * [Donkey Kong Jr. (Japan)](https://www.google.com/search?q=dkongjrj.zip+arcade+rom) (Important: filename with "jrj")
     * [Ms. Pacman](https://www.google.com/search?q=mspacman.zip+arcade+rom)
+    * [Time Pilot](https://www.google.com/search?q=timeplt.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 

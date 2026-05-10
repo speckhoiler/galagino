@@ -22,6 +22,7 @@
 #define ENABLE_LADYBUG
 #define ENABLE_DKONGJR
 #define ENABLE_MSPACMAN
+#define ENABLE_TIMEPLT
 
 #ifdef ENABLE_PACMAN  
   #include "machines/pacman/pacman.h"
@@ -103,6 +104,10 @@
   #include "machines/mspacman/mspacman.h"
 #endif
 
+#ifdef ENABLE_TIMEPLT 
+  #include "machines/timeplt/timeplt.h"
+#endif
+
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
@@ -163,7 +168,10 @@ machineBase *machines[] = {
   new dkongjr(),
 #endif
 #ifdef ENABLE_MSPACMAN  
-  new mspacman()
+  new mspacman(),
+#endif
+#ifdef ENABLE_TIMEPLT 
+  new timeplt()
 #endif
 };
 

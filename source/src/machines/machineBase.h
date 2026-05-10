@@ -54,7 +54,8 @@ enum {
   MCH_GYRUSS,
   MCH_LADYBUG,
   MCH_DKONGJR,
-  MCH_MSPACMAN
+  MCH_MSPACMAN,
+  MCH_TIMEPLT
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame

@@ -60,3 +60,4 @@ conv_gyruss.bat
 conv_ladybug.bat
 conv_dkongjr.bat
 conv_mspacman.bat
+conv_timeplt.bat
