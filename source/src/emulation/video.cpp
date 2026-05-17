@@ -237,7 +237,8 @@ void Video::write(uint16_t *colors, uint32_t len) {
   if(dma_active) {
     spi_device_get_trans_result(handle, &r_trans, portMAX_DELAY);
   }
- 
+
+  if(2 * len > 224*8*2) return;
   memcpy(dma_buffer, colors, 2 * len);
   transaction.flags = 0;
   transaction.length = 16 * len; // Length in bits
