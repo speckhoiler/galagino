@@ -3,6 +3,7 @@
 
 #include "cpus/z80/Z80.h"
 #include "cpus/i8048/i8048.h"
+#include "cpus/m6809/m6809.h"
 
 void emulation_start(void);
 void emulation_stop(void);
@@ -30,4 +31,9 @@ extern "C" void i8048_xdm_write(i8048_state_S *state, unsigned char addr, unsign
 extern "C" unsigned char i8048_rom_read(i8048_state_S *state, unsigned short addr);
 #endif
 
+#ifdef __cplusplus
+extern "C" unsigned char m6809_read(m6809_state *s, uint16_t addr);
+extern "C" void m6809_write(m6809_state *s, uint16_t addr, uint8_t val);
+extern "C" unsigned char m6809_read_opcode(m6809_state *s, uint16_t addr);
+#endif
 #endif

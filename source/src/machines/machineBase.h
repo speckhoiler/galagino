@@ -55,7 +55,8 @@ enum {
   MCH_LADYBUG,
   MCH_DKONGJR,
   MCH_MSPACMAN,
-  MCH_TIMEPLT
+  MCH_TIMEPLT,
+  MCH_TUTANKHM
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame
@@ -114,6 +115,10 @@ public:
     virtual unsigned char rdI8048_port(struct i8048_state_S *state, unsigned char port) { return 0x00; };
     virtual unsigned char rdI8048_xdm(struct i8048_state_S *state, unsigned char addr)  { return 0x00; };
     virtual unsigned char rdI8048_rom(struct i8048_state_S *state, unsigned short addr) { return 0x00; };
+
+    virtual unsigned char m6809_read(m6809_state *s, uint16_t addr) { return 0x00; }
+    virtual void m6809_write(m6809_state *s, uint16_t addr, uint8_t val) { }
+    virtual unsigned char m6809_read_opcode(m6809_state *s, uint16_t addr) { return 0x00; }
 
     virtual void run_frame(void) { };
     virtual void prepare_frame(void) { };

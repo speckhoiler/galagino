@@ -117,15 +117,7 @@ void anteater::wrZ80(unsigned short Addr, unsigned char Value) {
     if((Addr >= 0xa000) & (Addr <= 0xa003)) {
       // PA goes to AY port A and can be read by SND CPU through the AY
       if(Addr == 0xa000) {
-        //Todo: Sounds with filter acivated 0x1, 0x2, 0x3, 0x4, 0x5, 0x8, 0x9, 0xa not working??? - select other ones...
-        if (Value == 0x3)
-          snd_command = 0x6;
-        else if (Value == 0x5)
-          snd_command = 0x7;
-        else if (Value == 0xa)
-          snd_command = 0xb;
-        else
-          snd_command = Value;
+        snd_command = Value;
       }
 	      
       // rising edge on bit 3 sets audio irq
@@ -149,7 +141,8 @@ void anteater::wrZ80(unsigned short Addr, unsigned char Value) {
       showCustomBackground = Value & 1;
       return;
     } 
-  } else {
+  } 
+  else {
     // anteater audio cpu
     if((Addr & 0xf000) == 0x8000) {
       memory[Addr - 0x8000 + 0x0d00] = Value;
@@ -158,32 +151,8 @@ void anteater::wrZ80(unsigned short Addr, unsigned char Value) {
 
     //konami_sound_filter
     if((Addr & 0xf000) == 0x9000) {
-      snd_filter = Value;
-      konami_sound_filter(Addr, Value);
     }
   }
-}
-
-void anteater::konami_sound_filter(unsigned short offset, uint8_t data)
-{
-    //printf("filter: %04x\n", data);
-    return;
-
-		// the offset is used as data, 6 channels * 2 bits each
-		// AV0 .. AV5  ==> AY8910 #2 - 3C
-		// AV6 .. AV11 ==> AY8910 #1 - 3D
-		for (int which = 0; which < 2; which++)
-		{
-				for (int flt = 0; flt < 6; flt++)
-				{
-					const int fltnum = (flt + 6 * which);
-					const uint8_t bit = (offset >> (flt + 6 * (1 - which))) & 1;
-     			// low bit goes to 0.22uF capacitor = 220000pF
-					// high bit goes to 0.047uF capacitor = 47000pF
-					//m_filter_ctl[fltnum]->write(bit);
-				  printf("filter: %04x %04x\n", fltnum, bit);
-        }
-		}
 }
 
 // called by audio cpu only...

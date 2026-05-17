@@ -1,10 +1,10 @@
-# Galagino ported to platformio - now with 21 games!
+# Galagino ported to platformio - now with 22 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
 The games Bombjack, Mr. Do!, Pengo and Donkey Kong Jr. I got from [Alby1970](https://github.com/Alby1970).
-The games Gyruss, Lady Bug, Ms. Pacman and Time Pilot I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
+The games Gyruss, Lady Bug, Ms. Pacman, Time Pilot and Tutankham I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -34,6 +34,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Donkey Kong Jr. screenshot](images/dkongjr.png)
 ![Ms. Pacman screenshot](images/mspacman.png)
 ![Time Pilot screenshot](images/timeplt.png)
+![Tutankham screenshot](images/tutankham.png)
 
 ## Hardware
 
@@ -89,6 +90,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Donkey Kong Jr. (Japan)](https://www.google.com/search?q=dkongjrj.zip+arcade+rom) (Important: filename with "jrj")
     * [Ms. Pacman](https://www.google.com/search?q=mspacman.zip+arcade+rom)
     * [Time Pilot](https://www.google.com/search?q=timeplt.zip+arcade+rom)
+    * [Tutankham](https://www.google.com/search?q=tutankhm.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
@@ -119,6 +121,7 @@ With the current configuration, the buttons have the following additional functi
 * Return back to menu: Hold the coin button for more than 3 seconds. Attract mode is then active again.
 * Demo sounds off: To disable the demo sounds of Galaga, Digdug, The Glob, Anteater, Bombjack and Pengo hold down the fire button while turning it on.
 * The Glob game: Push coin button to call the elevator.
+* Tutankham: Push coin button for the flash bomb.
 
 ## Attract mode
 
@@ -126,11 +129,12 @@ In Attract mode, the machine cycles through all games if you do not touch the jo
 
 ## Limitations
 
-Gyruss: The sound cpu I8039 is missing - so there is no drum sound. Sometimes sprites appear that are no longer in use.
-
 Because of no free GPIO´s, the following buttons are not connected and do not work:
 * Power board: Light button / headphone jack
 * Switch board: Volume up / volume down
 * Joystick board: Home / 1 Player / 2 Player
 
 With this solution, it's not possible to operate the machine with the battery pack in the back of the case. An external power supply is required. However, I installed batteries inside the case to increase the weight.
+
+Gyruss: The sound cpu I8039 is missing - so there is no drum sound. Sometimes sprites appear that are no longer in use.
+Tutankham: Some sounds are not playable in galagino. So I changed it to play other sounds.

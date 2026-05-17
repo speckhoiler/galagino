@@ -1,21 +1,6 @@
 #include "gyruss.h"
-#include "esp_task_wdt.h"
 
-gyruss *g_gyruss_instance = nullptr;
-
-extern "C" {
-  uint8_t m6809_read(m6809_state *s, uint16_t addr) {
-    return g_gyruss_instance->sub_read(addr);
-  }
-  void m6809_write(m6809_state *s, uint16_t addr, uint8_t val) {
-    g_gyruss_instance->sub_write(addr, val);
-  }
-  uint8_t m6809_read_opcode(m6809_state *s, uint16_t addr) {
-    return g_gyruss_instance->sub_read_opcode(addr);
-  }
-}
-
-uint8_t gyruss::sub_read(uint16_t addr) {
+unsigned char gyruss::m6809_read(m6809_state *s, uint16_t addr) {
   if (addr == 0x0000) {
     multiplexUsed = 1;
     return scanline_counter;
@@ -33,7 +18,7 @@ uint8_t gyruss::sub_read(uint16_t addr) {
   return 0xFF;
 }
 
-void gyruss::sub_write(uint16_t addr, uint8_t val) {
+void gyruss::m6809_write(m6809_state *s, uint16_t addr, uint8_t val) {
   if (addr >= 0x4000 && addr <= 0x47FF) {
     sub_ram[addr - 0x4000] = val;
     return;
@@ -49,12 +34,12 @@ void gyruss::sub_write(uint16_t addr, uint8_t val) {
   }
 }
 
-uint8_t gyruss::sub_read_opcode(uint16_t addr) {
+unsigned char gyruss::m6809_read_opcode(m6809_state *s, uint16_t addr) {
   // Konami-1 decrypted opcodes at 0xE000-0xFFFF only (no mirror)
   if (addr >= 0xE000) {
     return  gyruss_rom_sub_decrypt[addr - 0xE000];
   }
-  return sub_read(addr);
+  return m6809_read(s, addr);
 }
 
 static void taskWrapper(void *param) {
@@ -109,12 +94,7 @@ void gyruss::run_audio_batch(int steps) {
       sound_irq_pending = 0;
     }
   }
-  audio_cycle_approx += steps * 7;
-}
-
-void gyruss::init(Input *input, unsigned short *framebuffer, sprite_S *spritebuffer, unsigned char *memorybuffer) {
-  machineBase::init(input, framebuffer, spritebuffer, memorybuffer);
-  g_gyruss_instance = this;
+  audio_cycle_approx += steps * 8;
 }
 
 void gyruss::start() {

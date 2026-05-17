@@ -26,6 +26,9 @@
 #define D6_E      1174.56
 #define B5_F      987.767
 
+#define NUM_AY_CHIPS 5
+#define NUM_SN_CHIPS 2
+
 class Audio {
 public:
   void init();
@@ -51,32 +54,40 @@ private:
   unsigned short snd_buffer[64];  // buffer space for a single channel
 #endif
 
-  int ay_period[5][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
-  int ay_volume[5][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-  int ay_enable[5][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-  int audio_cnt[5][4], audio_toggle[5][4] = {{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
-  unsigned long ay_noise_rng[5] = {1, 1, 1, 1, 1};
+  short volumeSetting = 3;
+  bool volumeUpLast;
+  bool volumeDownLast;
 
+  // Namco
   unsigned long snd_cnt[3] = {0, 0, 0};
   unsigned long snd_freq[3];
   const signed char *snd_wave[3];
   unsigned char snd_volume[3];
 
-  short volumeSetting = 3;
-  bool volumeUpLast;
-  bool volumeDownLast;
+  // AY 8910
+  char AY; 
+  char AY_INC;
+  char AY_VOL;
 
-  // Bombjack
-  int ay_envelope_period[3] = {0,0,0};
-  uint8_t ay_envelope_shape[3] = {0,0,0};
-  int ay_envelope_counter[3] = {0,0,0};
-  int ay_envelope_step[3] = {0,0,0};
-  int ay_envelope_holding[3] = {0,0,0};
+  // up to five AY's
+  int ay_volume[NUM_AY_CHIPS][3];
+  int ay_enable[NUM_AY_CHIPS][3];
+  int audio_toggle[NUM_AY_CHIPS][3];
+  int audio_cnt[NUM_AY_CHIPS][4];
+  int ay_period[NUM_AY_CHIPS][4];
+  unsigned long ay_noise_rng[NUM_AY_CHIPS];
 
-  // MrDo!
-  int sn_counter[2][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}};
-  int sn_toggle[2][4] = {{1, 1, 1, 1}, {1, 1, 1, 1}};
+  // AY Envelope
+  char ay_envelope[NUM_AY_CHIPS][3];
+  int ay_envelope_period[NUM_AY_CHIPS];
+  uint8_t ay_envelope_shape[NUM_AY_CHIPS];
+  int ay_envelope_counter[NUM_AY_CHIPS];
+  int ay_envelope_step[NUM_AY_CHIPS];
+  int ay_envelope_holding[NUM_AY_CHIPS];
 
+  // SN 76489
+  int sn_counter[NUM_SN_CHIPS][4];
+  int sn_toggle[NUM_SN_CHIPS][4];
   // Labdybug
   uint32_t noise_lfsr[2] = {0x4000, 0x4000};
 

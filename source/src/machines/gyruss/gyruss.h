@@ -2,7 +2,6 @@
 #define GYRUSS_H
 
 #include "../machineBase.h"
-#include "../../cpus/m6809/m6809.h"
 #include "gyruss_rom_main.h"
 #include "gyruss_rom_sub.h"
 #include "gyruss_rom_audio.h"
@@ -11,7 +10,6 @@
 #include "gyruss_palette.h"
 #include "gyruss_dipswitches.h"
 #include "gyruss_logo.h"
-
 
 // Gyruss memory layout offsets in shared memory[] buffer
 // memory[0x0000..0x03FF] = Color RAM (1KB)
@@ -29,7 +27,6 @@ public:
     gyruss() { }
     ~gyruss() { }
 
-    void init(Input *input, unsigned short *framebuffer, sprite_S *spritebuffer, unsigned char *memorybuffer) override;
     void start() override;
     void reset() override;
 
@@ -44,6 +41,10 @@ public:
     unsigned char opZ80(unsigned short Addr) override;
     unsigned char inZ80(unsigned short Port) override;
 
+    unsigned char m6809_read(m6809_state *s, uint16_t addr) override;
+    void m6809_write(m6809_state *s, uint16_t addr, uint8_t val) override;
+    unsigned char m6809_read_opcode(m6809_state *s, uint16_t addr) override;
+
     void run_frame(void) override;
     void prepare_frame(void) override;
     void render_row(short row) override;
@@ -53,11 +54,6 @@ public:
     void menuLeds(CRGB *leds) override;
     void gameLeds(CRGB *leds) override;
 #endif
-
-    // M6809 sub-CPU memory access (called from C callbacks)
-    uint8_t sub_read(uint16_t addr);
-    void sub_write(uint16_t addr, uint8_t val);
-    uint8_t sub_read_opcode(uint16_t addr);
 
     // Audio Z80 dual-core support
     void start_audio_task();
@@ -95,13 +91,9 @@ private:
     unsigned char multiplexUsed;
     unsigned char multiplexUsedPart1 = 0;
     
-   
 #ifdef LED_PIN
     const CRGB menu_leds[7] = { LED_BLUE, LED_CYAN, LED_WHITE, LED_CYAN, LED_WHITE, LED_CYAN, LED_BLUE };
 #endif
 };
-
-// Global pointer for M6809 callbacks (only one gyruss instance)
-extern gyruss *g_gyruss_instance;
 
 #endif

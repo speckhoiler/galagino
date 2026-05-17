@@ -112,3 +112,15 @@ unsigned char i8048_xdm_read(i8048_state_S *state, unsigned char addr) {
 
 void i8048_xdm_write(i8048_state_S *state, unsigned char addr, unsigned char data) {
 }
+
+unsigned char m6809_read(m6809_state *s, uint16_t addr) {
+  return currentMachine->m6809_read(s, addr);
+}
+
+void m6809_write(m6809_state *s, uint16_t addr, uint8_t val) {
+  currentMachine->m6809_write(s, addr, val);
+}
+
+unsigned char m6809_read_opcode(m6809_state *s, uint16_t addr) {
+  return currentMachine->m6809_read_opcode(s, addr);
+}
