@@ -129,7 +129,7 @@ void digdug::wrZ80(unsigned short Addr, unsigned char Value) {
     
     // writing 46 (U), first char of UP, to the top left corner
     // is an indication that the game has booted up      
-    if(Addr == 0x8000 + 985 && (Value & 0x7f) == 46)
+    if(!game_started && Addr == 0x8000 + 985 && (Value & 0x7f) == 46)
       game_started = 1;
     
     memory[Addr - 0x8000] = Value;

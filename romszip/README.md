@@ -21,3 +21,5 @@ ladybug.zip
 dkongjrj.zip
 timeplt.zip
 tutankhm.zip
+invaders.zip
+galaxian.zip

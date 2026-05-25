@@ -1,10 +1,10 @@
-# Galagino ported to platformio - now with 22 games!
+# Galagino ported to platformio - now with 24 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
 The games Bombjack, Mr. Do!, Pengo and Donkey Kong Jr. I got from [Alby1970](https://github.com/Alby1970).
-The games Gyruss, Lady Bug, Ms. Pacman, Time Pilot and Tutankham I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
+The games Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -35,6 +35,8 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Ms. Pacman screenshot](images/mspacman.png)
 ![Time Pilot screenshot](images/timeplt.png)
 ![Tutankham screenshot](images/tutankham.png)
+![Space Invaders screenshot](images/invaders.png)
+![Galaxian screenshot](images/galaxian.png)
 
 ## Hardware
 
@@ -91,6 +93,8 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Ms. Pacman](https://www.google.com/search?q=mspacman.zip+arcade+rom)
     * [Time Pilot](https://www.google.com/search?q=timeplt.zip+arcade+rom)
     * [Tutankham](https://www.google.com/search?q=tutankhm.zip+arcade+rom)
+    * [Space Invaders](https://www.google.com/search?q=invaders.zip+arcade+rom)
+    * [Galaxian](https://www.google.com/search?q=galaxian.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
@@ -103,7 +107,7 @@ Please ensure that the stripts run without errors!
 
 With all these files in place, the source folder can be loaded into visual studio code with the [PlatformIO](https://platformio.org/) plugin. The needed
 platform packages and the arduino framework will be installed during compilation automatically.
-For best performance, compile and upload the release version. All games are running at nearly 100% speed.
+For best performance, compile and upload the release version. **All games are running at nearly 100% speed**.
 
 Like in the original:
 If you want to use a LED stripe, you have to download FastLED library.

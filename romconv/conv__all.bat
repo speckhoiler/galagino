@@ -24,6 +24,8 @@ call conv_dkongjr.bat
 call conv_mspacman.bat
 call conv_timeplt.bat
 call conv_tutankhm.bat
+call conv_invaders.bat
+call conv_galaxian.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!

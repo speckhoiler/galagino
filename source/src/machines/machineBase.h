@@ -56,7 +56,9 @@ enum {
   MCH_DKONGJR,
   MCH_MSPACMAN,
   MCH_TIMEPLT,
-  MCH_TUTANKHM
+  MCH_TUTANKHM,
+  MCH_SPACE,
+  MCH_GALAXIAN
 };
 
 // one inst at 3Mhz ~ 500k inst/sec = 500000/60 inst per frame

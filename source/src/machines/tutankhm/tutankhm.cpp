@@ -23,10 +23,17 @@ void tutankhm::start() {
   memset(palette_rgb565, 0, sizeof(palette_rgb565) / 2);
   memset(snd_ram, 0, sizeof(snd_ram));
   irq_toggle = 0;
+  irq_enable = 0;
+  snd_irq_pending = 0;
+  snd_irq_last = 0;
+  snd_icnt = 0;
 }
 
 unsigned char tutankhm::m6809_read_opcode(m6809_state *s, uint16_t addr) {
-  return m6809_read(s, addr);
+  if (addr >= 0xA000)
+    return tutankhm_rom[addr - 0xA000];
+
+  return 0xFF;
 }
 
 unsigned char tutankhm::m6809_read(m6809_state *s, uint16_t addr) {

@@ -62,3 +62,5 @@ conv_dkongjr.bat
 conv_mspacman.bat
 conv_timeplt.bat
 conv_tutankhm.bat
+conv_invaders.bat
+conv_galaxian.bat

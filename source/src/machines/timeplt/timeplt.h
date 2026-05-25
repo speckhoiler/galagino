@@ -1,7 +1,6 @@
 #ifndef TIMEPLT_H
 #define TIMEPLT_H
 
-#include <pgmspace.h>
 #include "timeplt_logo.h"
 #include "timeplt_rom.h"
 #include "timeplt_snd_rom.h"
@@ -72,7 +71,7 @@ protected:
 
 private:
 	unsigned char nmi_enable;
-	unsigned char video_enable;
+	unsigned char video_enable = 0;
 	unsigned char flip_screen;
 	unsigned char soundlatch;
 	unsigned char scanline_counter;
@@ -84,14 +83,13 @@ private:
 	// Sound CPU state
 	Z80 snd_cpu;
 	unsigned char snd_ram[1024];
-	unsigned char snd_irq_pending;
-	unsigned char snd_irq_last;    // previous Q2 state for edge detection
+	unsigned char snd_irq_pending = 0;
+	unsigned char snd_irq_last = 0;    // previous Q2 state for edge detection
+	unsigned long snd_icnt = 0;
 
 	// AY-3-8910 registers
 	unsigned char ay_addr[2];
 	unsigned char ay_regs[2][16];
-	unsigned char ay_timer_counter;
-	unsigned long snd_icnt;
 
 #ifdef LED_PIN
 	const CRGB menu_leds[7] = { LED_CYAN, LED_WHITE, LED_CYAN, LED_WHITE, LED_CYAN, LED_WHITE, LED_CYAN };
