@@ -11,20 +11,20 @@ if errorlevel 1 goto :error
 cd pengo
 
 echo Pengo CPU code
-cpu_conv.py
-audio_conv.py
+python ./cpu_conv.py
+python ./audio_conv.py
 if errorlevel 1 goto :error
 
 echo Peno Tiles
-tiles_fg_conv.py
+python ./tiles_fg_conv.py
 if errorlevel 1 goto :error
 
 echo Peno Sprites
-sprites_conv.py
+python ./sprites_conv.py
 if errorlevel 1 goto :error
 
 echo Pengo Colormaps
-colormap.py
+python ./colormap.py
 if errorlevel 1 goto :error
 
 echo --- Success ---

@@ -11,21 +11,21 @@ if errorlevel 1 goto :error
 cd mrdo
 
 echo MrDo CPU code
-cpu_conv.py
+python ./cpu_conv.py
 if errorlevel 1 goto :error
 
 echo MrDo Tiles
-bg_tiles.py
-fg_tiles.py
+python ./bg_tiles.py
+python ./fg_tiles.py
 if errorlevel 1 goto :error
 
 echo MrDo Sprites
-sprites.py
+python ./sprites.py
 if errorlevel 1 goto :error
 
 echo MrDo Colormaps
-Palette_mrdo.py
-sprite_colormap.py
+python ./Palette_mrdo.py
+python ./sprite_colormap.py
 if errorlevel 1 goto :error
 
 echo --- Success ---

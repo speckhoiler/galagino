@@ -11,18 +11,18 @@ if errorlevel 1 goto :error
 cd bombjack
 
 echo Bombjack CPU code
-cpu_conv.py
-audio_cpu_conv.py
+python ./cpu_conv.py
+python ./audio_cpu_conv.py
 if errorlevel 1 goto :error
 
 echo Bombjack Tiles
-tiles_bg_conv.py
-tiles_fg_conv.py
-bgmaps_conv.py
+python ./tiles_bg_conv.py
+python ./tiles_fg_conv.py
+python ./bgmaps_conv.py
 if errorlevel 1 goto :error
 
 echo Bombjack Sprites
-sprites_conv.py
+python ./sprites_conv.py
 if errorlevel 1 goto :error
 
 echo --- Success ---
