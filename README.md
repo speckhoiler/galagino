@@ -1,10 +1,10 @@
-# Galagino ported to platformio - now with 24 games!
+# Galagino ported to platformio - now with 25 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
-The games Bombjack, Mr. Do!, Pengo and Donkey Kong Jr. I got from [Alby1970](https://github.com/Alby1970).
-The games Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
+The game templates for Bombjack, Mr. Do!, Pengo, Donkey Kong Jr. and Starforce I got from [Alby1970](https://github.com/Alby1970).
+The game templates for Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -37,6 +37,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Tutankham screenshot](images/tutankham.png)
 ![Space Invaders screenshot](images/invaders.png)
 ![Galaxian screenshot](images/galaxian.png)
+![Starforce screenshot](images/starforce.png)
 
 ## Hardware
 
@@ -95,6 +96,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Tutankham](https://www.google.com/search?q=tutankhm.zip+arcade+rom)
     * [Space Invaders](https://www.google.com/search?q=invaders.zip+arcade+rom)
     * [Galaxian](https://www.google.com/search?q=galaxian.zip+arcade+rom)
+    * [Starforce](https://www.google.com/search?q=starforc.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
@@ -141,5 +143,7 @@ Because of no free GPIO´s, the following buttons are not connected and do not w
 
 With this solution, it's not possible to operate the machine with the battery pack in the back of the case. An external power supply is required. However, I installed batteries inside the case to increase the weight.
 
-Gyruss: The sound cpu I8039 is missing - so there is no drum sound. Sometimes sprites appear that are no longer in use.
-Tutankham: Some sounds are not playable in galagino. So I changed it to play other sounds.
+Known game issues:
+* Gyruss: The sound cpu I8039 is missing - so there is no drum sound. Sometimes sprites appear that are no longer in use.
+* Tutankham: Some sounds are not playable in galagino. So I changed it to play other sounds.
+* Starforce: Drawing of the universe background is disabled (BG3) – emulation would be too slow when drawing this background.

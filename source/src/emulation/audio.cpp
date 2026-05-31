@@ -117,7 +117,7 @@ void Audio::transmit() {
       ay_render_buffer();
     else if (currentMachine->hasNamcoAudio())
       namco_render_buffer();
-    else if (machineType == MCH_MRDO || machineType == MCH_LADYBUG)
+    else if (machineType == MCH_MRDO || machineType == MCH_LADYBUG || machineType == MCH_STARFORCE)
       sn76489_render_buffer();
     else if (machineType == MCH_DKONG || machineType == MCH_DKONGJR)
       i8048_render_buffer();

@@ -28,7 +28,7 @@
 #define B5_F      987.767
 
 #define NUM_AY_CHIPS 5
-#define NUM_SN_CHIPS 2
+#define NUM_SN_CHIPS 3
 
 class Audio {
 public:
@@ -92,7 +92,7 @@ private:
   int sn_counter[NUM_SN_CHIPS][4];
   int sn_toggle[NUM_SN_CHIPS][4];
   // Labdybug
-  uint32_t noise_lfsr[2] = {0x4000, 0x4000};
+  uint32_t noise_lfsr[NUM_SN_CHIPS] = {0x4000, 0x4000, 0x4000};
 
   // Bagman 
   unsigned short positionLast;

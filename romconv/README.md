@@ -64,3 +64,4 @@ conv_timeplt.bat
 conv_tutankhm.bat
 conv_invaders.bat
 conv_galaxian.bat
+conv_startforce.bat

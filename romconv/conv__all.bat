@@ -26,6 +26,7 @@ call conv_timeplt.bat
 call conv_tutankhm.bat
 call conv_invaders.bat
 call conv_galaxian.bat
+call conv_startforce.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!

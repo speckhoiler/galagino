@@ -26,6 +26,7 @@
 #define ENABLE_TUTANKHM
 #define ENABLE_SPACE
 #define ENABLE_GALAXIAN
+#define ENABLE_STARFORCE
 
 #ifdef ENABLE_PACMAN  
   #include "machines/pacman/pacman.h"
@@ -123,6 +124,10 @@
   #include "machines/galaxian/galaxian.h"
 #endif
 
+#ifdef ENABLE_STARFORCE
+  #include "machines/starforce/starforce.h"
+#endif
+
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
@@ -195,7 +200,10 @@ machineBase *machines[] = {
   new spaceinvaders(),
 #endif
 #ifdef ENABLE_GALAXIAN 
-  new galaxian()
+  new galaxian(),
+#endif
+#ifdef ENABLE_STARFORCE 
+  new starforce()
 #endif
 };
 
