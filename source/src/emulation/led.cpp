@@ -7,7 +7,7 @@ void Led::init() {
 }
 
 void Led::update(machineBase *machines[], signed char machineIndexPreselection, signed char machineSelected) {
-  if (machineSelected == MCH_MENU)
+  if (machineSelected < 0)
     machines[machineIndexPreselection]->menuLeds(leds);
   else
     machines[machineSelected]->gameLeds(leds);
