@@ -83,6 +83,11 @@ public:
   void render_row(short row) override;
   const unsigned short *logo(void) override;
 
+#ifdef LED_PIN
+  void menuLeds(CRGB *leds) override;
+  void gameLeds(CRGB *leds) override;
+#endif
+
 protected:
   void blit_tile(short row, char col) override;
   void blit_sprite(short row, unsigned char s) override;
@@ -111,5 +116,9 @@ private:
  
   uint8_t gfx_bank[4] = {0x00,0x00,0x00,0x00};
   uint8_t gfx_scroll;
-};
-#endif
+
+  #ifdef LED_PIN
+   const CRGB menu_leds[7] = { LED_YELLOW, LED_BLUE, LED_GREEN, LED_WHITE, LED_GREEN, LED_BLUE, LED_YELLOW };
+  #endif
+  };
+  #endif

@@ -385,3 +385,23 @@ inline unsigned short mooncresta::rgb_to_swapped565(unsigned char r, unsigned ch
 const unsigned short *mooncresta::logo(void) {
   return mooncresta_logo;
 }
+
+#ifdef LED_PIN
+void mooncresta::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 32) {
+    sub_cnt = 0;
+    static char led = 0;
+    char il = (led < NUM_LEDS) ? led : ((2 * NUM_LEDS - 2) - led);
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c == il) leds[c] = LED_YELLOW;
+      else        leds[c] = LED_BLUE;
+    }
+    led = (led + 1) % (2 * NUM_LEDS - 2);
+  }
+}
+
+void mooncresta::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+#endif

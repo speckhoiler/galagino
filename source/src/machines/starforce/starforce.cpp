@@ -596,3 +596,23 @@ void starforce::render_row(short row) {
 const unsigned short *starforce::logo(void) {
   return starforce_logo;
 }
+
+#ifdef LED_PIN
+void starforce::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 32) {
+    sub_cnt = 0;
+    static char led = 0;
+    char il = (led < NUM_LEDS) ? led : ((2 * NUM_LEDS - 2) - led);
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c == il) leds[c] = LED_WHITE;
+      else        leds[c] = LED_BLUE;
+    }
+    led = (led + 1) % (2 * NUM_LEDS - 2);
+  }
+}
+
+void starforce::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+#endif
