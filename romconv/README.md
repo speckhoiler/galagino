@@ -65,3 +65,4 @@ conv_tutankhm.bat
 conv_invaders.bat
 conv_galaxian.bat
 conv_startforce.bat
+conv_mooncresta.bat

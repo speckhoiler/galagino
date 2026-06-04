@@ -2,7 +2,6 @@
 
 void anteater::reset() { 
   machineBase::reset();
-  skipFirstInterrupt = 1;
   ignoreFireButton = 1;
   game_started = 1;
 }
@@ -129,11 +128,6 @@ void anteater::wrZ80(unsigned short Addr, unsigned char Value) {
 
     if(Addr == 0xa801) {  
       irq_enable[0] = Value & 1;
-
-      if (irq_enable[0] && skipFirstInterrupt) {
-        irq_enable[0] = 0;
-        skipFirstInterrupt = 0;
-      }
       return;
     }
 

@@ -125,7 +125,7 @@ void Audio::transmit() {
       bagman_render_buffer();
     else if(machineType == MCH_SPACE)
       spaceinvaders_render_buffer();
-    else if(machineType == MCH_GALAXIAN)
+    else if(machineType == MCH_GALAXIAN || machineType == MCH_MOONCRESTA)
       galaxian_render_buffer();
   } while(bytesOut);
 }

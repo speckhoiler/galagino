@@ -1,10 +1,11 @@
-# Galagino ported to platformio - now with 25 games!
+# Galagino ported to platformio - now with 26 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
 The game templates for Bombjack, Mr. Do!, Pengo, Donkey Kong Jr. and Starforce I got from [Alby1970](https://github.com/Alby1970).
 The game templates for Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
+The game template for Moon Cestra I got from [galagino](https://github.com/galagino)
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -38,6 +39,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Space Invaders screenshot](images/invaders.png)
 ![Galaxian screenshot](images/galaxian.png)
 ![Starforce screenshot](images/starforce.png)
+![Moon Cestra screenshot](images/mooncresta.png)
 
 ## Hardware
 
@@ -97,11 +99,13 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Space Invaders](https://www.google.com/search?q=invaders.zip+arcade+rom)
     * [Galaxian](https://www.google.com/search?q=galaxian.zip+arcade+rom)
     * [Starforce](https://www.google.com/search?q=starforc.zip+arcade+rom)
+    * [Moon Cestra](https://www.google.com/search?q=mooncrst.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
 * If you do not have Python installed, download it from here. [Python 3.13.0](https://www.python.org/downloads/release/python-3130)
-* Then install the Python Imaging Library. For that, run the command: pip install Pillow
+* Then install the Phyton Pillow Imaging Library. For that, run the command: pip install pillow
+* Optional: If you want to run the logoconv.py to recreate the menu logos, you must install NumPy: pip install numpy
 * The ROM ZIP files have to be placed in the [romszip directory](romszip/), together with the ZIP file containing the Z80 emulator.
 * A set of [python scripts](romconv/) is then being used to convert and patch the ROM data and emulator code and to include the resulting code into the galagino machines directory. For all games, just use conv__all.bat.
 

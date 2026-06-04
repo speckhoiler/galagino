@@ -47,7 +47,6 @@ protected:
 	virtual const unsigned long *spriteRom(unsigned char flags, unsigned char code) override;
 
 private:
-	unsigned char skipFirstInterrupt;
 	unsigned char showCustomBackground;
 	unsigned char ignoreFireButton;
 	
