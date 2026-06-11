@@ -5,7 +5,7 @@ This port is NOT by the original author, so please do not bother him with issues
 
 The game templates for Bombjack, Mr. Do!, Pengo, Donkey Kong Jr. and Starforce I got from [Alby1970](https://github.com/Alby1970).
 The game templates for Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
-The game template for Moon Cresta and Scramble I got from [galagino](https://github.com/galagino)
+The game template for Moon Cresta and Scramble I got from [galagino](https://github.com/galagino/galagino)
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -153,3 +153,4 @@ Known game issues:
 * Gyruss: The sound cpu I8039 is missing - so there is no drum sound. Sometimes sprites appear that are no longer in use.
 * Tutankham: Some sounds are not playable in galagino. So I changed it to play other sounds.
 * Starforce: Drawing of the universe background is disabled (BG3) – emulation would be too slow when drawing this background.
+* Scramble: Audio doesn't sound right.
