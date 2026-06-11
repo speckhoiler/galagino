@@ -28,6 +28,7 @@ call conv_invaders.bat
 call conv_galaxian.bat
 call conv_startforce.bat
 call conv_mooncresta.bat
+call conv_scramble.bat
 
 echo ---- Important
 echo ---- Please check if any errors occured!
