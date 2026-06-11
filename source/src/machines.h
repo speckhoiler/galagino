@@ -28,6 +28,7 @@
 #define ENABLE_GALAXIAN
 #define ENABLE_STARFORCE
 #define ENABLE_MOONCRESTA
+#define ENABLE_SCRAMBLE
 
 #ifdef ENABLE_PACMAN  
   #include "machines/pacman/pacman.h"
@@ -133,6 +134,10 @@
   #include "machines/mooncresta/mooncresta.h"
 #endif
 
+#ifdef ENABLE_SCRAMBLE
+  #include "machines/scramble/scramble.h"
+#endif
+
 // change machine order is possible here...
 machineBase *machines[] = {
 #ifdef ENABLE_PACMAN  
@@ -211,7 +216,10 @@ machineBase *machines[] = {
   new starforce(),
 #endif
 #ifdef ENABLE_MOONCRESTA
-  new mooncresta()
+  new mooncresta(),
+#endif
+#ifdef ENABLE_SCRAMBLE
+  new scramble()
 #endif
 };
 
