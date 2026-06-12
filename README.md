@@ -64,7 +64,7 @@ These are the steps to build the new hardware for the machine:
 * Use a soldering iron to connect the wires from the CYD. Connect them like in the schematics.
 ![Schematics](schematics/GalaginoWiringDiagram.png)
 
-* Use cable ties and two srews to fix the CYD on the front of the cabinet - it fits perfectly.
+* Secure the CYD inside the housing using cable ties and two screws – it fits perfectly.
 ![CabinetBack](images/galagino_cabinet_back.jpg)
 
 ## Software
@@ -150,4 +150,3 @@ With this solution, it's not possible to operate the machine with the battery pa
 Known game issues:
 * Gyruss: The sound cpu I8039 is missing - so there is no drum sound. Sometimes sprites appear that are no longer in use.
 * Tutankham: Some sounds are not playable in galagino. So I changed it to play other sounds.
-* Starforce: Drawing of the universe background is disabled (BG3) – emulation would be too slow when drawing this background.

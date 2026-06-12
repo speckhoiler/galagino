@@ -5,8 +5,19 @@
 #include "cpus/i8048/i8048.h"
 #include "cpus/m6809/m6809.h"
 
+//#define DEBUG_TIMING
+
+#ifdef DEBUG_TIMING
+static int counter;
+static unsigned long timeTotal = 0;
+static unsigned long cpuStart;
+static unsigned long cpuSum = 0;
+static unsigned long videoSum = 0;
+#endif
+
 void emulation_start(void);
 void emulation_stop(void);
+void emulation_videoRendered(void);
 void emulation_notifyGive(void);
 void emulation_task(void *p);
 

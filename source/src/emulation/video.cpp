@@ -37,6 +37,23 @@ static spi_device_interface_config_t if_cfg {
 #define TFT_MAC 0x48
 #endif
 
+// Use MADCTL macro to simplify TFT FLIPs
+#ifdef TFT_ILI9341
+  #ifdef TFT_VFLIP
+    #define MADCTL_DEFAULT (TFT_MAC ^ 0xc0)
+  #else
+    #define MADCTL_DEFAULT (TFT_MAC)
+  #endif
+#else
+  #ifdef TFT_VFLIP
+    // 0x00 top to bottom + 0x00 left to right
+    #define MADCTL_DEFAULT (0x00)
+  #else
+    // 0x80 bottom to top + 0x40 right to left
+    #define MADCTL_DEFAULT (0xc0)
+  #endif
+#endif
+
 spi_bus_config_t bus_cfg{
     .mosi_io_num = TFT_MOSI,
     .miso_io_num = TFT_MISO,
@@ -60,11 +77,7 @@ static const uint8_t init_cmd[] = {
   0xC1, 1, 0x10,                    // Power control SAP[2:0];BT[3:0]
   0xC5, 2, 0x3e, 0x28,              // VCM control
   0xC7, 1, 0x86,                    // VCM control2
-#ifdef TFT_VFLIP
-  0x36, 1, TFT_MAC^0xc0,            // Memory Access Control
-#else
-  0x36, 1, TFT_MAC,                 // Memory Access Control, with x/y order reversed
-#endif
+  0x36, 1, MADCTL_DEFAULT,
   0x37, 1, 0x00,                    // Vertical scroll zero
   0x3A, 1, 0x55,
   0xB1, 2, 0x00, 0x18,              // Framerate control
@@ -88,11 +101,7 @@ static const uint8_t init_cmd[] = {
   0xff, 10,                         // 10 ms delay
   0x3a, 1, 0x55,                    // Set color mode 16-bit color
   0xff, 10,                         // 10 ms delay
-#ifdef TFT_VFLIP
-  0x36, 1, 0x00,                    // Mem access ctrl, upside down, RGB
-#else
-  0x36, 1, 0xc0,                    // Mem access ctrl, upside up, RGB
-#endif
+  0x36, 1, MADCTL_DEFAULT,
   0x2a, 4, W16(0), W16(240),        // Column addr set, XSTART = 0, XEND = 240     
   0x2b, 4, W16(0), W16(320),        // Row addr set, YSTART = 0, YEND = 320
   0x20, 0,                          // INV OFF
@@ -178,35 +187,16 @@ void Video::flip(char flipY, char flipX) {
   if (!flipY && !flipX)
     return;
 
+  uint8_t madctl = MADCTL_DEFAULT;
+  if (flipY) madctl ^= 0xc0; // flip the MY bit
+  if (flipX) madctl ^= 0x40; // flip the MX bit
+
   if (dma_active)
     spi_device_get_trans_result(handle, &r_trans, portMAX_DELAY);
- 
-  writeCommand(0x36); // Row address set, same command for ili9341 and st7789
-#ifdef TFT_ILI9341
-  if (flipY && flipX)
-    write8(0xC8);
-  else if (flipY)
-    write8(0x88);
-  else if (flipX)
-    write8(0x08);
-#else
-#ifdef TFT_VFLIP
-  if (flipY && flipX)
-    write8(0x80);
-  else if (flipY)
-    write8(0xc0);
-  else if (flipX)
-    write8(0x40);
-#else
-  if (flipY && flipX)
-    write8(0x40);
-  else if (flipY)
-    write8(0x00);
-  else if (flipX)
-    write8(0x80);
-#endif
-#endif
-  writeCommand(0x2C); // Write to RAM, same command for ili9341 and st7789 
+
+  writeCommand(0x36);
+  write8(madctl);
+  writeCommand(0x2C);
 
   dma_active = 0; 
 }
@@ -217,18 +207,10 @@ void Video::flipReset(char flipY, char flipX) {
 
   if (dma_active)
     spi_device_get_trans_result(handle, &r_trans, portMAX_DELAY);
- 
-  writeCommand(0x36); // Row address set, same command for ili9341 and st7789
-#ifdef TFT_ILI9341
-  write8(TFT_MAC);
-#else
-#ifdef TFT_VFLIP
-  write8(0x00);
-#else
-  write8(0xc0);
-#endif
-#endif
-  writeCommand(0x2C); // Write to RAM, same command for ili9341 and st7789 
+
+  writeCommand(0x36);
+  write8(MADCTL_DEFAULT);
+  writeCommand(0x2C);
 
   dma_active = 0; 
 }

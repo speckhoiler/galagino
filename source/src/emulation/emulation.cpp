@@ -7,6 +7,9 @@ TaskHandle_t emulationTaskHandle;
 volatile static char doDeleteEmulationTask;
 
 void emulation_start() {
+#ifdef DEBUG_TIMING
+  timeTotal = millis();
+#endif
   currentMachine->reset();
   currentMachine->start();
   xTaskCreatePinnedToCore(emulation_task, "emulation task", 4096, NULL, 2, &emulationTaskHandle, ARDUINO_RUNNING_CORE == 0 ? 1 : 0);
@@ -33,8 +36,18 @@ void emulation_notifyGive() {
   xTaskNotifyGive(emulationTaskHandle);
 }
 
+void emulation_videoRendered(void) {
+#ifdef DEBUG_TIMING
+  videoSum += millis() - cpuStart;
+#endif
+}
+
 void emulation_task(void *p) {
   for(;;) {
+#ifdef DEBUG_TIMING
+    cpuStart = millis();
+#endif
+
     currentMachine->run_frame();
 
     if (doDeleteEmulationTask) {
@@ -42,20 +55,17 @@ void emulation_task(void *p) {
       vTaskDelete(emulationTaskHandle);
     }
 
-    // It may happen that the emulation runs too slow. It will then miss the
-    // vblank notification and in turn will miss a frame and significantly
-    // slow down. This risk is only given with Galaga as the emulation of
-    // all three CPUs takes nearly 13ms. The 60hz vblank rate is in turn 
-    // 16.6 ms.  
-#if 0
-    static int counter;
-    static unsigned long time = millis();
-  
+#ifdef DEBUG_TIMING
+    cpuSum += millis() - cpuStart;
+
+    // The 60hz vblank rate is in turn 16.6 ms.
     if (counter % 10 == 0) {
-      // good time: 160...170ms
+      // good time total: 160...170ms
       unsigned long now = millis();
-      printf("10 frames: %dms\n",  now - time);
-      time = now;
+      printf("10-frames: %3d Hz | Total: %3d ms | Cpu: %3d ms | Video: %3d ms\n", 10000 / (now - timeTotal),  now - timeTotal, cpuSum, videoSum);
+      timeTotal = now;
+      cpuSum = 0;
+      videoSum = 0;
     }
     counter++;
 #endif

@@ -322,7 +322,6 @@ void starforce::prepare_frame(void) {
     spr->color = attr_byte & 0x07;
     spr->flags = ((attr_byte & 0x40) ? 1 : 0) | ((attr_byte & 0x80) ? 2 : 0);
     spr->priority = (attr_byte & 0x30) >> 4;
-
     active_sprites++;
   }
 }
@@ -355,11 +354,10 @@ inline unsigned short starforce::calculate_color_starforce(unsigned char raw_pal
 }
 
 void starforce::blit_background_line(short start_screen_row, int layer_num) {
-  short start_tile_row = start_screen_row / 8;
+  short start_tile_row = start_screen_row >> 3; // / 8 -> >> 3
   if (start_tile_row < 4 || start_tile_row >= 32)
     return;
 
-  // (Tutta la logica di setup iniziale rimane invariata)
   const uint32_t *base_tile_ptr;
   unsigned char *vram_data;
   int scroll_x, scroll_y;
@@ -368,229 +366,217 @@ void starforce::blit_background_line(short start_screen_row, int layer_num) {
   unsigned char *hw_control_ram = &memory[STARFORCE_HW_CONTROL_RAM];
 
   switch (layer_num) {
-  // ... (nessuna modifica qui) ...
   case 1:
     base_tile_ptr = (const uint32_t *)starforce_bg1_tilemap;
     vram_data = &memory[STARFORCE_BG1_VIDEO_RAM];
-    scroll_x = (hw_control_ram + 0x35)[0];
-    scroll_y = (hw_control_ram + 0x30)[0] + ((hw_control_ram + 0x30)[1] << 8);
+    scroll_x = hw_control_ram[0x35];
+    scroll_y = hw_control_ram[0x30] + (hw_control_ram[0x31] << 8);
     palette_bank_offset = 64;
     break;
   case 2:
     base_tile_ptr = (const uint32_t *)starforce_bg2_tilemap;
     vram_data = &memory[STARFORCE_BG2_VIDEO_RAM];
-    scroll_x = (hw_control_ram + 0x35)[0];
-    scroll_y = (hw_control_ram + 0x30)[0] + ((hw_control_ram + 0x30)[1] << 8);
+    scroll_x = hw_control_ram[0x35];
+    scroll_y = hw_control_ram[0x30] + (hw_control_ram[0x31] << 8);
     palette_bank_offset = 128;
     break;
   case 3:
     base_tile_ptr = (const uint32_t *)starforce_bg3_tilemap;
     vram_data = &memory[STARFORCE_BG3_VIDEO_RAM];
-    scroll_x = (hw_control_ram + 0x25)[0];
-    scroll_y = (hw_control_ram + 0x20)[0] + ((hw_control_ram + 0x20)[1] << 8);
+    scroll_x = hw_control_ram[0x25];
+    scroll_y = hw_control_ram[0x20] + (hw_control_ram[0x21] << 8);
     palette_bank_offset = 192;
     break;
-  default:
-    return;
   }
 
-  // La tua struttura di loop originale
   int logical_x_start = start_screen_row + scroll_x;
+  int target_fb_col = 223;
 
-  for (int x_buffer = 0; x_buffer < 224; x_buffer++) {
-    int game_screen_y = x_buffer;
-    int logical_y = game_screen_y + scroll_y;
-    int source_tile_row = (logical_y / 16) % 32;
+  for (int x_buffer = 0; x_buffer < 224; x_buffer++, target_fb_col--) {
+    int logical_y = x_buffer + scroll_y;
+    int source_tile_row = (logical_y >> 4) % 32; // / 16 -> >> 4
     int y_in_tile = logical_y & 15;
+    
+    // VRAM-base address for line
+    unsigned char *vram_row_ptr = vram_data + (source_tile_row << 4); // * 16 -> << 4
+    int y_tile_offset = y_in_tile << 1; // * 2 -> << 1
+
+    // set pointer to start address of framebuffer
+    unsigned short *fb_ptr = &frame_buffer[target_fb_col];
 
     for (int y_in_buffer = 0; y_in_buffer < 8; y_in_buffer++) {
-      int logical_x = logical_x_start + y_in_buffer;
-      int source_tile_col = (logical_x / 16) & 15;
-      int x_in_tile = logical_x & 15;
+      // is pixel already used (not black)?
+      if (*fb_ptr == 0) { 
+        int logical_x = logical_x_start + y_in_buffer;
+        int source_tile_col = (logical_x >> 4) & 15; // / 16 -> >> 4
 
-      unsigned short vram_addr = (source_tile_row * 16) + source_tile_col;
-      unsigned char tile_code = vram_data[vram_addr];
+        unsigned char tile_code = vram_row_ptr[source_tile_col];
+        if (tile_code > 0 && tile_code < num_tiles_in_map) {
+          int x_in_tile = logical_x & 15;
+          int tile_offset = (tile_code << 5) + y_tile_offset; // tile_code * 32 -> << 5
+          
+          const uint32_t *tile_gfx_row = base_tile_ptr + tile_offset;
+          uint32_t packed_chunk = tile_gfx_row[x_in_tile >> 3]; // / 8 -> >> 3
+          
+          unsigned char px = (packed_chunk >> (3 * (7 - (x_in_tile & 7)))) & 0x07; 
+          
+          if (px != 0) {
+            unsigned char color_group = 0;
 
-      if (tile_code >= num_tiles_in_map)
-        continue;
-
-      int tile_offset = (tile_code * 16 * 2) + (y_in_tile * 2);
-      const uint32_t *tile_gfx_row = base_tile_ptr + tile_offset;
-
-      uint32_t packed_chunk = tile_gfx_row[x_in_tile / 8];
-      unsigned char px = (packed_chunk >> (3 * (7 - (x_in_tile % 8)))) & 0x07;
-
-      if (px != 0) {
-        // La logica della palette è corretta
-        unsigned char color_group;
-        if (layer_num == 1) {
-          unsigned char top_bits = (tile_code & 0xE0) >> 5;
-          color_group = ((top_bits & 0x02) >> 1) | ((top_bits & 0x01) << 1) | (top_bits & 0x04);
+            if (layer_num == 1) {
+              unsigned char bit0 = (tile_code >> 5) & 1; // Bit 5
+              unsigned char bit2 = (tile_code >> 6) & 1; // Bit 6
+              unsigned char bit1 = (tile_code >> 7) & 1; // Bit 7
+              color_group = bit1 | (bit0 << 1) | (bit2 << 2);
+            } 
+            else {
+              color_group = (tile_code & 0xE0) >> 5;
+            }
+    
+            const unsigned short *colors = &starforce_palette[palette_bank_offset + (color_group << 3)]; // * 8 -> << 3 (8 colors each palette)
+            *fb_ptr = colors[px];
+          }
         }
-        else {
-          color_group = (tile_code & 0xE0) >> 5;
-        }
-        const unsigned short *colors = &starforce_palette[palette_bank_offset + color_group * 8];
-
-        // ===============================================
-        // === LA SOLUZIONE: INVERTI x_buffer IN SCRITTURA ===
-        // ===============================================
-        // Il pixel calcolato per la colonna 0 va in 223.
-        // Il pixel calcolato per la colonna 1 va in 222.
-        // ...
-        // Il pixel calcolato per la colonna 223 va in 0.
-        frame_buffer[y_in_buffer * 224 + (223 - x_buffer)] = colors[px];
       }
+      // jump to next line in framebuffer (+224)
+      fb_ptr += 224;
     }
   }
 }
 
 void starforce::blit_tile_fg(short row, char col) {
-  // Il controllo dei limiti è corretto.
-  if ((row < 2) || (row >= 34))
-    return;
-
-  // L'indirizzamento della VRAM è corretto.
   unsigned short vram_addr = tileaddr[row][col];
-
   unsigned char base_tile_code = memory[STARFORCE_FG_VIDEO_RAM + vram_addr];
   unsigned char color_attr = memory[STARFORCE_FG_COLOR_RAM + vram_addr];
-
-  unsigned int final_tile_code = base_tile_code;
-  if (color_attr & 0x10)
-    final_tile_code += 256;
-
+  unsigned int final_tile_code = base_tile_code + ((color_attr & 0x10) << 4); // 0x10 << 4 = 256
   const unsigned int *tile_data = starforce_fg_tilemap[final_tile_code];
+  const unsigned short *colors = &starforce_palette[(color_attr & 0x07) << 3]; // * 8 -> << 3
 
-  // --- MODIFICA CHIAVE ---
-  // Invece di calcolare un 'offset' numerico, creiamo un puntatore
-  // che punta direttamente al primo dei 8 colori corretti nella nostra palette pre-calcolata.
-  const unsigned short *colors = &starforce_palette[(color_attr & 0x07) * 8];
+  // start address for column offset in framebuffer
+  unsigned short *ptr = frame_buffer + (col << 3); // col * 8 -> col << 3
 
-  unsigned short *ptr = frame_buffer + 8 * col;
-
-  // Il doppio loop di disegno è corretto per la gestione dei dati pre-ruotati.
-  for (char c = 0; c < 8; c++, ptr += (224 - 8)) {
+  // 8 lines of tile
+  for (char c = 0; c < 8; c++) {
     unsigned int rowdata = tile_data[c];
-    for (char r = 0; r < 8; r++) {
-      // Estrae l'indice del pixel (0-7) dalla riga di dati.
-      unsigned char px = (rowdata >> (3 * (7 - r))) & 0x07;
 
-      if (px != 0) { // Il pixel 0 è trasparente.
-        // --- MODIFICA CHIAVE ---
-        // Adesso basta una singola, velocissima operazione di lookup!
-        // 'colors' punta al primo colore del banco (es. colore 0).
-        // 'colors[px]' accede direttamente al colore corretto (es. colore 0 + px).
-        *ptr = colors[px];
-      }
-      ptr++;
-    }
+    // Pixel 0 (r = 0): Shift 3 * (7 - 0) = 21
+    unsigned char px = (rowdata >> 21) & 0x07;
+    if (px != 0) ptr[0] = colors[px];
+
+    // Pixel 1 (r = 1): Shift 3 * (7 - 1) = 18
+    px = (rowdata >> 18) & 0x07;
+    if (px != 0) ptr[1] = colors[px];
+
+    // Pixel 2 (r = 2): Shift 3 * (7 - 2) = 15
+    px = (rowdata >> 15) & 0x07;
+    if (px != 0) ptr[2] = colors[px];
+
+    // Pixel 3 (r = 3): Shift 3 * (7 - 3) = 12
+    px = (rowdata >> 12) & 0x07;
+    if (px != 0) ptr[3] = colors[px];
+
+    // Pixel 4 (r = 4): Shift 3 * (7 - 4) = 9
+    px = (rowdata >> 9) & 0x07;
+    if (px != 0) ptr[4] = colors[px];
+
+    // Pixel 5 (r = 5): Shift 3 * (7 - 5) = 6
+    px = (rowdata >> 6) & 0x07;
+    if (px != 0) ptr[5] = colors[px];
+
+    // Pixel 6 (r = 6): Shift 3 * (7 - 6) = 3
+    px = (rowdata >> 3) & 0x07;
+    if (px != 0) ptr[6] = colors[px];
+
+    // Pixel 7 (r = 7): Shift 3 * (7 - 7) = 0
+    px = rowdata & 0x07;
+    if (px != 0) ptr[7] = colors[px];
+
+    // jump to next line of framebuffers
+    ptr += 224;
   }
 }
 
-void starforce::blit_sprite(short row, unsigned char s_idx, unsigned char target_priority) {
-  if ((row < 2) || (row >= 34))
-    return;
-
+void starforce::blit_sprite(short row, unsigned char s_idx) {
   const struct sprite_S *spr = &sprite[s_idx];
-
-  // Controllo priorità
-  if (spr->priority != target_priority)
-    return;
-
   const short size = spr->is_32x32 ? 32 : 16;
 
-  // Calcola le coordinate Y della striscia corrente
-  const short y_strip_start = row * 8;
+  // vertical boundaries of actual 8-pixel strip
+  const int y_strip_start = row << 3; 
+  const int y_strip_end   = y_strip_start + 8;
 
-  // Culling verticale (se lo sprite non interseca questa striscia, esci)
-  if (spr->y >= y_strip_start + 8 || (spr->y + size) <= y_strip_start)
+  // Culling: is sprite in strip?
+  const int spr_y_start = spr->y;
+  const int spr_y_end   = spr_y_start + size;
+  if (spr_y_start >= y_strip_end || spr_y_end <= y_strip_start)
     return;
- 
-  const unsigned short *colors = &starforce_palette[320 + (spr->color * 8)];
 
-  // Itera su ogni riga dello sprite (da 0 a size-1)
-  for (int y_in_sprite = 0; y_in_sprite < size; y_in_sprite++) {
-    int dest_y = spr->y + y_in_sprite;
+  // calculate the exact area of ​​overlap (intersection for Y).
+  int min_y_sprite = (spr_y_start < y_strip_start) ? (y_strip_start - spr_y_start) : 0;
+  int max_y_sprite = (spr_y_end > y_strip_end) ? (y_strip_end - spr_y_start) : size;
 
-    // Se questa riga specifica non è nella striscia, salta
-    if (dest_y < y_strip_start || dest_y >= y_strip_start + 8)
-      continue;
+  // precompute horizontal clipping boundaries for the X-loop.
+  int spr_x_start = spr->x;
+  int min_x_sprite = (spr_x_start < 0) ? -spr_x_start : 0;
+  int max_x_sprite = (spr_x_start + size > 224) ? (224 - spr_x_start) : size;
+  if (min_x_sprite >= max_x_sprite) 
+    return; 
 
-    // Calcola la riga corrispondente nel nostro framebuffer (0-7)
-    int y_in_buffer = dest_y - y_strip_start;
+  const unsigned short *colors = &starforce_palette[320 + (spr->color << 3)];
+  const bool flip_y = (spr->flags & 2) != 0;
+  const bool flip_x = (spr->flags & 1) != 0;
+  const int size_minus_1 = size - 1;
 
-    // Applica Flip Y
-    int y_read = (spr->flags & 2) ? (size - 1 - y_in_sprite) : y_in_sprite;
+  // base-pointer 
+  const uint32_t *sprite_data_ptr = spr->is_32x32 
+    ? (const uint32_t *)starforce_sprites_32x32[spr->code] 
+    : (const uint32_t *)starforce_sprites_16x16[spr->code];
 
-    // Itera sui pixel della riga
-    for (int x_in_sprite = 0; x_in_sprite < size; x_in_sprite++) {
-      int dest_x = spr->x + x_in_sprite;
+  for (int y_in_sprite = min_y_sprite; y_in_sprite < max_y_sprite; y_in_sprite++) {
+    int y_in_buffer = (spr_y_start + y_in_sprite) - y_strip_start;
+    int y_read = flip_y ? (size_minus_1 - y_in_sprite) : y_in_sprite;
 
-      // Clipping orizzontale
-      if (dest_x < 0 || dest_x >= 224)
-        continue;
+    const uint32_t *sprite_row_gfx = sprite_data_ptr + (y_read * (spr->is_32x32 ? 4 : 2));
 
-      // Applica Flip X
-      int x_read = (spr->flags & 1) ? (size - 1 - x_in_sprite) : x_in_sprite;
+    // set pointer to begin of line in frame buffer
+    unsigned short *fb_row_ptr = &frame_buffer[y_in_buffer * 224];
 
-      // --- ESTRAZIONE PIXEL DAI NUOVI DATI ---
-      int chunk_idx = x_read / 8;
-      int x_in_chunk = x_read % 8;
+    for (int x_in_sprite = min_x_sprite; x_in_sprite < max_x_sprite; x_in_sprite++) {
+      // 1. Calculate which pixel must be read from the sprite memory.
+      int x_read = flip_x ? (size_minus_1 - x_in_sprite) : x_in_sprite;
 
-      unsigned long packed_data;
-      if (spr->is_32x32) {
-        // Maschera per ottenere solo gli ultimi 6 bit del codice per l'array 32x32 che pero e gia calcolata in prepare_frame
-        packed_data = starforce_sprites_32x32[spr->code][y_read][chunk_idx];
-      }
-      else {
-        packed_data = starforce_sprites_16x16[spr->code][y_read][chunk_idx];
-      }
+      // Bit-Extraction
+      int chunk_idx = x_read >> 3;   
+      int x_in_chunk = x_read & 7;    
 
+      uint32_t packed_data = sprite_row_gfx[chunk_idx];
       unsigned char px = (packed_data >> (3 * (7 - x_in_chunk))) & 0x07;
-      // --- FINE ESTRAZIONE ---
 
       if (px != 0) {
-        // Scrivi il pixel nel buffer
-        frame_buffer[y_in_buffer * 224 + (223 - dest_x)] = colors[px];
-        // frame_buffer[y_in_buffer * 224 + dest_x] = colors[px];
+        // 2. Calculate the target coordinate on the screen
+        int dest_x = spr_x_start + x_in_sprite;
+        fb_row_ptr[223 - dest_x] = colors[px];
       }
     }
   }
 }
 
 void starforce::render_row(short row) {
-  // Sprite con priorità 0
+  if ((row < 2) || (row >= 34))
+    return;
+
   for (unsigned char s = 0; s < active_sprites; s++) {
-    blit_sprite(row, s, 0);
-  }
-
-#ifdef ENABLE_BG3
-  blit_background_line(row * 8, 3); // BG3
-#endif
-
-  // Sprite con priorità 1
-  for (unsigned char s = 0; s < active_sprites; s++) {
-    blit_sprite(row, s, 1);
-  }
-
-  blit_background_line(row * 8, 2); // BG2
-
-  // Sprite con priorità 2
-  for (unsigned char s = 0; s < active_sprites; s++) {
-    blit_sprite(row, s, 2);
-  }
-
-  blit_background_line(row * 8, 1); // BG1
-
-  // Sprite con priorità 3
-  for (unsigned char s = 0; s < active_sprites; s++) {
-    blit_sprite(row, s, 3);
+    blit_sprite(row, s);
   }
 
   for (char col = 0; col < 28; col++) {
     blit_tile_fg(row, col);
   }
+
+  blit_background_line(row * 8, 1); // BG1
+ 
+  blit_background_line(row * 8, 2); // BG2
+
+  blit_background_line(row * 8, 3); // BG3
 }
 
 const unsigned short *starforce::logo(void) {

@@ -146,6 +146,8 @@ void updateAudioVideo(void) {
       audio.transmit();
     } 
  
+    emulation_videoRendered();
+
     // one screen at 60 Hz is 16.6ms
     unsigned long t1 = (micros() - t0) / 1000;  // calculate time in milliseconds
     if(t1 < 16) 
@@ -169,7 +171,9 @@ void updateAudioVideo(void) {
         // Audio registers are udated by CPU3 two times per 30hz frame.
         audio.transmit();
       } 
- 
+    
+      emulation_videoRendered();
+
       // one screen at 60 Hz is 16.6ms
       unsigned long t1 = (micros() - t0) / 1000;  // calculate time in milliseconds
       if(t1 < (half ? 33 : 16))

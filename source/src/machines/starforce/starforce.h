@@ -26,9 +26,6 @@
 #define STARFORCE_RADAR_RAM  		0x32C0	//400
 #define STARFORCE_SOUND_RAM  		0x36C0	//400
 
-// with BG3 the game is running too slow (up to 220ms for 10 frames)
-//#define ENABLE_BG3
-
 class starforce : public machineBase
 {
 public:
@@ -41,7 +38,7 @@ public:
 	unsigned char opZ80(unsigned short Addr) override; 
 	unsigned char rdZ80(unsigned short Addr) override;
 	void wrZ80(unsigned short Addr, unsigned char Value) override;
-    unsigned char inZ80(unsigned short Port) override; 
+	unsigned char inZ80(unsigned short Port) override; 
 	void outZ80(unsigned short Port, unsigned char Value) override;
 
 	void run_frame(void) override;
@@ -54,14 +51,12 @@ public:
 	void gameLeds(CRGB *leds) override;
 #endif
 
-protected:
+private:
 	void blit_tile_bg(short logical_row);
 	void blit_tile_fg(short row, char col);
-	void blit_sprite(short row, unsigned char s_idx, unsigned char target_priority);
-
-private:
-    unsigned short calculate_color_starforce(unsigned char raw_palette_byte);
-    void blit_background_line(short start_screen_row, int layer_num);
+	void blit_sprite(short row, unsigned char s_idx);
+	unsigned short calculate_color_starforce(unsigned char raw_palette_byte);
+	void blit_background_line(short start_screen_row, int layer_num);
 	void SN76489_Write_3chip(int chip, unsigned char data);
 	int sn_last_register[3];
 
@@ -76,10 +71,9 @@ private:
 	unsigned char coinBackup = 0;
 	unsigned char coinFrameCounter = 0;
 
-	#ifdef LED_PIN
-		const CRGB menu_leds[7] = { LED_BLUE, LED_CYAN, LED_BLUE, LED_WHITE, LED_BLUE, LED_CYAN, LED_BLUE };
-	#endif
+#ifdef LED_PIN
+	const CRGB menu_leds[7] = { LED_BLUE, LED_CYAN, LED_BLUE, LED_WHITE, LED_BLUE, LED_CYAN, LED_BLUE };
+#endif
+};
 
-	};
-
-	#endif
+#endif

@@ -23,18 +23,19 @@
 #define RAMSIZE     16384 // max usage is Starforce with 15.040
 
 struct sprite_S {
-  unsigned char code, color, flags;
-  short x, y;
+  int x, y;
+  unsigned char code;
+  unsigned char color;
+  unsigned char color_block;
+  unsigned char flags;
+  unsigned char priority;
 
-  //bombjack
-  unsigned char color_block; // Già shiftato di 3 per essere usato come offset
-  char is_32x32;
-  char flip_x;
-  char flip_y;
-
-  //startforce
-  char priority;
-};
+  // flags
+  unsigned char is_32x32  : 1; 
+  unsigned char flip_x    : 1;
+  unsigned char flip_y    : 1;
+  unsigned char reserved  : 5;
+}; 
 
 enum {
   MCH_MENU = 0,
