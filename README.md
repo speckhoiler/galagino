@@ -1,11 +1,11 @@
-# Galagino ported to platformio - now with 26 games!
+# Galagino ported to platformio - now with 27 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
-The game templates for Bombjack, Mr. Do!, Pengo, Donkey Kong Jr. and Starforce I got from [Alby1970](https://github.com/Alby1970).
-The game templates for Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian I got from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
-The game template for Moon Cresta I got from [galagino](https://github.com/galagino)
+I used and modified the games Bombjack, Mr. Do!, Pengo, Donkey Kong Jr. and Starforce from [Alby1970](https://github.com/Alby1970).
+I used and modified the games Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
+I used and modified the games Moon Cresta and Scramble from [galagino](https://github.com/galagino)
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -40,6 +40,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Galaxian screenshot](images/galaxian.png)
 ![Starforce screenshot](images/starforce.png)
 ![Moon Cresta screenshot](images/mooncresta.png)
+![Scramble screenshot](images/scramble.png)
 
 ## Hardware
 
@@ -100,6 +101,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Galaxian](https://www.google.com/search?q=galaxian.zip+arcade+rom)
     * [Starforce](https://www.google.com/search?q=starforc.zip+arcade+rom)
     * [Moon Cresta](https://www.google.com/search?q=mooncrst.zip+arcade+rom)
+    * [Scramble](https://www.google.com/search?q=scramble.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
