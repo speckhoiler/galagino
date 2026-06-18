@@ -293,13 +293,13 @@ void scramble::prepare_frame(void) {
   // Indices 0-6 = enemy shells (white), index 7 = player missile (yellow)
   bullet_active = 0;
   for(int idx = 0; idx < 8; idx++) {
-    unsigned char *bbase = memory + CPU1_BULLET_OFFSET;
+    unsigned char *bbase = memory + CPU1_BULLET_OFFSET + 4 * idx;
     // galagino X = must match tile scroll direction (ship uses scroll registers)
     // The scroll shifts tiles RIGHT with increasing value.
     // bbase[1] encodes the bullet's scanline position in the same direction as scroll.
     bullet_x[idx] = bbase[1] - 16;
     // galagino Y = MAME X position: (255 - bbase[3]) + 15 - 4 (bullet width adjust)
-    bullet_y[idx] = 266 - bbase[3];
+    bullet_y[idx] = 264 - bbase[3];
     if(bbase[1] && bbase[3] && bullet_x[idx] >= 0 && bullet_x[idx] < 224 &&
        bullet_y[idx] > -4 && bullet_y[idx] < 288)
       bullet_active |= (1 << idx);
@@ -423,26 +423,18 @@ void scramble::render_row(short row) {
       blit_sprite(row, s);
   }
 
-  // Draw bullets: 4-pixel vertical lines
-  // Colors: shells (0-6) = white 0xFFFF, player missile (7) = yellow 0xE0FF (byte-swapped)
+  // Draw bullets as single yellow pixels (player missile is a single dot,
+  // and the bullet-slot index can vary, so don't special-case index 7)
   if(bullet_active) {
     short row_top = 8 * row;
     short row_bot = row_top + 8;
     for(int b = 0; b < 8; b++) {
       if(!(bullet_active & (1 << b))) continue;
-      // Bullet is 4 pixels tall in portrait mode (was 4 pixels wide in landscape)
       short bx = bullet_x[b];
       short by = bullet_y[b];
       if(bx < 0 || bx >= 224) continue;
-      if(by + 4 <= row_top || by >= row_bot) continue;
-
-      unsigned short color = (b == 7) ? 0xE0FF : 0xFFFF;  // yellow for player, white for enemies
-      for(int py = 0; py < 4; py++) {
-        short sy = by + py;
-        if(sy >= row_top && sy < row_bot) {
-          frame_buffer[(sy - row_top) * 224 + bx] = color;
-        }
-      }
+      if(by < row_top || by >= row_bot) continue;
+      frame_buffer[(by - row_top) * 224 + bx] = 0xE0FF;  // yellow (byte-swapped)
     }
   }
 
