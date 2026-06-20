@@ -88,6 +88,7 @@ protected:
 
   uint8_t gfx_bank[4] = {0x00,0x00,0x00,0x00};
   uint8_t gfx_scroll;
+  unsigned char background_enable = 0;
 
   // Bullet rendering (8 bullets: 7 enemy shells + 1 player missile)
   short bullet_x[8], bullet_y[8];

@@ -132,8 +132,9 @@ void supercobra::wrZ80(unsigned short Addr, unsigned char Value) {
         irq_enable[0] = Value & 1;
         return;
       case 0xa802: // Coin counter
-      case 0xa803: // Blue background ???
-        // GalBackgroundEnable = d & 1;
+        return;
+      case 0xa803: // Blue background
+        background_enable = Value & 1;
         game_started = 1;
         return;
       case 0xa804: // Stars enable
@@ -354,6 +355,31 @@ void supercobra::blit_sprite(short row, unsigned char s) {
 void supercobra::render_row(short row) {
   if(row <= 1 || row >= 34) return;
 
+  // blue background
+  if (background_enable)
+    memset(frame_buffer, 8, 2 * 224 * 8);
+
+  if(stars_enabled) {
+    if (row == 2) {
+      stars_frame_counter++;
+
+      if ((stars_frame_counter % 60) == 0) {
+        stars_index = 2 + ((stars_frame_counter / 60) % 4);
+      }
+    }
+
+    int row_top = 8 * row;
+    int row_bot = row_top + 8;
+    for(int i = 0; i < star_count; i++) {
+      if (stars[i].y >= row_top && stars[i].y < row_bot) {
+        if (stars[i].x >= 0 &&  stars[i].x < 224 && (i % stars_index) == 0) {
+          int fb_idx = (stars[i].y - row_top) * 224 + stars[i].x;
+          frame_buffer[fb_idx] = stars[i].color;
+        }
+      }
+    }
+  }
+
   // Read scroll register for this portrait row (per-column scroll in MAME terms)
   // ObjRAM even bytes at 0x9000+2*col → attribute_ram[2*(row-2)]
   unsigned char scroll = memory[CPU1_ATTR_OFFSET + 2 * (row - 2)];
@@ -389,28 +415,6 @@ void supercobra::render_row(short row) {
       if(by < row_top || by >= row_bot) continue;
 
       frame_buffer[(by - row_top) * 224 + bx] = 0xE0FF;  // yellow (byte-swapped)
-    }
-  }
-
-  if(stars_enabled) {
-    if (row == 2) {
-      stars_frame_counter++;
-
-      if ((stars_frame_counter % 60) == 0) {
-        stars_index = 2 + ((stars_frame_counter / 60) % 4);
-      }
-    }
-
-    int row_top = 8 * row;
-    int row_bot = row_top + 8;
-    for(int i = 0; i < star_count; i++) {
-      if (stars[i].y >= row_top && stars[i].y < row_bot) {
-        if (stars[i].x >= 0 &&  stars[i].x < 224 && (i % stars_index) == 0) {
-          int fb_idx = (stars[i].y - row_top) * 224 + stars[i].x;
-          if (frame_buffer[fb_idx] == 0x00)
-            frame_buffer[fb_idx] = stars[i].color;
-        }
-      }
     }
   }
 }
