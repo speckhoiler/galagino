@@ -1,11 +1,11 @@
-# Galagino ported to platformio - now with 27 games!
+# Galagino ported to platformio - now with 28 games!
 
 This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.com/harbaum/galagino) ported to platformio.
 This port is NOT by the original author, so please do not bother him with issues.
 
 I used and modified the games Bombjack, Mr. Do!, Pengo, Donkey Kong Jr. and Starforce from [Alby1970](https://github.com/Alby1970).
 I used and modified the games Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
-I used and modified the games Moon Cresta and Scramble from [galagino](https://github.com/galagino)
+I used and modified the games Moon Cresta, Scramble and Super Cobra from [galagino](https://github.com/galagino)
 
 This solution is an easy way to build a galagino arcade machine. No need of a 3D printer and PCB´s. Just buy the hardware listed below.
 
@@ -41,6 +41,7 @@ This solution is an easy way to build a galagino arcade machine. No need of a 3D
 ![Starforce screenshot](images/starforce.png)
 ![Moon Cresta screenshot](images/mooncresta.png)
 ![Scramble screenshot](images/scramble.png)
+![Super Copra screenshot](images/supercobra.png)
 
 ## Hardware
 
@@ -102,6 +103,7 @@ Like in the original from Till Harbaum's Galaga emulator, download these files:
     * [Starforce](https://www.google.com/search?q=starforc.zip+arcade+rom)
     * [Moon Cresta](https://www.google.com/search?q=mooncrst.zip+arcade+rom)
     * [Scramble](https://www.google.com/search?q=scramble.zip+arcade+rom)
+    * [Super Cobra](https://www.google.com/search?q=scobra.zip+arcade+rom)
 
 Galagino uses code that is not freely available and thus not included in this repository. Preparing the firmware thus consists of a few additional steps:
 
@@ -152,3 +154,4 @@ With this solution, it's not possible to operate the machine with the battery pa
 Known game issues:
 * Gyruss: The sound cpu I8039 is missing - so there is no drum sound. Sometimes sprites appear that are no longer in use.
 * Tutankham: Some sounds are not playable in galagino. So I changed it to play other sounds.
+* Super Cobra: The helicopter doesn't sound like a helicopter. It sounds very unpleasant — I’ve turned down the volume.

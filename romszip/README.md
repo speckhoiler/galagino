@@ -1,28 +1,29 @@
 Put rom zip files here:
-Z80-081707.zip
-1942.zip
-digdug.zip
-dkong.zip
-eyes.zip
-frogger.zip
-galaga.zip
-lizwiz.zip
-mrtnt.zip
-pacman.zip
-theglobp.zip
-crush.zip
-anteater.zip
-bombjack.zip
-mrdo.zip
-pengo2u.zip
-bagmanm2.zip
-gyruss.zip
-ladybug.zip
-dkongjrj.zip
-timeplt.zip
-tutankhm.zip
-invaders.zip
-galaxian.zip
-starforc.zip
-mooncrst.zip
-scramble.zip
+*  Z80-081707.zip
+*  1942.zip
+*  digdug.zip
+*  dkong.zip
+*  eyes.zip
+*  frogger.zip
+*  galaga.zip
+*  lizwiz.zip
+*  mrtnt.zip
+*  pacman.zip
+*  theglobp.zip
+*  crush.zip
+*  anteater.zip
+*  bombjack.zip
+*  mrdo.zip
+*  pengo2u.zip
+*  bagmanm2.zip
+*  gyruss.zip
+*  ladybug.zip
+*  dkongjrj.zip
+*  timeplt.zip
+*  tutankhm.zip
+*  invaders.zip
+*  galaxian.zip
+*  starforc.zip
+*  mooncrst.zip
+*  scramble.zip
+*  scobra.zip

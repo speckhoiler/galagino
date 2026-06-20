@@ -67,3 +67,4 @@ conv_galaxian.bat
 conv_startforce.bat
 conv_mooncresta.bat
 conv_scramble.bat
+conv_supercobra.bat

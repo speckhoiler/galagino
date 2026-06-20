@@ -8,7 +8,6 @@
 #include "scramble_tilemap.h"
 #include "scramble_cmap.h"
 #include "scramble_dipswitches.h"
-
 #include "../tileaddr.h"
 #include "../machineBase.h"
 
@@ -77,28 +76,6 @@ protected:
   void blit_sprite(short row, unsigned char s) override;
   void blit_tile_scroll(short row, signed char col, unsigned char scroll);
 
-private:
-  // Bullet rendering (8 bullets: 7 enemy shells + 1 player missile)
-  short bullet_x[8], bullet_y[8];
-  unsigned char bullet_active;  // bitmask of active bullets
-
-  // Starfield
-  static constexpr unsigned short SCRAMBLE_MAX_STARS = 256;
-  void stars_init(void);
-  unsigned short rgb_to_swapped565(unsigned char r, unsigned char g, unsigned char b);
-
-  struct star_entry {
-    unsigned char x;       // 0-255 horizontal position (landscape)
-    unsigned char y;       // 0-255 vertical position (landscape)
-    unsigned short color;  // RGB565 byte-swapped
-  };
-  star_entry stars[SCRAMBLE_MAX_STARS];
-
-  int star_count = 0;
-  int stars_frame_counter = 0;
-  int stars_index = 2;
-  unsigned char stars_enabled = 0;
- 
   unsigned char ignoreFireButton;
   unsigned char sound_latch;
   unsigned char ay_port;
@@ -112,6 +89,28 @@ private:
   uint8_t gfx_bank[4] = {0x00,0x00,0x00,0x00};
   uint8_t gfx_scroll;
 
+  // Bullet rendering (8 bullets: 7 enemy shells + 1 player missile)
+  short bullet_x[8], bullet_y[8];
+  unsigned char bullet_active;  // bitmask of active bullets
+
+  // Starfield
+  void stars_init(void);
+  static constexpr unsigned short SCRAMBLE_MAX_STARS = 256;
+  struct star_entry {
+    unsigned char x;       // 0-255 horizontal position (landscape)
+    unsigned char y;       // 0-255 vertical position (landscape)
+    unsigned short color;  // RGB565 byte-swapped
+  };
+  star_entry stars[SCRAMBLE_MAX_STARS];
+
+  int star_count = 0;
+  int stars_frame_counter = 0;
+  int stars_index = 2;
+  unsigned char stars_enabled = 0;
+  
+private:
+  unsigned short rgb_to_swapped565(unsigned char r, unsigned char g, unsigned char b);
+ 
   static constexpr unsigned short CPU1_ROM_SIZE    = 0x4000;
   static constexpr unsigned short CPU2_ROM_SIZE    = 0x2000;
 
@@ -128,8 +127,6 @@ private:
   static constexpr unsigned short CPU1_SPRITE_SIZE = 0x0020;
   static constexpr unsigned short CPU1_BULLET_SIZE = 0x0020;
   static constexpr unsigned short CPU1_RAM2_SIZE   = 0x0080;
-  static constexpr unsigned short CPU1_OBJRAM_SIZE = CPU1_ATTR_SIZE + CPU1_SPRITE_SIZE + CPU1_BULLET_SIZE + CPU1_RAM2_SIZE;
-
   static constexpr unsigned short CPU1_RAM_OFFSET    = 0x0000;
   static constexpr unsigned short CPU1_VRAM_OFFSET   = CPU1_RAM_OFFSET    + CPU1_RAM_SIZE;
   static constexpr unsigned short CPU1_ATTR_OFFSET   = CPU1_VRAM_OFFSET   + CPU1_VRAM_SIZE;
@@ -144,7 +141,6 @@ private:
   static constexpr unsigned short CPU2_MEM_FREE      = CPU2_RAM_OFFSET    + CPU2_RAM_SIZE;
   static constexpr unsigned short CPU2_FILTER_ADDR   = 0x9000; // hardware sound filter, not RAM
   static constexpr unsigned short CPU2_FILTER_SIZE   = 0x1000;
-
   static_assert(CPU2_MEM_FREE <= RAMSIZE, "RAMSIZE is too low");
 
 #ifdef LED_PIN
