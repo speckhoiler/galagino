@@ -514,3 +514,27 @@ inline unsigned short scramble::rgb_to_swapped565(unsigned char r, unsigned char
 const unsigned short *scramble::logo(void) {
   return scramble_logo;
 }
+
+#ifdef LED_PIN
+void scramble::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 12) {
+    sub_cnt = 0;
+    static char pos = 0;
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c == pos) {
+        leds[c] = LED_WHITE;
+      } else if(c == (pos + NUM_LEDS - 1) % NUM_LEDS) {
+        leds[c] = LED_CYAN;
+      } else {
+        leds[c] = (c % 2 == 0) ? LED_BLUE : LED_BLACK;
+      }
+    }
+    pos = (pos + 1) % NUM_LEDS;
+  }
+}
+
+void scramble::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+#endif

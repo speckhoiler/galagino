@@ -422,3 +422,39 @@ void supercobra::render_row(short row) {
 const unsigned short *supercobra::logo(void) {
   return supercobra_logo;
 }
+
+#ifdef LED_PIN
+void supercobra::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 10) {
+    sub_cnt = 0;
+    static char tick = 0;
+    static char pos = 1;
+    static char dir = 1;
+    
+    // Outer hazard lights blink red/black
+    CRGB hazardColor = (tick % 2 == 0) ? LED_RED : LED_BLACK;
+    leds[0] = hazardColor;
+    leds[NUM_LEDS - 1] = hazardColor;
+    
+    // Inner yellow warning scanner
+    for(char c = 1; c < NUM_LEDS - 1; c++) {
+      if(c == pos) {
+        leds[c] = LED_YELLOW;
+      } else {
+        leds[c] = LED_BLACK;
+      }
+    }
+    
+    pos += dir;
+    if(pos == 1 || pos == NUM_LEDS - 2) {
+      dir = -dir;
+    }
+    tick++;
+  }
+}
+
+void supercobra::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+#endif
