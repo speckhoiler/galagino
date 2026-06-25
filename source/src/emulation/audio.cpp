@@ -123,6 +123,8 @@ void Audio::transmit() {
       sn76489_render_buffer();
     else if (machineType == MCH_DKONG || machineType == MCH_DKONGJR)
       i8048_render_buffer();
+    else if (machineType == MCH_DKONG3)
+      dkong3_render_buffer();
     else if (machineType == MCH_BAGMAN)
       bagman_render_buffer();
     else if(machineType == MCH_SPACE)
@@ -682,6 +684,18 @@ void Audio::galaxian_render_buffer(void) {
       value += ((gal_fire_rng & 1) ? 70 : -70);
     }
 
+    valueToBuffer(i, value);
+  }
+}
+
+void Audio::dkong3_render_buffer(void) {
+  dkong3 *dk3 = static_cast<dkong3*>(currentMachine);
+  for (int i = 0; i < 64; i++) {
+    short value = 0;
+    if (dk3->dk3_rptr != dk3->dk3_wptr) {
+      value = dk3->dk3_samples[dk3->dk3_rptr];
+      dk3->dk3_rptr = (dk3->dk3_rptr + 1) & (dkong3::DK3_SAMPLES - 1);
+    }
     valueToBuffer(i, value);
   }
 }
