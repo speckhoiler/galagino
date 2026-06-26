@@ -4,6 +4,7 @@ This repo is a port of Till Harbaum's awesome [Galaga emulator](https://github.c
 This port is NOT by the original author, so please do not bother him with issues.
 
 I used and modified the games Bombjack, Mr. Do!, Pengo, Donkey Kong Jr., Donkey Kong 3 and Starforce from [Alby1970](https://github.com/Alby1970).
+Donkey Kong 3 sound cpus have been added by [VirtualClaudioBoy](https://github.com/VirtualClaudioBoy).  
 I used and modified the games Gyruss, Lady Bug, Ms. Pacman, Time Pilot, Tutankham, Space Invaders and Galaxian from [SurvivalHacking](https://github.com/SurvivalHacking/galagino3).
 I used and modified the games Moon Cresta, Scramble and Super Cobra from [galagino](https://github.com/galagino)
 
