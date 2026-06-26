@@ -18,6 +18,22 @@ public:
 	~lizwiz() { }
 
 	signed char machineType() override { return MCH_LIZWIZ; } 
+
+#ifdef LED_PIN
+	void menuLeds(CRGB *leds) override { memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB)); }
+	void gameLeds(CRGB *leds) override {
+		static char sub_cnt = 0;
+		if(sub_cnt++ == 16) {
+			sub_cnt = 0;
+			static char pos = 0;
+			for(char c = 0; c < NUM_LEDS; c++) {
+				if(c == pos) leds[c] = LED_MAGENTA;
+				else         leds[c] = LED_GREEN;
+			}
+			pos = (pos + 1) % NUM_LEDS;
+		}
+	}
+#endif 
 	unsigned char rdZ80(unsigned short Addr) override;
 	void wrZ80(unsigned short Addr, unsigned char Value) override;
 	void outZ80(unsigned short Port, unsigned char Value) override;
@@ -33,6 +49,9 @@ protected:
 	const unsigned long *spriteRom(unsigned char flags, unsigned char code) override;
 
 private:
+#ifdef LED_PIN
+	const CRGB menu_leds[7] = { LED_GREEN, LED_MAGENTA, LED_GREEN, LED_WHITE, LED_GREEN, LED_MAGENTA, LED_GREEN };
+#endif
 };
 
 #endif

@@ -43,7 +43,7 @@ private:
 	void pitch_w(uint8_t data);
 	unsigned char gfxbank;
 #ifdef LED_PIN
-	const CRGB menu_leds[7] = { LED_RED, LED_GREEN, LED_YELLOW, LED_YELLOW, LED_YELLOW, LED_GREEN, LED_RED };
+	const CRGB menu_leds[7] = { LED_YELLOW, LED_RED, LED_BLACK, LED_YELLOW, LED_BLACK, LED_RED, LED_YELLOW };
 #endif
 
 };
