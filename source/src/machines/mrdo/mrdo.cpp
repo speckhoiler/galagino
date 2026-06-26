@@ -439,22 +439,22 @@ const unsigned short *mrdo::logo(void) {
 
 #ifdef LED_PIN
 void mrdo::gameLeds(CRGB *leds) {
-  // mrdo: slow yellow on green "knight rider" ...
   static char sub_cnt = 0;
-  if (sub_cnt++ == 32) {
+  if(sub_cnt++ == 16) {
     sub_cnt = 0;
-
-    // and also do the marquee LEDs
-    static char led = 0;
-
-    char il = (led < NUM_LEDS) ? led : ((2 * NUM_LEDS - 2) - led);
-    for (char c = 0; c < NUM_LEDS; c++) {
-      if (c == il)
-        leds[c] = LED_YELLOW;
-      else
-        leds[c] = LED_GREEN;
+    static char pos = 0;
+    static char dir = 1;
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c == pos) {
+        leds[c] = LED_WHITE;
+      } else {
+        leds[c] = (c % 2 == 0) ? LED_RED : LED_GREEN;
+      }
     }
-    led = (led + 1) % (2 * NUM_LEDS - 2);
+    pos += dir;
+    if(pos == 0 || pos == NUM_LEDS - 1) {
+      dir = -dir;
+    }
   }
 }
 

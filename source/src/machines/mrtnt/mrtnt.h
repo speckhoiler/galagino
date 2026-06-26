@@ -18,6 +18,23 @@ public:
 	~mrtnt() { }
 
 	signed char machineType() override { return MCH_MRTNT; } 
+
+#ifdef LED_PIN
+	void menuLeds(CRGB *leds) override { memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB)); }
+	void gameLeds(CRGB *leds) override {
+		static char sub_cnt = 0;
+		if(sub_cnt++ == 16) {
+			sub_cnt = 0;
+			static char pos = 0;
+			for(char c = 0; c < NUM_LEDS; c++) {
+				if(c == pos)                                leds[c] = LED_WHITE;
+				else if(c == (pos + NUM_LEDS - 1) % NUM_LEDS) leds[c] = LED_YELLOW;
+				else                                        leds[c] = LED_RED;
+			}
+			pos = (pos + 1) % NUM_LEDS;
+		}
+	}
+#endif 
 	unsigned char rdZ80(unsigned short Addr) override;
 	void wrZ80(unsigned short Addr, unsigned char Value) override;
 	void outZ80(unsigned short Port, unsigned char Value) override;
@@ -33,6 +50,9 @@ protected:
 	const unsigned long *spriteRom(unsigned char flags, unsigned char code) override;
 
 private:
+#ifdef LED_PIN
+	const CRGB menu_leds[7] = { LED_RED, LED_YELLOW, LED_RED, LED_BLACK, LED_RED, LED_YELLOW, LED_RED };
+#endif
 };
 
 #endif

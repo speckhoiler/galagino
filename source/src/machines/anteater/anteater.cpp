@@ -404,21 +404,30 @@ const unsigned short *anteater::logo(void) {
 
 #ifdef LED_PIN
 void anteater::gameLeds(CRGB *leds) {
-  // anteater: slow yellow on green "knight rider" ...
   static char sub_cnt = 0;
-  if(sub_cnt++ == 32) {
+  if(sub_cnt++ == 20) {
     sub_cnt = 0;
-      
-    // and also do the marquee LEDs
-    static char led = 0;
-      
-    char il = (led<NUM_LEDS)?led:((2*NUM_LEDS-2)-led);
-    for(char c=0;c<NUM_LEDS;c++) {
-      if(c == il) leds[c] = LED_YELLOW;
-      else        leds[c] = LED_GREEN;
+    static char length = 1;
+    static char extending = 1;
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c < length) {
+        leds[c] = LED_RED;
+      } else {
+        leds[c] = (c % 2 == 0) ? LED_YELLOW : LED_BLACK;
+      }
     }
-    led = (led + 1) % (2*NUM_LEDS-2);      
-  }    
+    if(extending) {
+      length++;
+      if(length == NUM_LEDS) {
+        extending = 0;
+      }
+    } else {
+      length--;
+      if(length == 1) {
+        extending = 1;
+      }
+    }
+  }
 }
 
 void anteater::menuLeds(CRGB *leds) {

@@ -21,6 +21,24 @@ public:
  	void reset() override;
 
 	signed char machineType() override { return MCH_THEGLOB; } 
+
+#ifdef LED_PIN
+	void menuLeds(CRGB *leds) override { memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB)); }
+	void gameLeds(CRGB *leds) override {
+		static char sub_cnt = 0;
+		if(sub_cnt++ == 20) {
+			sub_cnt = 0;
+			static char pos = 0;
+			static char dir = 1;
+			for(char c = 0; c < NUM_LEDS; c++) {
+				if(c == pos) leds[c] = LED_RED;
+				else         leds[c] = (c % 2 == 0) ? LED_YELLOW : LED_BLACK;
+			}
+			pos += dir;
+			if(pos == 0 || pos == NUM_LEDS - 1) dir = -dir;
+		}
+	}
+#endif 
 	unsigned char rdZ80(unsigned short Addr) override;
 	void wrZ80(unsigned short Addr, unsigned char Value) override;
 	void outZ80(unsigned short Port, unsigned char Value) override;
@@ -60,6 +78,11 @@ private:
 		static_assert(sizeof...(b) == B, "wrong number of bits");
 		return bitswap(val, b...);
 	}
+
+private:
+#ifdef LED_PIN
+	const CRGB menu_leds[7] = { LED_RED, LED_BLUE, LED_YELLOW, LED_WHITE, LED_YELLOW, LED_BLUE, LED_RED };
+#endif
 };
 
 #endif

@@ -64,7 +64,7 @@ private:
 	bool m_flip;                // Flag per lo screen flip
 
 #ifdef LED_PIN
-	const CRGB menu_leds[7] = { LED_RED, LED_GREEN, LED_YELLOW, LED_YELLOW, LED_YELLOW, LED_GREEN, LED_RED };
+	const CRGB menu_leds[7] = { LED_BLUE, LED_RED, LED_YELLOW, LED_WHITE, LED_YELLOW, LED_RED, LED_BLUE };
 #endif
 
 };

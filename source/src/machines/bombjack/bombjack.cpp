@@ -481,26 +481,23 @@ const unsigned short *bombjack::logo(void) {
 }
 
 #ifdef LED_PIN
-void bombjack::gameLeds(CRGB *leds)
-{
-  // bombjack: slow yellow on green "knight rider" ...
+void bombjack::gameLeds(CRGB *leds) {
   static char sub_cnt = 0;
-  if (sub_cnt++ == 32)
-  {
+  if(sub_cnt++ == 16) {
     sub_cnt = 0;
-
-    // and also do the marquee LEDs
-    static char led = 0;
-
-    char il = (led < NUM_LEDS) ? led : ((2 * NUM_LEDS - 2) - led);
-    for (char c = 0; c < NUM_LEDS; c++)
-    {
-      if (c == il)
-        leds[c] = LED_YELLOW;
-      else
-        leds[c] = LED_GREEN;
+    static char step = 0;
+    for(char c = 0; c < NUM_LEDS; c++) {
+      leds[c] = LED_BLACK;
     }
-    led = (led + 1) % (2 * NUM_LEDS - 2);
+    if(step < NUM_LEDS - 1) {
+      leds[step] = LED_YELLOW;
+      leds[NUM_LEDS - 1] = LED_RED;
+    } else {
+      for(char c = 0; c < NUM_LEDS; c++) {
+        leds[c] = (step % 2 == 0) ? LED_RED : LED_MAGENTA;
+      }
+    }
+    step = (step + 1) % (NUM_LEDS + 4);
   }
 }
 
