@@ -27,3 +27,4 @@ Put rom zip files here:
 *  mooncrst.zip
 *  scramble.zip
 *  scobra.zip
+*  dkong3.zip
