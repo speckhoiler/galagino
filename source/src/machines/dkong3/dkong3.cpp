@@ -541,3 +541,58 @@ void dkong3::render_row(short row) {
 const unsigned short *dkong3::logo(void) {
     return dkong3_logo;
 }
+
+#ifdef LED_PIN
+void dkong3::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 16) {
+    sub_cnt = 0;
+    static char step = 0;
+    
+    // Default background: black/dim green vibe
+    for(char c = 0; c < NUM_LEDS; c++) {
+      leds[c] = LED_BLACK;
+    }
+    
+    switch(step) {
+      case 0:
+        // Stanley sprays from the sides
+        leds[0] = LED_WHITE;
+        leds[6] = LED_WHITE;
+        break;
+      case 1:
+        // Spray travels inward
+        leds[1] = LED_CYAN;
+        leds[5] = LED_CYAN;
+        break;
+      case 2:
+        // Spray travels inward
+        leds[2] = LED_CYAN;
+        leds[4] = LED_CYAN;
+        break;
+      case 3:
+        // Hits DK in the middle! Yellow puff
+        leds[3] = LED_YELLOW;
+        break;
+      case 4:
+        // DK gets pushed up / cloud disperses (red/green flash)
+        leds[3] = LED_RED;
+        leds[2] = LED_GREEN;
+        leds[4] = LED_GREEN;
+        break;
+      case 5:
+        // Fades out
+        leds[2] = LED_BLACK;
+        leds[4] = LED_BLACK;
+        leds[3] = LED_BLACK;
+        break;
+    }
+    
+    step = (step + 1) % 6;
+  }
+}
+
+void dkong3::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+#endif

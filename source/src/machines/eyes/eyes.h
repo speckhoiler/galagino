@@ -18,6 +18,11 @@ public:
 	~eyes() { }
 
 	signed char machineType() override { return MCH_EYES; } 
+
+#ifdef LED_PIN
+	void menuLeds(CRGB *leds) override;
+	void gameLeds(CRGB *leds) override;
+#endif 
 	unsigned char rdZ80(unsigned short Addr) override;
 	void wrZ80(unsigned short Addr, unsigned char Value) override;
 	void outZ80(unsigned short Port, unsigned char Value) override;
@@ -33,6 +38,9 @@ protected:
 	const unsigned long *spriteRom(unsigned char flags, unsigned char code) override;
 
 private:
+#ifdef LED_PIN
+	const CRGB menu_leds[7] = { LED_YELLOW, LED_RED, LED_BLUE, LED_BLACK, LED_BLUE, LED_RED, LED_YELLOW };
+#endif
 };
 
 #endif

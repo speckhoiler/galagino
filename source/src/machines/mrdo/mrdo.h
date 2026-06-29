@@ -60,7 +60,7 @@ private:
     int sn_last_register[2];
 
 #ifdef LED_PIN
-	const CRGB menu_leds[7] = { LED_RED, LED_GREEN, LED_YELLOW, LED_YELLOW, LED_YELLOW, LED_GREEN, LED_RED };
+	const CRGB menu_leds[7] = { LED_RED, LED_WHITE, LED_BLUE, LED_YELLOW, LED_BLUE, LED_WHITE, LED_RED };
 #endif
 
 };

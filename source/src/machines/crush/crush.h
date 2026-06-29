@@ -18,6 +18,11 @@ public:
 	~crush() { }
 
 	signed char machineType() override { return MCH_CRUSH; } 
+
+#ifdef LED_PIN
+	void menuLeds(CRGB *leds) override;
+	void gameLeds(CRGB *leds) override;
+#endif 
 	unsigned char rdZ80(unsigned short Addr) override;
 	void wrZ80(unsigned short Addr, unsigned char Value) override;
 	void outZ80(unsigned short Port, unsigned char Value) override;
@@ -40,6 +45,10 @@ private:
 	uint8_t m_maketrax_offset;
 	uint8_t m_maketrax_disable_protection;
 	unsigned long timerSoundChanged;
+
+#ifdef LED_PIN
+	const CRGB menu_leds[7] = { LED_RED, LED_YELLOW, LED_GREEN, LED_CYAN, LED_BLUE, LED_MAGENTA, LED_WHITE };
+#endif
 };
 
 #endif

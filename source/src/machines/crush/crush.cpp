@@ -193,3 +193,29 @@ const signed char * crush::waveRom(unsigned char value) {
 const unsigned short *crush::logo(void) {
   return crush_logo;
 }
+
+#ifdef LED_PIN
+void crush::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+
+void crush::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 16) {
+    sub_cnt = 0;
+    static char pos = 0;
+    static char color_offset = 0;
+    const CRGB paint_colors[6] = { LED_RED, LED_YELLOW, LED_GREEN, LED_CYAN, LED_BLUE, LED_MAGENTA };
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c == pos)  leds[c] = LED_WHITE;
+      else if(c < pos) leds[c] = paint_colors[(c + color_offset) % 6];
+      else             leds[c] = LED_BLACK;
+    }
+    pos++;
+    if(pos == NUM_LEDS) {
+      pos = 0;
+      color_offset = (color_offset + 1) % 6;
+    }
+  }
+}
+#endif

@@ -106,3 +106,22 @@ const signed char *lizwiz::waveRom(unsigned char value) {
 const unsigned short *lizwiz::logo(void) {
   return lizwiz_logo;
 }
+
+#ifdef LED_PIN
+void lizwiz::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+
+void lizwiz::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 16) {
+    sub_cnt = 0;
+    static char pos = 0;
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c == pos) leds[c] = LED_MAGENTA;
+      else         leds[c] = LED_GREEN;
+    }
+    pos = (pos + 1) % NUM_LEDS;
+  }
+}
+#endif

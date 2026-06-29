@@ -254,21 +254,19 @@ const unsigned short *bagman::logo(void) {
 
 #ifdef LED_PIN
 void bagman::gameLeds(CRGB *leds) {
-  // bagman: slow yellow on green "knight rider" ...
   static char sub_cnt = 0;
-  if(sub_cnt++ == 32) {
+  if(sub_cnt++ == 24) {
     sub_cnt = 0;
-      
-    // and also do the marquee LEDs
-    static char led = 0;
-      
-    char il = (led<NUM_LEDS)?led:((2*NUM_LEDS-2)-led);
-    for(char c=0;c<NUM_LEDS;c++) {
-      if(c == il) leds[c] = LED_YELLOW;
-      else        leds[c] = LED_GREEN;
+    static char pos = 0;
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c == pos) {
+        leds[c] = LED_YELLOW;
+      } else {
+        leds[c] = ((c + pos) % 3 == 0) ? LED_RED : LED_BLACK;
+      }
     }
-    led = (led + 1) % (2*NUM_LEDS-2);      
-  }    
+    pos = (pos + 1) % NUM_LEDS;
+  }
 }
 
 void bagman::menuLeds(CRGB *leds) {
