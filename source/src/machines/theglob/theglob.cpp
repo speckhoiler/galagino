@@ -163,3 +163,24 @@ const signed char *theglob::waveRom(unsigned char value) {
 const unsigned short *theglob::logo(void) {
   return theglob_logo;
 }
+
+#ifdef LED_PIN
+void theglob::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+
+void theglob::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 20) {
+    sub_cnt = 0;
+    static char pos = 0;
+    static char dir = 1;
+    for(char c = 0; c < NUM_LEDS; c++) {
+      if(c == pos) leds[c] = LED_RED;
+      else         leds[c] = (c % 2 == 0) ? LED_YELLOW : LED_BLACK;
+    }
+    pos += dir;
+    if(pos == 0 || pos == NUM_LEDS - 1) dir = -dir;
+  }
+}
+#endif

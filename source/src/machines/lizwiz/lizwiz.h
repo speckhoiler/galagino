@@ -20,19 +20,8 @@ public:
 	signed char machineType() override { return MCH_LIZWIZ; } 
 
 #ifdef LED_PIN
-	void menuLeds(CRGB *leds) override { memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB)); }
-	void gameLeds(CRGB *leds) override {
-		static char sub_cnt = 0;
-		if(sub_cnt++ == 16) {
-			sub_cnt = 0;
-			static char pos = 0;
-			for(char c = 0; c < NUM_LEDS; c++) {
-				if(c == pos) leds[c] = LED_MAGENTA;
-				else         leds[c] = LED_GREEN;
-			}
-			pos = (pos + 1) % NUM_LEDS;
-		}
-	}
+	void menuLeds(CRGB *leds) override;
+	void gameLeds(CRGB *leds) override;
 #endif 
 	unsigned char rdZ80(unsigned short Addr) override;
 	void wrZ80(unsigned short Addr, unsigned char Value) override;

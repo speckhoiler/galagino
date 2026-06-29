@@ -107,3 +107,25 @@ const signed char * eyes::waveRom(unsigned char value) {
 const unsigned short *eyes::logo(void) {
   return eyes_logo;
 }
+
+#ifdef LED_PIN
+void eyes::menuLeds(CRGB *leds) {
+  memcpy(leds, menu_leds, NUM_LEDS * sizeof(CRGB));
+}
+
+void eyes::gameLeds(CRGB *leds) {
+  static char sub_cnt = 0;
+  if(sub_cnt++ == 12) {
+    sub_cnt = 0;
+    static char bullet_pos = 1;
+    leds[0] = LED_YELLOW;
+    leds[NUM_LEDS - 1] = LED_YELLOW;
+    for(char c = 1; c < NUM_LEDS - 1; c++) {
+      if(c == bullet_pos || c == NUM_LEDS - 1 - bullet_pos) leds[c] = LED_BLUE;
+      else                                                  leds[c] = LED_BLACK;
+    }
+    bullet_pos++;
+    if(bullet_pos == NUM_LEDS / 2 + 1) bullet_pos = 1;
+  }
+}
+#endif
